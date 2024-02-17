@@ -1,0 +1,43 @@
+.blur1 {
+    position: relative;
+    /* Ajoutez d'autres styles selon vos besoins */
+  
+    /* Créer un cercle avec effet blur */
+    &::before {
+      content: '';
+      position: fixed;
+      bottom: -60px;
+      right: -70px;
+      width: 300px; /* Ajustez la taille du cercle selon vos besoins */
+      height: 300px; /* Ajustez la taille du cercle selon vos besoins */
+      background:#25515C; /* Couleur du cercle avec une opacité */
+      border-radius: 100%; /* Pour créer un cercle */
+      filter: blur(40px); /* Ajoute un effet de flou */
+      opacity: 30%;
+      z-index: -1;
+
+    }
+  }
+  
+  .blur2 {
+    position: relative;
+    /* Ajoutez d'autres styles selon vos besoins */
+  
+    /* Créer un cercle avec effet blur */
+    &::before {
+      content: '';
+      position: fixed;
+      top: -60px;
+      left: 250px;
+      width: 300px; /* Ajustez la taille du cercle selon vos besoins */
+      height: 300px; /* Ajustez la taille du cercle selon vos besoins */
+      background: #00C3D5 ; /* Couleur du cercle avec une opacité */
+      border-radius: 100%; /* Pour créer un cercle */
+      filter: blur(40px); /* Ajoute un effet de flou */
+      opacity: 20%;
+      z-index: -1;
+
+    }
+  }
+  
+  
