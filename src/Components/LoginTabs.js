@@ -61,9 +61,9 @@ function a11yProps(index) {
   };
 }
 
-export default function LoginTabs() {
+export default function LoginTabs( {props , children}) {
   const [value, setValue] = React.useState(0);
-
+  let i = -1;
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -77,12 +77,11 @@ export default function LoginTabs() {
         </Tabs>
       </Box>
       <Box>
-      <CustomTabPanel value={value} index={0}>
-        <LoginForm/>
+      {children.map(child => (
+      <CustomTabPanel value={value} index={i = i+1} key={i}>
+        {child}
       </CustomTabPanel>
-      <CustomTabPanel value={value} index={1}>
-        <SignUpForm/>
-      </CustomTabPanel>
+      ))}
       </Box>
     </Container>
   );

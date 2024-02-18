@@ -3,6 +3,8 @@ import React from 'react'
 import myimg from '../Ressources/cyber-4084714_1280.jpg'
 import './login.css'
 import LoginTabs from '../Components/LoginTabs'
+import LoginForm from '../Components/LoginForm'
+import SignUpForm from '../Components/SignupForm'
 
 
 const drawerWidth = 320
@@ -38,7 +40,10 @@ export default function Login({children}) {
     />
     
     <Box sx={{ width: '100%' }}> {/* Ajoutez cette ligne */}
-      <LoginTabs />
+      <LoginTabs>
+        <LoginForm/>
+        <SignUpForm/>
+      </LoginTabs>
     </Box>
     <Box className='blur1' />
     <Box className='blur2'></Box>

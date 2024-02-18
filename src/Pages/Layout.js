@@ -1,4 +1,4 @@
-import { Box, Container, Drawer, IconButton, List, ListItem, ListItemIcon, ListItemText, Typography } from '@mui/material';
+import { AppBar, Avatar, Badge, Box, Container, Drawer, IconButton, InputBase, List, ListItem, ListItemIcon, ListItemText, TextField, Toolbar, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
@@ -7,6 +7,9 @@ import ShareIcon from '@mui/icons-material/Share';
 import BarChartOutlinedIcon from '@mui/icons-material/BarChartOutlined';
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNoneOutlined';
+import SearchIcon from '@mui/icons-material/Search';
+import { orange, red } from '@mui/material/colors';
+
 
 
 
@@ -80,13 +83,46 @@ const items = [
   };
 
   return (
-    <Container sx={{ backgroundColor: '#CBD7D9', display: 'flex', minHeight: '100vh' }}>
+    <Box sx={{ backgroundColor: '#EFF3F3', display: 'flex', minHeight: '100vh'}}>
+      <AppBar position='fixed' sx={{backgroundColor :'transparent', width : `calc(100% - ${drawerWidth}px)`, paddingTop : '2%'}} elevation={0}>
+            <Toolbar>
+            <Container>
+      <Box sx={{display : 'flex', backgroundColor : '#ffffff', width : '70%', borderRadius : '10px'}}>
+                <Box>
+                    <SearchIcon />
+                </Box>
+                <InputBase
+                    sx={{height :'40px',     transition: 'transform 0.5s ease-in-out',                  }}
+                    fullWidth
+                    placeholder="Search…"
+                    inputProps={{ 'aria-label': 'search' }}
+                />
+      </Box>
+      </Container>
+           <Box sx={{flexGrow : 1}}></Box>
+                {/* <Typography variant='h6' sx={classes.date}>
+                    {format(new Date(),'do MMMM Y')}
+                </Typography> */}
+                <IconButton
+                    size="large"
+                    aria-label="show 17 new notifications"
+                    color="inherit"
+                >
+                <Container >
+                <Badge badgeContent={3} color="error" >
+                    <NotificationsNoneOutlinedIcon sx={{color : '#000000', height : 30 , width : 30,}}/>
+                </Badge>
+                </Container>
+            </IconButton>
+            <Avatar sx={{backgroundColor : '#C27821'}}>FB</Avatar>
+            </Toolbar>
+        </AppBar>
       <Drawer
         sx={{
           width: drawerWidth,
           transition: 'width 0.5s ease-in-out',
           '& .MuiDrawer-paper': {
-            backgroundColor: '#8AA2A8',
+            backgroundColor: '#CBD7D9',
             width: drawerWidth,
             transition: 'width 0.5s ease-in-out',
             borderRight: 'none', // Supprime la bordure droite
@@ -124,9 +160,6 @@ const items = [
           ))}
         </List>
       </Drawer>
-      <h1 className="text-3xl font-bold underline">
-        Hello world!
-      </h1>
-    </Container>
+    </Box>
   );
 }
