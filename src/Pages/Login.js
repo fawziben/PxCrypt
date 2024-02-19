@@ -2,7 +2,7 @@ import { Box, Container, Drawer } from '@mui/material'
 import React from 'react'
 import myimg from '../Ressources/cyber-4084714_1280.jpg'
 import './login.css'
-import LoginTabs from '../Components/LoginTabs'
+import CustomTabs from '../Components/CustomTabs'
 import LoginForm from '../Components/LoginForm'
 import SignUpForm from '../Components/SignupForm'
 
@@ -29,7 +29,7 @@ const classes = {
   },
 }
 
-export default function Login({children}) {
+export default function Login() {
   return (
 <Box sx={classes.root}>
     <Drawer
@@ -39,11 +39,11 @@ export default function Login({children}) {
       open
     />
     
-    <Box sx={{ width: '100%' }}> {/* Ajoutez cette ligne */}
-      <LoginTabs>
+    <Box sx={{ width: '100%' ,}}> {/* Ajoutez cette ligne */}
+    <CustomTabs title1="Login" title2="SignUp">
         <LoginForm/>
         <SignUpForm/>
-      </LoginTabs>
+      </CustomTabs>
     </Box>
     <Box className='blur1' />
     <Box className='blur2'></Box>

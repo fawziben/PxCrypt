@@ -3,7 +3,7 @@ import { ThemeProvider } from '@emotion/react'
 import { CssBaseline, createTheme } from '@mui/material'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 import Login from './Pages/Login'
-import LoginTabs from './Components/LoginTabs'
+import LoginTabs from './Components/CustomTabs'
 import SignUpForm from './Components/SignupForm'
 import Layout from './Pages/Layout'
 

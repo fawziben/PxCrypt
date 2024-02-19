@@ -1,4 +1,4 @@
-import { AppBar, Avatar, Badge, Box, Container, Drawer, IconButton, InputBase, List, ListItem, ListItemIcon, ListItemText, TextField, Toolbar, Typography } from '@mui/material';
+import { AppBar, Avatar, Badge, Box, Container, Drawer, Fab, IconButton, InputBase, List, ListItem, ListItemIcon, ListItemText, TextField, Toolbar, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
@@ -9,6 +9,13 @@ import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNoneOutlined';
 import SearchIcon from '@mui/icons-material/Search';
 import { orange, red } from '@mui/material/colors';
+import CustomTable from '../Components/CustomTable';
+import CustomTabs from '../Components/CustomTabs';
+import SignUpForm from '../Components/SignupForm';
+import MainPageTabs from '../Components/MainPageTabs';
+import AddIcon from '@mui/icons-material/Add';
+import KeyOutlinedIcon from '@mui/icons-material/KeyOutlined';
+
 
 
 
@@ -46,7 +53,12 @@ const classes = {
   text : {
     
     width : !showNewIcon ? '0%' : '50%'
-  }
+  },
+  fab: {
+    position: 'fixed',
+    bottom: '16px', // Ajustez la position verticale en fonction de vos besoins
+    right: '16px', // Ajustez la position horizontale en fonction de vos besoins
+  },    
 };
 
 const items = [
@@ -83,8 +95,8 @@ const items = [
   };
 
   return (
-    <Box sx={{ backgroundColor: '#EFF3F3', display: 'flex', minHeight: '100vh'}}>
-      <AppBar position='fixed' sx={{backgroundColor :'transparent', width : `calc(100% - ${drawerWidth}px)`, paddingTop : '2%'}} elevation={0}>
+<div style={{ backgroundColor: '#EFF3F3', display: 'flex', minHeight: '100vh', overflowY: 'hidden' }}>
+      <AppBar position='fixed' sx={{backgroundColor :'transparent', width : `calc(100% - ${drawerWidth}px)`, paddingTop : '2%', marginBottom : '30px'}} elevation={0}>
             <Toolbar>
             <Container>
       <Box sx={{display : 'flex', backgroundColor : '#ffffff', width : '70%', borderRadius : '10px'}}>
@@ -160,6 +172,15 @@ const items = [
           ))}
         </List>
       </Drawer>
-    </Box>
+<div style={{ marginTop: '100px', padding: 0, width: '100%', } } className = 'overflow-y-hidden'>
+  <MainPageTabs title1='Files' title2='Folders'>
+    <CustomTable />
+    <SignUpForm />
+  </MainPageTabs>
+  <Fab sx={classes.fab} color='primary' aria-label="add">
+                <KeyOutlinedIcon/>
+  </Fab>
+</div>   
+</div>
   );
 }
