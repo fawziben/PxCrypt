@@ -1,41 +1,46 @@
-const { app, BrowserWindow, ipcMain } = require('electron');
-const path = require ('path')
-const isDev = require ('electron-is-dev')
+const { app, BrowserWindow, ipcMain } = require('electron'); // Import des modules Electron nécessaires
+const path = require('path'); // Import du module path pour gérer les chemins de fichiers
+const isDev = require('electron-is-dev'); // Import du module electron-is-dev pour détecter le mode de développement
 
+let win; // Déclaration de la variable pour stocker la fenêtre de l'application
 
-let win;
-
-function createWindow () {
+// Fonction pour créer une nouvelle fenêtre de navigateur
+function createWindow() {
     win = new BrowserWindow({
-      width: 800,
-      height: 600,
-      webPreferences: {
-        preload: path.join(__dirname, 'preload.js')
-      }
-    })
-  
+        width: 800, // Largeur initiale de la fenêtre
+        height: 600, // Hauteur initiale de la fenêtre
+        webPreferences: {
+            preload: path.join(__dirname, 'preload.js') // Chargement du script de pré-chargement
+        }
+    });
+
+    // Chargement de l'URL de l'application React
     win.loadURL(isDev ? "http://127.0.0.1:3000" : `file://${path.join(__dirname,'../build/index.html')}`);
 }
 
-  ipcMain.on('logged-successfully', (event) => {
+// Écouteur d'événement pour l'événement 'logged-successfully'
+ipcMain.on('logged-successfully', (event) => {
+    // Redimensionnement de la fenêtre et centrage
     win.setSize(1000, 600);
-    win.center()
+    win.center();
+});
 
-  })
+// Événement lorsque Electron est prêt
+app.whenReady().then(() => {
+    // Création de la fenêtre principale de l'application
+    createWindow();
 
-  
-  app.whenReady().then(() => {
-    createWindow()
-  
+    // Gestion de l'événement 'activate' pour recréer la fenêtre si toutes les fenêtres sont fermées
     app.on('activate', () => {
-      if (BrowserWindow.getAllWindows().length === 0) {
-        createWindow()
-      }
-    })
-  })
+        if (BrowserWindow.getAllWindows().length === 0) {
+            createWindow();
+        }
+    });
+});
 
-  app.on('window-all-closed', () => {
+// Gestion de l'événement 'window-all-closed' pour quitter l'application lorsque toutes les fenêtres sont fermées, sauf sur macOS
+app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') {
-      app.quit()
+        app.quit();
     }
-  })
+});

@@ -24,14 +24,14 @@ function createData(file, size, accessDate, path, algo) {
 }
 
 const rows = [
-  createData('TextFile.docx', '33.2 KB', 'February 4th 2024', 'C:\Users\hp\Desktop\react_electron', 'AES_256'),
-  createData('TextFile.docx', '33.2 KB', 'February 4th 2024', 'C:\Users\hp\Desktop\react_electron', 'AES_256'),
-  createData('TextFile.docx', '33.2 KB', 'February 4th 2024', 'C:\Users\hp\Desktop\react_electron', 'AES_256'),
-  createData('TextFile.docx', '33.2 KB', 'February 4th 2024', 'C:\Users\hp\Desktop\react_electron', 'AES_256'),
-  createData('TextFile.docx', '33.2 KB', 'February 4th 2024', 'C:\Users\hp\Desktop\react_electron', 'AES_256'),
-  createData('TextFile.docx', '33.2 KB', 'February 4th 2024', 'C:\Users\hp\Desktop\react_electron', 'AES_256'),
-  createData('TextFile.docx', '33.2 KB', 'February 4th 2024', 'C:\Users\hp\Desktop\react_electron', 'AES_256'),
-  createData('TextFile.docx', '33.2 KB', 'February 4th 2024', 'C:\Users\hp\Desktop\react_electron', 'AES_256'),
+  createData('TextFile.docx', '33.2 KB', 'February 4th 2024', 'C:\\Users\\hp\\Desktop\\react_electron', 'AES_256'),
+  createData('TextFile.docx', '33.2 KB', 'February 4th 2024', 'C:\\Users\\hp\\Desktop\\react_electron', 'AES_256'),
+  createData('TextFile.docx', '33.2 KB', 'February 4th 2024', 'C:\\Users\\hp\\Desktop\\react_electron', 'AES_256'),
+  createData('TextFile.docx', '33.2 KB', 'February 4th 2024', 'C:\\Users\\hp\\Desktop\\react_electron', 'AES_256'),
+  createData('TextFile.docx', '33.2 KB', 'February 4th 2024', 'C:\\Users\\hp\\Desktop\\react_electron', 'AES_256'),
+  createData('TextFile.docx', '33.2 KB', 'February 4th 2024', 'C:\\Users\\hp\\Desktop\\react_electron', 'AES_256'),
+  createData('TextFile.docx', '33.2 KB', 'February 4th 2024', 'C:\\Users\\hp\\Desktop\\react_electron', 'AES_256'),
+  createData('TextFile.docx', '33.2 KB', 'February 4th 2024', 'C:\\Users\\hp\\Desktop\\react_electron', 'AES_256'),
 
 ];
 
@@ -47,6 +47,7 @@ export default function CustomTable() {
             <TableCell sx={classes.headers} align="center">Path</TableCell>
             <TableCell sx={classes.headers} align="center">Algorithm</TableCell>
           </TableRow>
+
         </TableHead>
         <TableBody>
           {rows.map((row) => (
@@ -62,6 +63,7 @@ export default function CustomTable() {
               <TableCell align="right">{row.path}</TableCell>
               <TableCell align="right">{row.algo}</TableCell>
             </TableRow>
+            
           ))}
         </TableBody>
       </Table>
