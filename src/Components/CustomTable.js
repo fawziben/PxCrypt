@@ -1,11 +1,6 @@
 import * as React from 'react';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
+import './CustomTable.css'
+import { Container } from '@mui/material';
 
 const classes = {
   headers : {
@@ -14,13 +9,13 @@ const classes = {
   headerRow: {
     position: 'sticky',
     top: 0,
-    zIndex: 1, // Pour s'assurer que le header reste au-dessus des autres contenus
+    zIndex: 1,
     backgroundColor: '#25525D',
   },
 }
 
 function createData(file, size, accessDate, path, algo) {
-  return { file, size, accessDate, path, algo};
+  return { file, size, accessDate, path, algo };
 }
 
 const rows = [
@@ -32,41 +27,61 @@ const rows = [
   createData('TextFile.docx', '33.2 KB', 'February 4th 2024', 'C:\\Users\\hp\\Desktop\\react_electron', 'AES_256'),
   createData('TextFile.docx', '33.2 KB', 'February 4th 2024', 'C:\\Users\\hp\\Desktop\\react_electron', 'AES_256'),
   createData('TextFile.docx', '33.2 KB', 'February 4th 2024', 'C:\\Users\\hp\\Desktop\\react_electron', 'AES_256'),
+  createData('TextFile.docx', '33.2 KB', 'February 4th 2024', 'C:\\Users\\hp\\Desktop\\react_electron', 'AES_256'),
+  createData('TextFile.docx', '33.2 KB', 'February 4th 2024', 'C:\\Users\\hp\\Desktop\\react_electron', 'AES_256'),
 
+  // Ajoutez d'autres données ici...
 ];
 
 export default function CustomTable() {
-  return (
-    <TableContainer component={Paper} style={{ maxHeight: '400px', overflow: 'auto',}}>
-      <Table sx={{ minWidth: 650 ,}} aria-label="simple table">
-        <TableHead >
-          <TableRow sx = {classes.headerRow} >
-            <TableCell sx={classes.headers} >File</TableCell>
-            <TableCell sx={classes.headers} align="center">Size</TableCell>
-            <TableCell sx={classes.headers} align="center">Access Date</TableCell>
-            <TableCell sx={classes.headers} align="center">Path</TableCell>
-            <TableCell sx={classes.headers} align="center">Algorithm</TableCell>
-          </TableRow>
+  const tableRef = React.useRef(null);
+  const [containerHeight, setContainerHeight] = React.useState(0);
 
-        </TableHead>
-        <TableBody>
-          {rows.map((row) => (
-            <TableRow
-              key={row.name}
-              sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-            >
-              <TableCell component="th" scope="row">
-                {row.file}
-              </TableCell>
-              <TableCell align="right">{row.size}</TableCell>
-              <TableCell align="right">{row.accessDate}</TableCell>
-              <TableCell align="right">{row.path}</TableCell>
-              <TableCell align="right">{row.algo}</TableCell>
-            </TableRow>
-            
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+  // Fonction pour recalculer la hauteur du conteneur
+  const updateContainerHeight = () => {
+    if (tableRef.current) {
+      const windowHeight = window.innerHeight;
+      const containerTop = tableRef.current.getBoundingClientRect().top;
+      const containerHeight = windowHeight - containerTop ; // 20 est une marge fixe pour la barre de défilement
+      setContainerHeight(containerHeight);
+    }
+  };
+
+  // Mettre à jour la hauteur du conteneur lorsque le composant est monté ou lorsque la fenêtre est redimensionnée
+  React.useEffect(() => {
+    updateContainerHeight();
+    window.addEventListener('resize', updateContainerHeight);
+    return () => {
+      window.removeEventListener('resize', updateContainerHeight);
+    };
+  }, []);
+
+  return (
+    <div className="w-full h-full overflow-y-auto" style={{ maxHeight: '100%' }}>
+      <div ref={tableRef} style={{ maxHeight: `${containerHeight}px`, overflowY: 'auto' }}>
+        <table className="w-full">
+          <thead className="text-white h-12">
+            <tr className="sticky top-0" style={{ backgroundColor: '#25525D' }}>
+              <th className="px-4">File</th>
+              <th className="px-4">Size</th>
+              <th className="px-4">Access Date</th>
+              <th className="px-4">Path</th>
+              <th className="px-4">Algorithm</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((row, index) => (
+              <tr key={index} className="bg-white h-12">
+                <td align='center'>{row.file}</td>
+                <td className="px-4" align="center">{row.size}</td>
+                <td className="px-4" align="center">{row.accessDate}</td>
+                <td className="px-4" align="center">{row.path}</td>
+                <td className="px-4" align="center">{row.algo}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
   );
 }
