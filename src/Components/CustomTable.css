@@ -1,27 +1,17 @@
-.custom-table-container {
-    max-height: 500px; /* Définissez la hauteur maximale du conteneur */
-    overflow-y: auto; /* Ajoutez une barre de défilement verticale si nécessaire */
+.row-b-bottom {
+    border-color: '#EFF3F3';
+    border-bottom-width: 2px;
+}
+/* CustomTable.css */
+.slide-down {
+    animation: slideDown 0.5s ease;
   }
   
-  .custom-table {
-    width: 100%; /* Assurez-vous que le tableau occupe toute la largeur du conteneur */
+  @keyframes slideDown {
+    0% {
+      transform: translateY(-100%);
+    }
+    100% {
+      transform: translateY(0);
+    }
   }
-  
-  .custom-table th,
-  .custom-table td {
-    padding: 8px; /* Ajoutez un espacement autour du contenu des cellules */
-  }
-  
-  .custom-table th {
-    background-color: #f2f2f2; /* Ajoutez une couleur de fond pour les en-têtes */
-    color: white; /* Couleur du texte des en-têtes */
-  }
-  
-  .custom-table tr:nth-child(even) {
-    background-color: #f2f2f2; /* Couleur de fond des lignes paires */
-  }
-  
-  .custom-table tr:hover {
-    background-color: #ddd; /* Couleur de fond au survol de la souris */
-  }
-  
