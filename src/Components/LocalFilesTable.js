@@ -25,7 +25,7 @@ const rows = [
   // Ajoutez d'autres données ici...
 ];
 
-export default function CustomTable() {
+export default function LocalFilesTable() {
   const tableRef = React.useRef(null);
   const [containerHeight, setContainerHeight] = React.useState(0);
   const [actions, setActions] = React.useState({});

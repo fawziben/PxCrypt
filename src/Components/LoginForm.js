@@ -7,7 +7,7 @@ export default function LoginForm() {
     const navigate = useNavigate(); // Initialisation du hook de navigation
     const handleClick = () => {
       window.electronAPI.loginSuccess(); // Appel d'une fonction depuis l'API Electron
-      navigate('add'); // Navigation vers la page 'add'
+      navigate('dashboard'); // Navigation vers la page 'add'
     };
 
     // Styles des composants

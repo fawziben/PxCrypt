@@ -8,20 +8,13 @@ import BarChartOutlinedIcon from '@mui/icons-material/BarChartOutlined';
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNoneOutlined';
 import SearchIcon from '@mui/icons-material/Search';
-import { orange, red } from '@mui/material/colors';
-import CustomTable from '../Components/CustomTable';
-import CustomTabs from '../Components/CustomTabs';
-import SignUpForm from '../Components/SignupForm';
-import MainPageTabs from '../Components/MainPageTabs';
-import AddIcon from '@mui/icons-material/Add';
-import KeyOutlinedIcon from '@mui/icons-material/KeyOutlined';
-import {useLocation, useNavigate } from 'react-router-dom';
+import {Outlet, useLocation, useNavigate } from 'react-router-dom';
 
 
 
 
 
-export default function Layout() {
+export default function Layout({children}) {
 
   const minWidth = 100;
   const maxWidth = 240;
@@ -29,6 +22,8 @@ export default function Layout() {
   const [drawerWidth, setWidth] = useState(minWidth);
   const [showNewIcon, setNewIcon] = useState(false);
   const navigate = useNavigate()
+  const location = useLocation()
+
 
 
 const classes = {
@@ -56,28 +51,23 @@ const classes = {
     
     width : !showNewIcon ? '0%' : '50%'
   },
-  fab: {
-    position: 'fixed',
-    bottom: '16px', // Ajustez la position verticale en fonction de vos besoins
-    right: '16px', // Ajustez la position horizontale en fonction de vos besoins
-  },    
 };
 
 const items = [
   {
     text: 'Dashboard',
     icon: <GridViewOutlinedIcon sx={{ color: '#000000', ...classes.drawerIcons }} />,
-    path: '/'
+    path: '/dashboard'
   },
   {
     text: 'Shared Files',
     icon: <ShareIcon sx={{ color: '#000000', ...classes.drawerIcons }} />,
-    path: '/add'
+    path: '/dashboard/sharedfiles'
   },
   {
     text: 'Analytics',
     icon: <BarChartOutlinedIcon sx={{ color: '#000000', ...classes.drawerIcons }} />,
-    path: '/add'
+    path: '/dashboard/analytics'
   },
   {
     text: 'Setting',
@@ -165,12 +155,13 @@ const items = [
         <List>
           {items.map(item => (
             <ListItem
+              
               onClick={()=>changeWindow(item)}
               button
-              sx={{ display: 'flex', justifyContent: 'center', marginBottom: '30px', borderRadius: 0 }}
+              sx={{ height : '80px', display: 'flex', justifyContent: 'center', borderRadius: 0, backgroundColor : location.pathname == item.path ? '#8AA2A8' : null}}
               key={item.text}
             >
-            <Box>
+            <Box sx={{ marginBottom : '0px'}}>
               <ListItemIcon sx={classes.drawerIcons}>{item.icon}</ListItemIcon>
               </Box>
               <Typography noWrap sx={classes.text}>{showNewIcon ? item.text : null}</Typography>
@@ -178,15 +169,7 @@ const items = [
           ))}
         </List>
       </Drawer>
-<div style={{ marginTop: '100px', padding: 0, width: '100%', } } className = 'overflow-y-hidden'>
-  <MainPageTabs title1='Files' title2='Folders'>
-    <CustomTable />
-    <SignUpForm />
-  </MainPageTabs>
-  <Fab sx={classes.fab} color='primary' aria-label="add">
-                <KeyOutlinedIcon/>
-  </Fab>
-</div>   
+      <Outlet/>
 </div>
   );
 }

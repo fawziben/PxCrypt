@@ -3,9 +3,10 @@ import { ThemeProvider } from '@emotion/react'
 import { CssBaseline, createTheme } from '@mui/material'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 import Login from './Pages/Login'
-import LoginTabs from './Components/CustomTabs'
-import SignUpForm from './Components/SignupForm'
 import Layout from './Pages/Layout'
+import MainPage from './Pages/MainPage'
+import SharedFiles from './Pages/SharedFiles'
+import FileStats from './Components/FileStats'
 
 const customTheme = createTheme({
   palette: {
@@ -19,17 +20,22 @@ const customTheme = createTheme({
   }
 })
 
-export default function App() {
+function App() {
   return (
-    
     <ThemeProvider theme={customTheme}>
       <CssBaseline/>
       <Router>
         <Routes>
           <Route exact path="/" element={<Login />} />
-          <Route path="/add" element={<Layout/>} />
+          <Route path = 'dashboard' element={<Layout />}>
+            <Route index element={<MainPage />} />
+            <Route path="sharedfiles" element={<SharedFiles />} />
+            <Route path="analytics" element={<FileStats />} />
+          </Route>
         </Routes>
       </Router>
     </ThemeProvider>
-  )
+  );
 }
+
+export default App;
