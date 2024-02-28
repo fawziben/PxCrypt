@@ -15,6 +15,7 @@ import SignUpForm from '../Components/SignupForm';
 import MainPageTabs from '../Components/MainPageTabs';
 import AddIcon from '@mui/icons-material/Add';
 import KeyOutlinedIcon from '@mui/icons-material/KeyOutlined';
+import {useLocation, useNavigate } from 'react-router-dom';
 
 
 
@@ -27,6 +28,7 @@ export default function Layout() {
 
   const [drawerWidth, setWidth] = useState(minWidth);
   const [showNewIcon, setNewIcon] = useState(false);
+  const navigate = useNavigate()
 
 
 const classes = {
@@ -93,6 +95,9 @@ const items = [
     setWidth(drawerWidth === minWidth ? maxWidth : minWidth);
     setNewIcon(!showNewIcon);
   };
+  const changeWindow = (item) => {  
+    navigate(item.path)
+}
 
   return (
 <div style={{ backgroundColor: '#EFF3F3', display: 'flex', minHeight: '100vh', overflowY: 'hidden' }}>
@@ -145,7 +150,7 @@ const items = [
         anchor='left'
         open
       >
-        <Container sx={{ display: 'flex', alignItems: 'center', justifyContent: 'right' }}>
+        <Container sx={{ display: 'flex', alignItems: 'center', justifyContent: 'right', marginBottom :'50px' }}>
           {showNewIcon ? (
             <Box sx={{ display: 'flex', flexGrow: 1 }}>
               <Typography variant='h5' sx={{ color: '#666666', ...classes.logo }}>Px</Typography>
@@ -160,8 +165,9 @@ const items = [
         <List>
           {items.map(item => (
             <ListItem
+              onClick={()=>changeWindow(item)}
               button
-              sx={{ display: 'flex', justifyContent: 'center', marginBottom: '20px', borderRadius: 0 }}
+              sx={{ display: 'flex', justifyContent: 'center', marginBottom: '30px', borderRadius: 0 }}
               key={item.text}
             >
             <Box>
