@@ -1,29 +1,30 @@
 import * as React from 'react';
 import './CustomTable.css'
-import ChecklistIcon from '@mui/icons-material/Checklist';
-
-function createData(file, size, date, algo) {
-  return { file, size, date, algo};
+import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
+import { Download } from '@mui/icons-material';
+import { IconButton } from '@mui/material';
+function createData(file, size, date, owner) {
+  return { file, size, date, owner};
 }
 
 const rows = [
-  createData('TextFile1.docx', '33.2 KB', 'February 4th 2024','AES_256'),
-  createData('TextFile1.docx', '33.2 KB', 'February 4th 2024','AES_256'),
-  createData('TextFile1.docx', '33.2 KB', 'February 4th 2024','AES_256'),
-  createData('TextFile1.docx', '33.2 KB', 'February 4th 2024','AES_256'),
-  createData('TextFile1.docx', '33.2 KB', 'February 4th 2024','AES_256'),
-  createData('TextFile1.docx', '33.2 KB', 'February 4th 2024','AES_256'),
-  createData('TextFile1.docx', '33.2 KB', 'February 4th 2024','AES_256'),
-  createData('TextFile1.docx', '33.2 KB', 'February 4th 2024','AES_256'),
+  createData('TextFile1.docx', '33.2 KB', 'February 4th 2024', 'if_benmoumen@esi.dz'),
+  createData('TextFile1.docx', '33.2 KB', 'February 4th 2024', 'if_benmoumen@esi.dz'),
+  createData('TextFile1.docx', '33.2 KB', 'February 4th 2024', 'if_benmoumen@esi.dz'),
+  createData('TextFile1.docx', '33.2 KB', 'February 4th 2024', 'if_benmoumen@esi.dz'),
+  createData('TextFile1.docx', '33.2 KB', 'February 4th 2024', 'if_benmoumen@esi.dz'),
+  createData('TextFile1.docx', '33.2 KB', 'February 4th 2024', 'if_benmoumen@esi.dz'),
+  createData('TextFile1.docx', '33.2 KB', 'February 4th 2024', 'if_benmoumen@esi.dz'),
+  createData('TextFile1.docx', '33.2 KB', 'February 4th 2024', 'if_benmoumen@esi.dz'),
+  createData('TextFile1.docx', '33.2 KB', 'February 4th 2024', 'if_benmoumen@esi.dz'),
+
 
   // Ajoutez d'autres données ici...
 ];
 
-export default function SharedFilesTable() {
+export default function ReceivedFilesTable() {
   const tableRef = React.useRef(null);
   const [containerHeight, setContainerHeight] = React.useState(0);
-  const [actions, setActions] = React.useState({});
-  const [selectedRow, setSelectedRow] = React.useState(null);
 
   // Fonction pour recalculer la hauteur du conteneur
   const updateContainerHeight = () => {
@@ -52,9 +53,9 @@ export default function SharedFilesTable() {
             <tr className="sticky top-0" style={{ backgroundColor: '#25525D' }}>
               <th className="px-4">File</th>
               <th className="px-4">Size</th>
-              <th className="px-4">Sending date</th>
-              <th className="px-4">Algorithm</th>
-              <th className="px-4">Action</th>
+              <th className="px-4">Receiving date</th>
+              <th className="px-4">Owner</th>
+              <th className="px-4">Actions</th>
 
             </tr>
           </thead>
@@ -65,8 +66,11 @@ export default function SharedFilesTable() {
                   <td align='center'>{row.file}</td>
                   <td className="px-4" align="center">{row.size}</td>
                   <td className="px-4" align="center">{row.date}</td>
-                  <td className="px-4" align="center">{row.algo}</td>
-                  <td align ="center"><ChecklistIcon/></td>
+                  <td className="px-4" align="center">{row.owner}</td>
+                  <div align = 'center'>
+                   <td ><IconButton><DeleteOutlineOutlinedIcon /></IconButton></td>
+                   <td ><IconButton><Download /></IconButton></td> 
+                   </div>
                 </tr>
               </React.Fragment>
             ))}

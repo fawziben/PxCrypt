@@ -4,6 +4,7 @@ import LocalFilesTable from '../Components/LocalFilesTable'
 import SignUpForm from '../Components/SignupForm'
 import { Fab } from '@mui/material'
 import KeyOutlinedIcon from '@mui/icons-material/KeyOutlined';
+import FoldersTable from '../Components/FoldersTable'
 
 
 export default function MainPage() {
@@ -11,7 +12,7 @@ export default function MainPage() {
       <div style={{ marginTop: '100px', padding: 0, width: '100%', } } className = 'overflow-y-hidden'>
   <MainPageTabs title1='Files' title2='Folders'>
     <LocalFilesTable />
-    <SignUpForm/>
+    <FoldersTable/>
   </MainPageTabs>
   <Fab sx={{
     position: 'fixed',
