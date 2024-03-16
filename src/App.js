@@ -1,33 +1,33 @@
-import React from 'react'
-import { ThemeProvider } from '@emotion/react'
-import { CssBaseline, createTheme } from '@mui/material'
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
-import Login from './Pages/Login'
-import Layout from './Pages/Layout'
-import MainPage from './Pages/MainPage'
-import SharedFiles from './Pages/SharedFiles'
-import FileStats from './Components/FileStats'
+import React from "react";
+import { ThemeProvider } from "@emotion/react";
+import { CssBaseline, createTheme } from "@mui/material";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import Login from "./Pages/Login";
+import Layout from "./Pages/Layout";
+import MainPage from "./Pages/MainPage";
+import SharedFiles from "./Pages/SharedFiles";
+import FileStats from "./Components/FileStats/FileStats";
 
 const customTheme = createTheme({
   palette: {
     primary: {
-      main: '#27535E'
-    }
+      main: "#27535E",
+    },
   },
   Tab: {
-    fontFamily: 'Poppins',
+    fontFamily: "Poppins",
     fontWeightRegular: 400,
-  }
-})
+  },
+});
 
 function App() {
   return (
     <ThemeProvider theme={customTheme}>
-      <CssBaseline/>
+      <CssBaseline />
       <Router>
         <Routes>
           <Route exact path="/" element={<Login />} />
-          <Route path = 'dashboard' element={<Layout />}>
+          <Route path="dashboard" element={<Layout />}>
             <Route index element={<MainPage />} />
             <Route path="sharedfiles" element={<SharedFiles />} />
             <Route path="analytics" element={<FileStats />} />

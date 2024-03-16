@@ -1,27 +1,27 @@
-import * as React from 'react'; // Import de React
-import PropTypes from 'prop-types'; // Import des types de propriétés pour la validation
-import Tabs from '@mui/material/Tabs'; // Import des onglets MUI
-import Tab from '@mui/material/Tab'; // Import de l'onglet MUI
-import Typography from '@mui/material/Typography'; // Import de la typographie MUI
-import Box from '@mui/material/Box'; // Import de la boîte MUI
-import { Container, TextField } from '@mui/material'; // Import des composants MUI
-import LoginForm from './LoginForm'; // Import du formulaire de connexion
-import SignUpForm from './SignupForm'; // Import du formulaire d'inscription
+import * as React from "react"; // Import de React
+import PropTypes from "prop-types"; // Import des types de propriétés pour la validation
+import Tabs from "@mui/material/Tabs"; // Import des onglets MUI
+import Tab from "@mui/material/Tab"; // Import de l'onglet MUI
+import Typography from "@mui/material/Typography"; // Import de la typographie MUI
+import Box from "@mui/material/Box"; // Import de la boîte MUI
+import { Container, TextField } from "@mui/material"; // Import des composants MUI
+import LoginForm from "./LoginForm"; // Import du formulaire de connexion
+import SignUpForm from "./SignupForm/SignupForm"; // Import du formulaire d'inscription
 
 // Styles des onglets
 const classes = {
   tab: {
-    marginTop: '30px',
-    fontWeight: 'bold',
-    fontSize: '23px',
-    textTransform: 'none', // Désactiver la transformation en majuscules
-    color: '#255660',
-    fontFamily: 'Outfit',
-    opacity: '35%',
+    marginTop: "30px",
+    fontWeight: "bold",
+    fontSize: "23px",
+    textTransform: "none", // Désactiver la transformation en majuscules
+    color: "#255660",
+    fontFamily: "Outfit",
+    opacity: "35%",
 
-    '&.Mui-selected': {
-      color: '#255660', // Couleur du texte de l'onglet actif
-      opacity: '100%',
+    "&.Mui-selected": {
+      color: "#255660", // Couleur du texte de l'onglet actif
+      opacity: "100%",
     },
   },
 };
@@ -57,7 +57,7 @@ CustomTabPanel.propTypes = {
 function a11yProps(index) {
   return {
     id: `simple-tab-${index}`,
-    'aria-controls': `simple-tabpanel-${index}`,
+    "aria-controls": `simple-tabpanel-${index}`,
   };
 }
 
@@ -74,9 +74,16 @@ export default function CustomTabs({ title1, title2, children }) {
     <Container>
       <Box>
         {/* Onglets */}
-        <Tabs value={value} onChange={handleChange} aria-label="basic tabs example" centered>
-          <Tab label={title1} {...a11yProps(0)} sx={classes.tab} /> {/* Onglet 1 */}
-          <Tab label={title2} {...a11yProps(1)} sx={classes.tab} /> {/* Onglet 2 */}
+        <Tabs
+          value={value}
+          onChange={handleChange}
+          aria-label="basic tabs example"
+          centered
+        >
+          <Tab label={title1} {...a11yProps(0)} sx={classes.tab} />{" "}
+          {/* Onglet 1 */}
+          <Tab label={title2} {...a11yProps(1)} sx={classes.tab} />{" "}
+          {/* Onglet 2 */}
         </Tabs>
       </Box>
       <Box>

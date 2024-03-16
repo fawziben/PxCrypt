@@ -36,7 +36,6 @@
       filter: blur(40px); /* Ajoute un effet de flou */
       opacity: 20%;
       z-index: -1;
-
     }
   }
   

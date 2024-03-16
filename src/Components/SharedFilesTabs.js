@@ -6,7 +6,7 @@ import Typography from "@mui/material/Typography"; // Import de la typographie M
 import Box from "@mui/material/Box"; // Import de la boîte MUI
 import { Container, TextField } from "@mui/material"; // Import du conteneur et du champ de texte MUI
 import LoginForm from "./LoginForm"; // Import du formulaire de connexion
-import SignUpForm from "./SignupForm/SignupForm"; // Import du formulaire d'inscription
+import SignUpForm from "./SignupForm"; // Import du formulaire d'inscription
 
 // Styles pour les onglets
 const classes = {
@@ -67,7 +67,7 @@ function a11yProps(index) {
 }
 
 // Composant de panneaux d'onglets principaux
-export default function MainPageTabs({ title1, title2, children }) {
+export default function SharedFilesTabs({ title1, title2, children }) {
   const [value, setValue] = React.useState(0); // État local pour la valeur de l'onglet sélectionné
   let i = -1; // Initialiser un compteur pour les index de panneaux d'onglets
 
