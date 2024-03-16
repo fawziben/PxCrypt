@@ -13,6 +13,7 @@ import {
   validateEmail,
   validatePhoneNumber,
 } from "../../Validators/inputValidators";
+import { axiosInstance } from "../../AxiosInstance";
 
 const classes = {
   input: {
@@ -31,10 +32,49 @@ const classes = {
 };
 
 export default function SignUpForm() {
+  const [fname, setFname] = useState(""); // État pour stocker le mot de passe
+  const [lname, setLname] = useState(""); // État pour stocker le mot de passe
   const [phoneNumber, setPhoneNumber] = useState("");
   const [phoneNumberError, setPhoneNumberError] = useState("");
   const [email, setEmail] = useState(""); // État pour stocker l'email
   const [emailError, setEmailError] = useState(false); // État pour gérer l'erreur d'email
+  const [password, setPassword] = useState(""); // État pour stocker le mot de passe
+  const [confirmPassword, setConfirmPassword] = useState(""); // État pour stocker le mot de passe
+  const [confirmPasswordError, setConfirmPasswordError] = useState(""); // État pour stocker le mot de passe
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+
+    if (!validateEmail(email)) {
+      setEmailError(true);
+      return;
+    }
+    if (!validatePhoneNumber(phoneNumber)) {
+      setPhoneNumberError(true);
+      return;
+    }
+    if (password != confirmPassword) {
+      setConfirmPasswordError(true);
+      return;
+    }
+    try {
+      const response = await axiosInstance.post("/users/", {
+        first_name: fname,
+        last_name: lname,
+        email: email,
+        phone_number: `0${phoneNumber.toString()}`,
+        password: password,
+      });
+
+      if (response.status === 201) {
+        alert("Success");
+      } else {
+        console.log("Invalid credentials");
+      }
+    } catch (error) {
+      console.log("Error:", error);
+    }
+  };
 
   const handleCreate = (e) => {
     e.preventDefault();
@@ -53,12 +93,13 @@ export default function SignUpForm() {
 
   return (
     <Box sx={classes.root}>
-      <form onSubmit={handleCreate}>
+      <form onSubmit={handleLogin}>
         <TextField
           variant="standard"
           label="First Name"
           required
           fullWidth
+          onChange={(e) => setFname(e.target.value)}
           sx={classes.input}
         />
         <TextField
@@ -66,6 +107,7 @@ export default function SignUpForm() {
           label="Last Name"
           required
           fullWidth
+          onChange={(e) => setLname(e.target.value)}
           sx={classes.input}
         />
         <TextField
@@ -111,6 +153,7 @@ export default function SignUpForm() {
           label="Password"
           required
           fullWidth
+          onChange={(e) => setPassword(e.target.value)} // Fonction de mise à jour de l'état password
           sx={classes.input}
           InputProps={{
             endAdornment: (
@@ -131,6 +174,12 @@ export default function SignUpForm() {
           sx={classes.input}
           InputLabelProps={{}}
           color="primary"
+          error={confirmPasswordError}
+          helperText={confirmPasswordError && "Passwords does not match"} // Message d'erreur affiché en cas d'erreur d'email
+          onChange={(e) => {
+            setConfirmPassword(e.target.value);
+            setConfirmPasswordError(false); // Réinitialisation de l'erreur d'email lors de la modification de l'email
+          }}
         />
         <Box sx={{ display: "flex", justifyContent: "center" }}>
           <Button

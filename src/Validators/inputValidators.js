@@ -7,7 +7,7 @@ const validateEmail = (email) => {
 const validatePhoneNumber = (phoneNumber) => {
   const phoneRegex = /^[567][0-9]{8}$/;
 
-  phoneRegex.test(phoneNumber);
+  return phoneRegex.test(phoneNumber);
 };
 
 export { validateEmail, validatePhoneNumber };
