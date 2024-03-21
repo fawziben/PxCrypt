@@ -1,10 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import MainPageTabs from "../Components/MainPageTabs";
 import LocalFilesTable from "../Components/LocalFilesTable";
-import SignUpForm from "../Components/SignupForm/SignupForm";
-import { Fab } from "@mui/material";
-import KeyOutlinedIcon from "@mui/icons-material/KeyOutlined";
 import FoldersTable from "../Components/FoldersTable";
+import KeyFab from "../Components/KeyFab";
 
 export default function MainPage() {
   return (
@@ -16,17 +14,7 @@ export default function MainPage() {
         <LocalFilesTable />
         <FoldersTable />
       </MainPageTabs>
-      <Fab
-        sx={{
-          position: "fixed",
-          bottom: "16px", // Ajustez la position verticale en fonction de vos besoins
-          right: "16px", // Ajustez la position horizontale en fonction de vos besoins
-        }}
-        color="primary"
-        aria-label="add"
-      >
-        <KeyOutlinedIcon />
-      </Fab>
+      <KeyFab></KeyFab>
     </div>
   );
 }

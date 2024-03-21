@@ -42,7 +42,7 @@ export default function SignUpForm() {
   const [confirmPassword, setConfirmPassword] = useState(""); // État pour stocker le mot de passe
   const [confirmPasswordError, setConfirmPasswordError] = useState(""); // État pour stocker le mot de passe
 
-  const handleLogin = async (e) => {
+  const handleCreate = async (e) => {
     e.preventDefault();
 
     if (!validateEmail(email)) {
@@ -53,7 +53,7 @@ export default function SignUpForm() {
       setPhoneNumberError(true);
       return;
     }
-    if (password != confirmPassword) {
+    if (password !== confirmPassword) {
       setConfirmPasswordError(true);
       return;
     }
@@ -68,32 +68,17 @@ export default function SignUpForm() {
 
       if (response.status === 201) {
         alert("Success");
-      } else {
-        console.log("Invalid credentials");
+      } else if (response.status === 400) {
+        alert("Invalid credentials");
       }
     } catch (error) {
       console.log("Error:", error);
     }
   };
 
-  const handleCreate = (e) => {
-    e.preventDefault();
-
-    // Vérification de l'email
-
-    if (!validateEmail(email)) {
-      setEmailError(true);
-      return;
-    }
-    if (!validatePhoneNumber(phoneNumber)) {
-      setPhoneNumberError(true);
-      return;
-    }
-  };
-
   return (
     <Box sx={classes.root}>
-      <form onSubmit={handleLogin}>
+      <form onSubmit={handleCreate}>
         <TextField
           variant="standard"
           label="First Name"
