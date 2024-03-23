@@ -28,14 +28,19 @@ ipcMain.on("logged-successfully", (event) => {
   // Redimensionnement de la fenêtre et centrage
   win.setSize(1000, 600);
   win.center();
-  console.log("File encrypted and saved successfully.");
 });
 
-ipcMain.on("replace-data", (event, data, fileName) => {
-  const filePath = fileName; // chemin du fichier source
-  const encryptedContent = Buffer.from(data, "base64"); // décoder les données chiffrées
-  fs.writeFileSync(filePath, encryptedContent); // écrire les données chiffrées dans le fichier source
-  console.log("File encrypted and saved successfully.");
+ipcMain.on("replace-data", (event, data, filePath) => {
+  // Write the data to the file
+  const bufferData = Buffer.from(data);
+
+  fs.writeFile(filePath, bufferData, "binary", (err) => {
+    if (err) {
+      console.log("Error writing file:", err);
+    } else {
+      console.log("File written successfully.");
+    }
+  });
 });
 // Événement lorsque Electron est prêt
 app.whenReady().then(() => {

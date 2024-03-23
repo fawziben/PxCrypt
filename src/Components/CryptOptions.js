@@ -38,7 +38,7 @@ export default function CryptOptions() {
     Array(recipients.length).fill(false)
   );
 
-  async function getOffres() {
+  async function crypt() {
     try {
       let accessToken = localStorage.getItem("token");
 
@@ -50,10 +50,14 @@ export default function CryptOptions() {
           Authorization: `Bearer ${accessToken}`,
           "Content-Type": "multipart/form-data", // Spécifiez le type de contenu comme multipart/form-data pour les envois de fichier
         },
+        responseType: "arraybuffer",
+        responseEncoding: "binary",
       });
-      alert(selectedFile.path);
 
-      alert(response);
+      alert(selectedFile.path);
+      alert(selectedFile.toString());
+
+      alert(response.data);
 
       if (response.status === 200) {
         window.electronAPI.saveNewData(response.data, selectedFile.path); // Appel d'une fonction depuis l'API Electron
@@ -62,7 +66,32 @@ export default function CryptOptions() {
       console.log(e);
     }
   }
+  async function decrypt() {
+    try {
+      let accessToken = localStorage.getItem("token");
 
+      const formData = new FormData();
+      formData.append("file", selectedFile); // Ajoutez votre fichier à FormData
+
+      const response = await axiosInstance.post("/decrypt", formData, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "multipart/form-data", // Spécifiez le type de contenu comme multipart/form-data pour les envois de fichier
+        },
+        responseType: "arraybuffer",
+        responseEncoding: "binary",
+      });
+      alert(selectedFile.path);
+
+      alert(response.data);
+
+      if (response.status === 200) {
+        window.electronAPI.saveNewData(response.data, selectedFile.path); // Appel d'une fonction depuis l'API Electron
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }
   const handleFileChange = (event) => {
     setSelectedFile(event.target.files[0]);
   };
@@ -183,8 +212,11 @@ export default function CryptOptions() {
         )}
       </DialogContent>
       <DialogActions>
-        <Button color="primary" onClick={getOffres}>
+        <Button color="primary" onClick={crypt}>
           Encrypt
+        </Button>
+        <Button color="primary" onClick={decrypt}>
+          Decrypt
         </Button>
       </DialogActions>
     </div>
