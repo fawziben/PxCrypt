@@ -16,6 +16,7 @@
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.6.7",
     "chart.js": "^4.4.2",
+    "chokidar": "^3.6.0",
     "cross-env": "^7.0.3",
     "crypto-js": "^4.2.0",
     "electron-is-dev": "^2.0.0",
@@ -67,5 +68,10 @@
     "electron-builder": "^24.9.1",
     "tailwindcss": "^3.4.1",
     "wait-on": "^7.2.0"
+  },
+  "fileAssociations": {
+    "ext": "enc",
+    "name": "Encrypted Files",
+    "role": "Editor"
   }
 }

@@ -5,8 +5,6 @@ import Tab from "@mui/material/Tab"; // Import de l'onglet MUI
 import Typography from "@mui/material/Typography"; // Import de la typographie MUI
 import Box from "@mui/material/Box"; // Import de la boîte MUI
 import { Container, TextField } from "@mui/material"; // Import des composants MUI
-import LoginForm from "./LoginForm"; // Import du formulaire de connexion
-import SignUpForm from "./SignupForm/SignupForm"; // Import du formulaire d'inscription
 
 // Styles des onglets
 const classes = {
