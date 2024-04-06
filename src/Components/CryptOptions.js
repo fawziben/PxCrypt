@@ -54,8 +54,6 @@ export default function CryptOptions({ updateFileData }) {
         responseEncoding: "binary",
       });
 
-      alert(selectedFile.path);
-      alert(selectedFile.toString());
       const { path, size } = selectedFile;
       const file = {
         path: `${path}.pxc`,
@@ -63,45 +61,9 @@ export default function CryptOptions({ updateFileData }) {
         size: convertSize(size),
       };
 
-      alert(response.data);
-
       if (response.status === 200) {
-        window.electronAPI.saveNewData(
-          response.data,
-          selectedFile.path,
-          "encrypt"
-        ); // Appel d'une fonction depuis l'API Electron
+        window.electronAPI.saveNewData(response.data, selectedFile.path); // Appel d'une fonction depuis l'API Electron
         updateFileData(file);
-      }
-    } catch (e) {
-      console.log(e);
-    }
-  }
-  async function decrypt() {
-    try {
-      let accessToken = localStorage.getItem("token");
-
-      const formData = new FormData();
-      formData.append("file", selectedFile); // Ajoutez votre fichier à FormData
-
-      const response = await axiosInstance.post("/decrypt", formData, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          "Content-Type": "multipart/form-data", // Spécifiez le type de contenu comme multipart/form-data pour les envois de fichier
-        },
-        responseType: "arraybuffer",
-        responseEncoding: "binary",
-      });
-      alert(selectedFile.path);
-
-      alert(response.data);
-
-      if (response.status === 200) {
-        window.electronAPI.saveNewData(
-          response.data,
-          selectedFile.path,
-          "decrypt"
-        ); // Appel d'une fonction depuis l'API Electron
       }
     } catch (e) {
       console.log(e);
@@ -187,9 +149,6 @@ export default function CryptOptions({ updateFileData }) {
       <DialogActions>
         <Button color="primary" onClick={crypt}>
           Encrypt
-        </Button>
-        <Button color="primary" onClick={decrypt}>
-          Decrypt
         </Button>
       </DialogActions>
     </div>

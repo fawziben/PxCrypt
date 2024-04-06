@@ -113,19 +113,15 @@ ipcMain.on("logged-successfully", (event) => {
   win.center();
 });
 
-ipcMain.on("replace-data", (event, data, filePath, operation) => {
-  // Ajouter l'extension ".pxc" au nom du fichier
-  const newFilePath =
-    operation == "encrypt" ? `${filePath}.pxc` : filePath.replace(/\.pxc$/, "");
+ipcMain.on("replace-data", (event, data, filePath) => {
+  const newFilePath = `${filePath}.pxc`;
 
-  // Renommer le fichier avec l'extension ".pxc"
   fs.rename(filePath, newFilePath, (err) => {
     if (err) {
       console.log("Error renaming file:", err);
       return;
     }
 
-    // Write the data to the renamed file
     const bufferData = Buffer.from(data);
     fs.writeFile(newFilePath, bufferData, "binary", (writeErr) => {
       if (writeErr) {
@@ -150,8 +146,6 @@ ipcMain.handle("decrypt-data", async (event, filePath, accessToken) => {
       responseType: "arraybuffer",
       responseEncoding: "binary",
     });
-    // Retourner la réponse de l'API
-    console.log(response.data);
     const newFilePath = filePath.replace(/\.pxc$/, "");
     fs.rename(filePath, newFilePath, (err) => {
       if (err) {

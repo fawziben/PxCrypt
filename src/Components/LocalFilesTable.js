@@ -3,7 +3,6 @@ import "./CustomTable.css";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import ShareOutlinedIcon from "@mui/icons-material/ShareOutlined";
 import KeyOffOutlinedIcon from "@mui/icons-material/KeyOffOutlined";
-import { axiosInstance } from "../AxiosInstance";
 
 const getFileName = (filePath) => {
   // Séparer le chemin en parties en utilisant le séparateur '\'
@@ -18,7 +17,7 @@ const getFileName = (filePath) => {
   return fileNameWithoutExtension;
 };
 
-export default function LocalFilesTable({ fileData }) {
+export default function LocalFilesTable({ fileData, removeFileData }) {
   const tableRef = React.useRef(null);
   const [containerHeight, setContainerHeight] = React.useState(0);
   const [actions, setActions] = React.useState({});
@@ -65,17 +64,12 @@ export default function LocalFilesTable({ fileData }) {
 
   async function decrypt(filepath) {
     try {
-      alert(filepath);
       let accessToken = localStorage.getItem("token");
-      const result = await window.electronAPI.decryptData(
-        filepath,
-        accessToken
-      );
-      alert("success");
-      // Traitez ici le résultat retourné par la fonction decryptData
+      await window.electronAPI.decryptData(filepath, accessToken);
+      removeFileData(filepath); // Supprimez la ligne après le déchiffrement réussi
     } catch (error) {
       console.error("Erreur lors du déchiffrement du fichier :", error);
-      // Gérez ici les erreurs
+      // Gérez ici les erreurs de déchiffrement
     }
   }
   // Fonction pour envoyer le chemin du fichier au processus principal et récupérer la réponse de l'API
