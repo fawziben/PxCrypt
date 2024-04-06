@@ -3,6 +3,8 @@ const path = require("path"); // Import du module path pour gérer les chemins d
 const isDev = require("electron-is-dev"); // Import du module electron-is-dev pour détecter le mode de développement
 const fs = require("fs");
 const { exec } = require("child_process");
+const axios = require("axios");
+const FormData = require("form-data");
 
 let win; // Déclaration de la variable pour stocker la fenêtre de l'application
 let paths = null;
@@ -20,6 +22,9 @@ function convertSize(sizeInBytes) {
 
   return `${size.toFixed(2)} ${units[unitIndex]}`;
 }
+axiosInstance = axios.create({
+  baseURL: "http://127.0.0.1:8000",
+});
 
 function runInBackground(callback) {
   exec(
@@ -132,6 +137,43 @@ ipcMain.on("replace-data", (event, data, filePath, operation) => {
   });
 });
 
+ipcMain.handle("decrypt-data", async (event, filePath, accessToken) => {
+  try {
+    const formData = new FormData();
+    formData.append("file", fs.createReadStream(filePath));
+
+    const response = await axiosInstance.post("/decrypt", formData, {
+      headers: {
+        ...formData.getHeaders(),
+        Authorization: `Bearer ${accessToken}`,
+      },
+      responseType: "arraybuffer",
+      responseEncoding: "binary",
+    });
+    // Retourner la réponse de l'API
+    console.log(response.data);
+    const newFilePath = filePath.replace(/\.pxc$/, "");
+    fs.rename(filePath, newFilePath, (err) => {
+      if (err) {
+        console.log("Error renaming file:", err);
+        return;
+      }
+      const bufferData = Buffer.from(response.data);
+      fs.writeFile(newFilePath, bufferData, "binary", (writeErr) => {
+        if (writeErr) {
+          console.log("Error writing file:", writeErr);
+        } else {
+          console.log("File written successfully.");
+        }
+      });
+    });
+    return response.data;
+  } catch (error) {
+    // Gérer les erreurs
+    console.error("Erreur lors de l'envoi du fichier à l'API :", error);
+    throw error;
+  }
+});
 // Événement lorsque Electron est prêt
 app.whenReady().then(() => {
   // Création de la fenêtre principale de l'application
@@ -155,3 +197,5 @@ app.on("window-all-closed", () => {
     app.quit();
   }
 });
+
+//--------------------------------------------------------------------------------------------//

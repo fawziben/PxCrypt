@@ -3,6 +3,7 @@ import "./CustomTable.css";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import ShareOutlinedIcon from "@mui/icons-material/ShareOutlined";
 import KeyOffOutlinedIcon from "@mui/icons-material/KeyOffOutlined";
+import { axiosInstance } from "../AxiosInstance";
 
 const getFileName = (filePath) => {
   // Séparer le chemin en parties en utilisant le séparateur '\'
@@ -17,15 +18,7 @@ const getFileName = (filePath) => {
   return fileNameWithoutExtension;
 };
 
-export default function LocalFilesTable() {
-  const [fileData, setFileData] = React.useState([]);
-  React.useEffect(() => {
-    /* These are the names that you into the preload file */
-    window.electronAPI.filePaths().then((result) => {
-      setFileData(result);
-    });
-  }, []);
-
+export default function LocalFilesTable({ fileData }) {
   const tableRef = React.useRef(null);
   const [containerHeight, setContainerHeight] = React.useState(0);
   const [actions, setActions] = React.useState({});
@@ -69,6 +62,23 @@ export default function LocalFilesTable() {
     toggleActions(index);
     setSelectedRow(index);
   };
+
+  async function decrypt(filepath) {
+    try {
+      alert(filepath);
+      let accessToken = localStorage.getItem("token");
+      const result = await window.electronAPI.decryptData(
+        filepath,
+        accessToken
+      );
+      alert("success");
+      // Traitez ici le résultat retourné par la fonction decryptData
+    } catch (error) {
+      console.error("Erreur lors du déchiffrement du fichier :", error);
+      // Gérez ici les erreurs
+    }
+  }
+  // Fonction pour envoyer le chemin du fichier au processus principal et récupérer la réponse de l'API
 
   return (
     <div
@@ -121,7 +131,9 @@ export default function LocalFilesTable() {
                           <ShareOutlinedIcon />
                         </div>
                         <div style={{ flex: 1 }} align="center">
-                          <KeyOffOutlinedIcon />
+                          <KeyOffOutlinedIcon
+                            onClick={() => decrypt(row.path)}
+                          />
                         </div>
                       </div>
                     </td>

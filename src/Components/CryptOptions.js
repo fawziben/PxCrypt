@@ -14,10 +14,10 @@ import {
   ListItem,
   ListItemText,
 } from "@mui/material";
-import { AES, enc } from "crypto-js";
 import { axiosInstance } from "../AxiosInstance";
+import { convertSize } from "../utilities/utilisties";
 
-export default function CryptOptions() {
+export default function CryptOptions({ updateFileData }) {
   const [selectedFile, setSelectedFile] = useState(null);
   const [algorithm, setAlgorithm] = useState("");
   const [shareEnabled, setShareEnabled] = useState(false);
@@ -56,6 +56,12 @@ export default function CryptOptions() {
 
       alert(selectedFile.path);
       alert(selectedFile.toString());
+      const { path, size } = selectedFile;
+      const file = {
+        path: `${path}.pxc`,
+        accessDate: "March 28, 2024",
+        size: convertSize(size),
+      };
 
       alert(response.data);
 
@@ -65,6 +71,7 @@ export default function CryptOptions() {
           selectedFile.path,
           "encrypt"
         ); // Appel d'une fonction depuis l'API Electron
+        updateFileData(file);
       }
     } catch (e) {
       console.log(e);
