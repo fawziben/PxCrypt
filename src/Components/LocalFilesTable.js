@@ -3,6 +3,7 @@ import "./CustomTable.css";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import ShareOutlinedIcon from "@mui/icons-material/ShareOutlined";
 import KeyOffOutlinedIcon from "@mui/icons-material/KeyOffOutlined";
+import ShareDialog from "./ShareDialog";
 
 const getFileName = (filePath) => {
   // Séparer le chemin en parties en utilisant le séparateur '\'
@@ -118,13 +119,25 @@ export default function LocalFilesTable({ fileData, removeFileData }) {
                   <tr className="h-14 row-b-bottom slide-down actions-row">
                     <td colSpan="5">
                       <div style={{ display: "flex" }}>
-                        <div style={{ flex: 1 }} align="center">
+                        <div
+                          style={{ flex: 1 }}
+                          align="center"
+                          className="cursor-pointer hover:text-blue-500"
+                        >
                           <DeleteOutlineOutlinedIcon />
                         </div>
-                        <div style={{ flex: 1 }} align="center">
-                          <ShareOutlinedIcon />
+                        <div
+                          style={{ flex: 1 }}
+                          align="center"
+                          className="cursor-pointer hover:text-blue-500"
+                        >
+                          <ShareDialog />
                         </div>
-                        <div style={{ flex: 1 }} align="center">
+                        <div
+                          style={{ flex: 1 }}
+                          align="center"
+                          className="cursor-pointer hover:text-blue-500"
+                        >
                           <KeyOffOutlinedIcon
                             onClick={() => decrypt(row.path)}
                           />

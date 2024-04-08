@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import {
-  TextField,
   FormControl,
   InputLabel,
   Select,
@@ -10,33 +9,15 @@ import {
   Button,
   Switch,
   FormControlLabel,
-  List,
-  ListItem,
-  ListItemText,
 } from "@mui/material";
 import { axiosInstance } from "../AxiosInstance";
 import { convertSize } from "../utilities/utilisties";
+import UsersList from "./UsersList";
 
 export default function CryptOptions({ updateFileData }) {
   const [selectedFile, setSelectedFile] = useState(null);
   const [algorithm, setAlgorithm] = useState("");
   const [shareEnabled, setShareEnabled] = useState(false);
-  const [recipients, setRecipients] = useState([
-    "Recipient 1",
-    "Recipient 2",
-    "Recipient 3",
-    "Recipient 4",
-    "Recipient 5",
-    "Recipient 6",
-    "Recipient 7",
-    "Recipient 8",
-    "Recipient 9",
-    "Recipient 10",
-  ]);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [recipientStates, setRecipientStates] = useState(
-    Array(recipients.length).fill(false)
-  );
 
   async function crypt() {
     try {
@@ -81,27 +62,6 @@ export default function CryptOptions({ updateFileData }) {
     setShareEnabled(!shareEnabled);
   };
 
-  const handleRecipientToggle = (index) => {
-    // Toggle the recipient's selection
-    setRecipientStates((prevState) => {
-      const newStates = [...prevState];
-      newStates[index] = !newStates[index];
-      return newStates;
-    });
-  };
-
-  const handleShare = () => {
-    // Handle sharing logic here
-    const selectedRecipients = recipients.filter(
-      (_, index) => recipientStates[index]
-    );
-    console.log("Shared with recipients:", selectedRecipients);
-  };
-
-  const filteredRecipients = recipients.filter((recipient) =>
-    recipient.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
   return (
     <div>
       <DialogContent>
@@ -123,28 +83,7 @@ export default function CryptOptions({ updateFileData }) {
           label="Share"
         />
         <br></br>
-        {shareEnabled && (
-          <div>
-            <TextField
-              label="Search Recipients"
-              fullWidth
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              sx={{ marginBottom: 2 }}
-            />
-            <List sx={{ maxHeight: 150, overflow: "auto" }}>
-              {filteredRecipients.map((recipient, index) => (
-                <ListItem key={recipient}>
-                  <ListItemText primary={recipient} />
-                  <Switch
-                    checked={recipientStates[index]}
-                    onChange={() => handleRecipientToggle(index)}
-                  />
-                </ListItem>
-              ))}
-            </List>
-          </div>
-        )}
+        {shareEnabled && <UsersList />}
       </DialogContent>
       <DialogActions>
         <Button color="primary" onClick={crypt}>
