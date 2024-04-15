@@ -4,31 +4,19 @@ import { axiosInstance } from "../AxiosInstance";
 
 const UsersList = () => {
   const [recipients, setRecipients] = useState([]);
-
-  const [recipientStates, setRecipientStates] = useState(
-    Array(recipients.length).fill(false)
-  );
   const [searchTerm, setSearchTerm] = useState("");
 
   const handleRecipientToggle = (index) => {
     // Toggle the recipient's selection
-    setRecipientStates((prevState) => {
+    setRecipients((prevState) => {
       const newStates = [...prevState];
-      newStates[index] = !newStates[index];
+      newStates[index].state = !newStates[index].state;
       return newStates;
     });
   };
 
-  const handleShare = () => {
-    // Handle sharing logic here
-    const selectedRecipients = recipients.filter(
-      (_, index) => recipientStates[index]
-    );
-    console.log("Shared with recipients:", selectedRecipients);
-  };
-
   const filteredRecipients = recipients.filter((recipient) =>
-    recipient.toLowerCase().includes(searchTerm.toLowerCase())
+    recipient.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   React.useEffect(() => {
@@ -51,7 +39,11 @@ const UsersList = () => {
 
         // Concaténer les first_name et last_name de chaque utilisateur
         const newRecipients = usersData.map((user) => {
-          return `${user.first_name} ${user.last_name}`;
+          return {
+            id: user.id,
+            name: `${user.first_name} ${user.last_name}`,
+            state: false,
+          };
         });
 
         // Mettre à jour la liste des destinataires
@@ -74,9 +66,9 @@ const UsersList = () => {
       <List sx={{ maxHeight: 150, overflow: "auto" }}>
         {filteredRecipients.map((recipient, index) => (
           <ListItem key={recipient}>
-            <ListItemText primary={recipient} />
+            <ListItemText primary={recipient.name} />
             <Switch
-              checked={recipientStates[index]}
+              checked={recipient.state}
               onChange={() => handleRecipientToggle(index)}
             />
           </ListItem>

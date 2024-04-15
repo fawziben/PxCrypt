@@ -1,26 +1,72 @@
-import * as React from 'react';
-import './CustomTable.css'
-import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
-import ShareOutlinedIcon from '@mui/icons-material/ShareOutlined';
-import KeyOffOutlinedIcon from '@mui/icons-material/KeyOffOutlined';
-
-const classes = {
-
-}
+import * as React from "react";
+import "./CustomTable.css";
+import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
+import ShareOutlinedIcon from "@mui/icons-material/ShareOutlined";
+import KeyOffOutlinedIcon from "@mui/icons-material/KeyOffOutlined";
+import { DownloadingOutlined } from "@mui/icons-material";
+import ShareDialog from "./ShareDialog";
 
 function createData(folder, size, accessDate, path, algo) {
   return { folder, size, accessDate, path, algo };
 }
 
 const rows = [
-  createData('Videos', '33.2 KB', 'February 4th 2024', 'C:\\Users\\hp\\Desktop\\react_electron', 'AES_256'),
-  createData('Videos', '33.2 KB', 'February 4th 2024', 'C:\\Users\\hp\\Desktop\\react_electron', 'AES_256'),
-  createData('Videos', '33.2 KB', 'February 4th 2024', 'C:\\Users\\hp\\Desktop\\react_electron', 'AES_256'),
-  createData('Videos', '33.2 KB', 'February 4th 2024', 'C:\\Users\\hp\\Desktop\\react_electron', 'AES_256'),
-  createData('Videos', '33.2 KB', 'February 4th 2024', 'C:\\Users\\hp\\Desktop\\react_electron', 'AES_256'),
-  createData('Videos', '33.2 KB', 'February 4th 2024', 'C:\\Users\\hp\\Desktop\\react_electron', 'AES_256'),
-  createData('Videos', '33.2 KB', 'February 4th 2024', 'C:\\Users\\hp\\Desktop\\react_electron', 'AES_256'),
-  createData('Videos', '33.2 KB', 'February 4th 2024', 'C:\\Users\\hp\\Desktop\\react_electron', 'AES_256'),
+  createData(
+    "Videos",
+    "33.2 KB",
+    "February 4th 2024",
+    "C:\\Users\\hp\\Desktop\\react_electron",
+    "AES_256"
+  ),
+  createData(
+    "Videos",
+    "33.2 KB",
+    "February 4th 2024",
+    "C:\\Users\\hp\\Desktop\\react_electron",
+    "AES_256"
+  ),
+  createData(
+    "Videos",
+    "33.2 KB",
+    "February 4th 2024",
+    "C:\\Users\\hp\\Desktop\\react_electron",
+    "AES_256"
+  ),
+  createData(
+    "Videos",
+    "33.2 KB",
+    "February 4th 2024",
+    "C:\\Users\\hp\\Desktop\\react_electron",
+    "AES_256"
+  ),
+  createData(
+    "Videos",
+    "33.2 KB",
+    "February 4th 2024",
+    "C:\\Users\\hp\\Desktop\\react_electron",
+    "AES_256"
+  ),
+  createData(
+    "Videos",
+    "33.2 KB",
+    "February 4th 2024",
+    "C:\\Users\\hp\\Desktop\\react_electron",
+    "AES_256"
+  ),
+  createData(
+    "Videos",
+    "33.2 KB",
+    "February 4th 2024",
+    "C:\\Users\\hp\\Desktop\\react_electron",
+    "AES_256"
+  ),
+  createData(
+    "Videos",
+    "33.2 KB",
+    "February 4th 2024",
+    "C:\\Users\\hp\\Desktop\\react_electron",
+    "AES_256"
+  ),
   // Ajoutez d'autres données ici...
 ];
 
@@ -35,7 +81,7 @@ export default function FoldersTable() {
     if (tableRef.current) {
       const windowHeight = window.innerHeight;
       const containerTop = tableRef.current.getBoundingClientRect().top;
-      const containerHeight = windowHeight - containerTop ; // 20 est une marge fixe pour la barre de défilement
+      const containerHeight = windowHeight - containerTop; // 20 est une marge fixe pour la barre de défilement
       setContainerHeight(containerHeight);
     }
   };
@@ -43,25 +89,25 @@ export default function FoldersTable() {
   // Mettre à jour la hauteur du conteneur lorsque le composant est monté ou lorsque la fenêtre est redimensionnée
   React.useEffect(() => {
     updateContainerHeight();
-    window.addEventListener('resize', updateContainerHeight);
+    window.addEventListener("resize", updateContainerHeight);
     return () => {
-      window.removeEventListener('resize', updateContainerHeight);
+      window.removeEventListener("resize", updateContainerHeight);
     };
   }, []);
 
   const toggleActions = (index) => {
-    setActions(prevState => ({
+    setActions((prevState) => ({
       ...prevState,
-      [index]: !prevState[index]
+      [index]: !prevState[index],
     }));
   };
 
   const handleRowClick = (index) => {
     // Ferme la ligne précédemment ouverte
     if (selectedRow !== null && selectedRow !== index) {
-      setActions(prevState => ({
+      setActions((prevState) => ({
         ...prevState,
-        [selectedRow]: false
+        [selectedRow]: false,
       }));
     }
     // Ouvre la ligne sélectionnée
@@ -70,37 +116,61 @@ export default function FoldersTable() {
   };
 
   return (
-    <div className="w-full h-full overflow-y-auto" style={{ maxHeight: '100%', }}>
-      <div ref={tableRef} style={{ maxHeight: `${containerHeight}px`, overflowY: 'auto',}}>
+    <div
+      className="w-full h-full overflow-y-auto"
+      style={{ maxHeight: "100%" }}
+    >
+      <div
+        ref={tableRef}
+        style={{ maxHeight: `${containerHeight}px`, overflowY: "auto" }}
+      >
         <table className="w-full">
           <thead className="text-white h-14">
-            <tr className="sticky top-0" style={{ backgroundColor: '#25525D' }}>
-              <th className="px-4">Folder</th>
+            <tr className="sticky top-0" style={{ backgroundColor: "#25525D" }}>
+              <th className="px-4">File</th>
               <th className="px-4">Size</th>
-              <th className="px-4">Access Date</th>
-              <th className="px-4">Path</th>
+              <th className="px-4">Upload Date</th>
               <th className="px-4">Algorithm</th>
             </tr>
           </thead>
           <tbody>
             {rows.map((row, index) => (
               <React.Fragment key={index}>
-                <tr className="bg-white h-14 row-b-bottom" onClick={() => handleRowClick(index)}>
-                  <td align='center'>{row.folder}</td>
-                  <td className="px-4" align="center">{row.size}</td>
-                  <td className="px-4" align="center">{row.accessDate}</td>
-                  <td className="px-4" align="center">{row.path}</td>
-                  <td className="px-4" align="center">{row.algo}</td>
+                <tr
+                  className="bg-white h-14 row-b-bottom"
+                  onClick={() => handleRowClick(index)}
+                >
+                  <td align="center">{row.folder}</td>
+                  <td className="px-4" align="center">
+                    {row.size}
+                  </td>
+                  <td className="px-4" align="center">
+                    {row.accessDate}
+                  </td>
+                  <td className="px-4" align="center">
+                    {row.algo}
+                  </td>
                 </tr>
                 {actions[index] && (
-                <tr className="h-14 row-b-bottom slide-down actions-row">
-                <td colSpan="5">
-                  <div style={{display : 'flex',}}>
-                    <div style={{flex : 1}} align ="center"><DeleteOutlineOutlinedIcon /></div>
-                    <div style={{flex : 1}} align ="center"><KeyOffOutlinedIcon /></div>
-                  </div>
-                </td>
-              </tr>
+                  <tr className="h-14 row-b-bottom slide-down actions-row">
+                    <td colSpan="5">
+                      <div style={{ display: "flex" }}>
+                        <div style={{ flex: 1 }} align="center">
+                          <DeleteOutlineOutlinedIcon />
+                        </div>
+                        <div style={{ flex: 1 }} align="center">
+                          <DownloadingOutlined />
+                        </div>
+                        <div
+                          style={{ flex: 1 }}
+                          align="center"
+                          className="cursor-pointer hover:text-blue-500"
+                        >
+                          <ShareDialog />
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
                 )}
               </React.Fragment>
             ))}

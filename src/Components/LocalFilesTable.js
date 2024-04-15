@@ -1,9 +1,9 @@
 import * as React from "react";
 import "./CustomTable.css";
-import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
-import ShareOutlinedIcon from "@mui/icons-material/ShareOutlined";
-import KeyOffOutlinedIcon from "@mui/icons-material/KeyOffOutlined";
 import ShareDialog from "./ShareDialog";
+import UploadButton from "./UploadButton";
+import DecryptIcon from "./DecryptButton";
+import DecryptButton from "./DecryptButton";
 
 const getFileName = (filePath) => {
   // Séparer le chemin en parties en utilisant le séparateur '\'
@@ -62,17 +62,6 @@ export default function LocalFilesTable({ fileData, removeFileData }) {
     toggleActions(index);
     setSelectedRow(index);
   };
-
-  async function decrypt(filepath) {
-    try {
-      let accessToken = localStorage.getItem("token");
-      await window.electronAPI.decryptData(filepath, accessToken);
-      removeFileData(filepath); // Supprimez la ligne après le déchiffrement réussi
-    } catch (error) {
-      console.error("Erreur lors du déchiffrement du fichier :", error);
-      // Gérez ici les erreurs de déchiffrement
-    }
-  }
   // Fonction pour envoyer le chemin du fichier au processus principal et récupérer la réponse de l'API
 
   return (
@@ -124,7 +113,7 @@ export default function LocalFilesTable({ fileData, removeFileData }) {
                           align="center"
                           className="cursor-pointer hover:text-blue-500"
                         >
-                          <DeleteOutlineOutlinedIcon />
+                          <UploadButton file_path={row.path} />
                         </div>
                         <div
                           style={{ flex: 1 }}
@@ -138,9 +127,10 @@ export default function LocalFilesTable({ fileData, removeFileData }) {
                           align="center"
                           className="cursor-pointer hover:text-blue-500"
                         >
-                          <KeyOffOutlinedIcon
-                            onClick={() => decrypt(row.path)}
-                          />
+                          <DecryptButton
+                            file_path={row.path}
+                            removeFileData={removeFileData}
+                          ></DecryptButton>
                         </div>
                       </div>
                     </td>

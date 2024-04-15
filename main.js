@@ -168,6 +168,32 @@ ipcMain.handle("decrypt-data", async (event, filePath, accessToken) => {
     throw error;
   }
 });
+
+ipcMain.handle(
+  "upload-data",
+  async (event, filePath, algorithm, accessToken) => {
+    try {
+      const formData = new FormData();
+      console.log(filePath);
+
+      formData.append("file", fs.createReadStream(filePath));
+
+      const response = await axiosInstance.post("/files/upload", formData, {
+        headers: {
+          ...formData.getHeaders(),
+          Authorization: `Bearer ${accessToken}`,
+        },
+        responseType: "arraybuffer",
+        responseEncoding: "binary",
+      });
+      return response.data;
+    } catch (error) {
+      // Gérer les erreurs
+      console.error("Erreur lors de l'envoi du fichier à l'API :", error);
+      throw error;
+    }
+  }
+);
 // Événement lorsque Electron est prêt
 app.whenReady().then(() => {
   // Création de la fenêtre principale de l'application

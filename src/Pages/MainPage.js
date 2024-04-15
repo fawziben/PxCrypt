@@ -59,7 +59,7 @@ export default function MainPage() {
       style={{ marginTop: "100px", padding: 0, width: "100%" }}
       className="overflow-y-hidden"
     >
-      <MainPageTabs title1="Files" title2="Folders">
+      <MainPageTabs title1="Local" title2="Uploaded">
         <LocalFilesTable fileData={fileData} removeFileData={removeFileData} />
         <FoldersTable />
       </MainPageTabs>
