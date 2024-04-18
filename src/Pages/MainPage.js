@@ -6,7 +6,6 @@ import KeyFab from "../Components/KeyFab";
 
 export default function MainPage() {
   const [fileData, setFileData] = useState([]);
-
   useEffect(() => {
     // Vérifiez si les données sont déjà stockées dans le localStorage
     const storedData = sessionStorage.getItem("fileData");

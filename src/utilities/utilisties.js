@@ -11,4 +11,12 @@ const convertSize = (sizeInBytes) => {
   return `${size.toFixed(2)} ${units[unitIndex]}`;
 };
 
-export { convertSize };
+const formatDate = (date) => {
+  const formattedDate = new Date(date).toLocaleDateString("en-US", {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  });
+  return formattedDate;
+};
+export { convertSize, formatDate };

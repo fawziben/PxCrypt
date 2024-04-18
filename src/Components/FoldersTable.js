@@ -1,82 +1,37 @@
 import * as React from "react";
 import "./CustomTable.css";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
-import ShareOutlinedIcon from "@mui/icons-material/ShareOutlined";
-import KeyOffOutlinedIcon from "@mui/icons-material/KeyOffOutlined";
 import { DownloadingOutlined } from "@mui/icons-material";
 import ShareDialog from "./ShareDialog";
-
-function createData(folder, size, accessDate, path, algo) {
-  return { folder, size, accessDate, path, algo };
-}
-
-const rows = [
-  createData(
-    "Videos",
-    "33.2 KB",
-    "February 4th 2024",
-    "C:\\Users\\hp\\Desktop\\react_electron",
-    "AES_256"
-  ),
-  createData(
-    "Videos",
-    "33.2 KB",
-    "February 4th 2024",
-    "C:\\Users\\hp\\Desktop\\react_electron",
-    "AES_256"
-  ),
-  createData(
-    "Videos",
-    "33.2 KB",
-    "February 4th 2024",
-    "C:\\Users\\hp\\Desktop\\react_electron",
-    "AES_256"
-  ),
-  createData(
-    "Videos",
-    "33.2 KB",
-    "February 4th 2024",
-    "C:\\Users\\hp\\Desktop\\react_electron",
-    "AES_256"
-  ),
-  createData(
-    "Videos",
-    "33.2 KB",
-    "February 4th 2024",
-    "C:\\Users\\hp\\Desktop\\react_electron",
-    "AES_256"
-  ),
-  createData(
-    "Videos",
-    "33.2 KB",
-    "February 4th 2024",
-    "C:\\Users\\hp\\Desktop\\react_electron",
-    "AES_256"
-  ),
-  createData(
-    "Videos",
-    "33.2 KB",
-    "February 4th 2024",
-    "C:\\Users\\hp\\Desktop\\react_electron",
-    "AES_256"
-  ),
-  createData(
-    "Videos",
-    "33.2 KB",
-    "February 4th 2024",
-    "C:\\Users\\hp\\Desktop\\react_electron",
-    "AES_256"
-  ),
-  // Ajoutez d'autres données ici...
-];
+import { axiosInstance } from "../AxiosInstance";
+import { formatDate } from "../utilities/utilisties";
 
 export default function FoldersTable() {
   const tableRef = React.useRef(null);
   const [containerHeight, setContainerHeight] = React.useState(0);
   const [actions, setActions] = React.useState({});
   const [selectedRow, setSelectedRow] = React.useState(null);
+  const [uploadedData, setUploadedData] = React.useState([]);
 
-  // Fonction pour recalculer la hauteur du conteneur
+  async function getUFiles() {
+    try {
+      let accessToken = localStorage.getItem("token");
+
+      const response = await axiosInstance.get("/files/uploaded", {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+
+      // Vérifiez si la réponse est valide et contient des données
+      if (response && response.data && response.data.length > 0) {
+        const uploadedFiles = response.data;
+        setUploadedData(uploadedFiles);
+      }
+    } catch (e) {
+      alert(e);
+    }
+  }
   const updateContainerHeight = () => {
     if (tableRef.current) {
       const windowHeight = window.innerHeight;
@@ -88,6 +43,7 @@ export default function FoldersTable() {
 
   // Mettre à jour la hauteur du conteneur lorsque le composant est monté ou lorsque la fenêtre est redimensionnée
   React.useEffect(() => {
+    getUFiles();
     updateContainerHeight();
     window.addEventListener("resize", updateContainerHeight);
     return () => {
@@ -134,21 +90,21 @@ export default function FoldersTable() {
             </tr>
           </thead>
           <tbody>
-            {rows.map((row, index) => (
+            {uploadedData.map((row, index) => (
               <React.Fragment key={index}>
                 <tr
                   className="bg-white h-14 row-b-bottom"
                   onClick={() => handleRowClick(index)}
                 >
-                  <td align="center">{row.folder}</td>
+                  <td align="center">{row.name}</td>
                   <td className="px-4" align="center">
                     {row.size}
                   </td>
                   <td className="px-4" align="center">
-                    {row.accessDate}
+                    {formatDate(row.upload_at)}
                   </td>
                   <td className="px-4" align="center">
-                    {row.algo}
+                    {row.algorithm}
                   </td>
                 </tr>
                 {actions[index] && (
