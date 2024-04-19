@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import MainPageTabs from "../Components/MainPageTabs";
 import LocalFilesTable from "../Components/LocalFilesTable";
-import FoldersTable from "../Components/FoldersTable";
+import UploadeFilesTable from "../Components/UploadedFilesTable";
 import KeyFab from "../Components/KeyFab";
 
 export default function MainPage() {
@@ -60,7 +60,7 @@ export default function MainPage() {
     >
       <MainPageTabs title1="Local" title2="Uploaded">
         <LocalFilesTable fileData={fileData} removeFileData={removeFileData} />
-        <FoldersTable />
+        <UploadeFilesTable />
       </MainPageTabs>
       <KeyFab updateFileData={updateFileData}></KeyFab>
     </div>

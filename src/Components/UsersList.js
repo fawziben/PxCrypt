@@ -1,9 +1,15 @@
 import React, { useState } from "react";
-import { TextField, Switch, List, ListItem, ListItemText } from "@mui/material";
+import {
+  TextField,
+  Switch,
+  List,
+  ListItem,
+  ListItemText,
+  Avatar,
+} from "@mui/material";
 import { axiosInstance } from "../AxiosInstance";
 
-const UsersList = () => {
-  const [recipients, setRecipients] = useState([]);
+const UsersList = ({ recipients, setRecipients }) => {
   const [searchTerm, setSearchTerm] = useState("");
 
   const handleRecipientToggle = (index) => {
@@ -66,6 +72,15 @@ const UsersList = () => {
       <List sx={{ maxHeight: 150, overflow: "auto" }}>
         {filteredRecipients.map((recipient, index) => (
           <ListItem key={recipient}>
+            <Avatar
+              sx={{
+                color: "#2353aa",
+                backgroundColor: "cyan",
+                marginRight: "20px",
+              }}
+            >
+              BF
+            </Avatar>
             <ListItemText primary={recipient.name} />
             <Switch
               checked={recipient.state}

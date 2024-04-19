@@ -5,8 +5,9 @@ import { DownloadingOutlined } from "@mui/icons-material";
 import ShareDialog from "./ShareDialog";
 import { axiosInstance } from "../AxiosInstance";
 import { formatDate } from "../utilities/utilisties";
+import PDFViewer from "./PDFViewer";
 
-export default function FoldersTable() {
+export default function UploadeFilesTable() {
   const tableRef = React.useRef(null);
   const [containerHeight, setContainerHeight] = React.useState(0);
   const [actions, setActions] = React.useState({});
@@ -122,7 +123,7 @@ export default function FoldersTable() {
                           align="center"
                           className="cursor-pointer hover:text-blue-500"
                         >
-                          <ShareDialog />
+                          <ShareDialog file_id={row.id} />
                         </div>
                       </div>
                     </td>
