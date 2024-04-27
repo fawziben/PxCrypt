@@ -6,6 +6,7 @@ import ShareDialog from "./ShareDialog";
 import { axiosInstance } from "../AxiosInstance";
 import { formatDate } from "../utilities/utilisties";
 import PDFViewer from "./PDFViewer";
+import DeleteButton from "./DeleteButton";
 
 export default function UploadeFilesTable() {
   const tableRef = React.useRef(null);
@@ -40,6 +41,15 @@ export default function UploadeFilesTable() {
       const containerHeight = windowHeight - containerTop; // 20 est une marge fixe pour la barre de défilement
       setContainerHeight(containerHeight);
     }
+  };
+
+  const handleDelete = (id) => {
+    // Filtrer les éléments pour exclure celui avec l'ID spécifié
+    const updatedData = uploadedData.filter((item) => item.id !== id);
+
+    // Mettre à jour uploadedData avec la nouvelle liste filtrée
+    setUploadedData(updatedData);
+    alert(uploadedData);
   };
 
   // Mettre à jour la hauteur du conteneur lorsque le composant est monté ou lorsque la fenêtre est redimensionnée
@@ -94,7 +104,7 @@ export default function UploadeFilesTable() {
             {uploadedData.map((row, index) => (
               <React.Fragment key={index}>
                 <tr
-                  className="bg-white h-14 row-b-bottom"
+                  className="bg-white h-14 row-b-bottom cursor_pointer"
                   onClick={() => handleRowClick(index)}
                 >
                   <td align="center">{row.name}</td>
@@ -112,10 +122,23 @@ export default function UploadeFilesTable() {
                   <tr className="h-14 row-b-bottom slide-down actions-row">
                     <td colSpan="5">
                       <div style={{ display: "flex" }}>
-                        <div style={{ flex: 1 }} align="center">
-                          <DeleteOutlineOutlinedIcon />
+                        <div
+                          style={{ flex: 1 }}
+                          align="center"
+                          className="cursor-pointer hover:text-blue-500"
+                        >
+                          {" "}
+                          <DeleteButton
+                            file_id={row.id}
+                            handleDelete={handleDelete}
+                          />
                         </div>
-                        <div style={{ flex: 1 }} align="center">
+                        <div
+                          style={{ flex: 1 }}
+                          align="center"
+                          className="cursor-pointer hover:text-blue-500"
+                        >
+                          {" "}
                           <DownloadingOutlined />
                         </div>
                         <div

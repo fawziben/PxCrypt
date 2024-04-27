@@ -1,37 +1,38 @@
-import * as React from 'react';
-import './CustomTable.css'
-import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
-import { Download } from '@mui/icons-material';
-import { IconButton } from '@mui/material';
-function createData(file, size, date, owner) {
-  return { file, size, date, owner};
-}
+import * as React from "react";
+import "./CustomTable.css";
+import ShareDialog from "./ShareDialog";
+import UploadButton from "./UploadButton";
+import DecryptIcon from "./DecryptButton";
+import DecryptButton from "./DecryptButton";
 
-const rows = [
-  createData('TextFile1.docx', '33.2 KB', 'February 4th 2024', 'if_benmoumen@esi.dz'),
-  createData('TextFile1.docx', '33.2 KB', 'February 4th 2024', 'if_benmoumen@esi.dz'),
-  createData('TextFile1.docx', '33.2 KB', 'February 4th 2024', 'if_benmoumen@esi.dz'),
-  createData('TextFile1.docx', '33.2 KB', 'February 4th 2024', 'if_benmoumen@esi.dz'),
-  createData('TextFile1.docx', '33.2 KB', 'February 4th 2024', 'if_benmoumen@esi.dz'),
-  createData('TextFile1.docx', '33.2 KB', 'February 4th 2024', 'if_benmoumen@esi.dz'),
-  createData('TextFile1.docx', '33.2 KB', 'February 4th 2024', 'if_benmoumen@esi.dz'),
-  createData('TextFile1.docx', '33.2 KB', 'February 4th 2024', 'if_benmoumen@esi.dz'),
-  createData('TextFile1.docx', '33.2 KB', 'February 4th 2024', 'if_benmoumen@esi.dz'),
-
-
-  // Ajoutez d'autres données ici...
-];
-
-export default function ReceivedFilesTable() {
+export default function SharedFilesTable({ fileData, removeFileData }) {
   const tableRef = React.useRef(null);
   const [containerHeight, setContainerHeight] = React.useState(0);
+  const [actions, setActions] = React.useState({});
+  const [selectedRow, setSelectedRow] = React.useState(null);
+  function createData(file, size, date, algo) {
+    return { file, size, date, algo };
+  }
+
+  const rows = [
+    createData("TextFile1.docx", "33.2 KB", "February 4th 2024", "AES_256"),
+    createData("TextFile1.docx", "33.2 KB", "February 4th 2024", "AES_256"),
+    createData("TextFile1.docx", "33.2 KB", "February 4th 2024", "AES_256"),
+    createData("TextFile1.docx", "33.2 KB", "February 4th 2024", "AES_256"),
+    createData("TextFile1.docx", "33.2 KB", "February 4th 2024", "AES_256"),
+    createData("TextFile1.docx", "33.2 KB", "February 4th 2024", "AES_256"),
+    createData("TextFile1.docx", "33.2 KB", "February 4th 2024", "AES_256"),
+    createData("TextFile1.docx", "33.2 KB", "February 4th 2024", "AES_256"),
+
+    // Ajoutez d'autres données ici...
+  ];
 
   // Fonction pour recalculer la hauteur du conteneur
   const updateContainerHeight = () => {
     if (tableRef.current) {
       const windowHeight = window.innerHeight;
       const containerTop = tableRef.current.getBoundingClientRect().top;
-      const containerHeight = windowHeight - containerTop ; // 20 est une marge fixe pour la barre de défilement
+      const containerHeight = windowHeight - containerTop; // 20 est une marge fixe pour la barre de défilement
       setContainerHeight(containerHeight);
     }
   };
@@ -39,39 +40,105 @@ export default function ReceivedFilesTable() {
   // Mettre à jour la hauteur du conteneur lorsque le composant est monté ou lorsque la fenêtre est redimensionnée
   React.useEffect(() => {
     updateContainerHeight();
-    window.addEventListener('resize', updateContainerHeight);
+    window.addEventListener("resize", updateContainerHeight);
     return () => {
-      window.removeEventListener('resize', updateContainerHeight);
+      window.removeEventListener("resize", updateContainerHeight);
     };
   }, []);
 
+  const toggleActions = (index) => {
+    setActions((prevState) => ({
+      ...prevState,
+      [index]: !prevState[index],
+    }));
+  };
+
+  const handleRowClick = (index) => {
+    // Ferme la ligne précédemment ouverte
+    if (selectedRow !== null && selectedRow !== index) {
+      setActions((prevState) => ({
+        ...prevState,
+        [selectedRow]: false,
+      }));
+    }
+    // Ouvre la ligne sélectionnée
+    toggleActions(index);
+    setSelectedRow(index);
+  };
+  // Fonction pour envoyer le chemin du fichier au processus principal et récupérer la réponse de l'API
+
   return (
-    <div className="w-full h-full overflow-y-auto" style={{ maxHeight: '100%', }}>
-      <div ref={tableRef} style={{ maxHeight: `${containerHeight}px`, overflowY: 'auto',}}>
-        <table className="w-full">
+    <div
+      className="w-full h-full overflow-y-auto"
+      style={{ maxHeight: "100%" }}
+    >
+      <div
+        ref={tableRef}
+        style={{ maxHeight: `${containerHeight}px`, overflowY: "auto" }}
+      >
+        <table className="w-full" style={{ width: "100%" }}>
           <thead className="text-white h-14">
-            <tr className="sticky top-0" style={{ backgroundColor: '#25525D' }}>
+            <tr className="sticky top-0" style={{ backgroundColor: "#25525D" }}>
               <th className="px-4">File</th>
               <th className="px-4">Size</th>
-              <th className="px-4">Receiving date</th>
+              <th className="px-4">Sending date</th>
               <th className="px-4">Owner</th>
-              <th className="px-4">Actions</th>
-
+              <th className="px-4">Algorithm</th>
             </tr>
           </thead>
           <tbody>
             {rows.map((row, index) => (
               <React.Fragment key={index}>
-                <tr className="bg-white h-14 row-b-bottom">
-                  <td align='center'>{row.file}</td>
-                  <td className="px-4" align="center">{row.size}</td>
-                  <td className="px-4" align="center">{row.date}</td>
-                  <td className="px-4" align="center">{row.owner}</td>
-                  <div align = 'center'>
-                   <td ><IconButton><DeleteOutlineOutlinedIcon /></IconButton></td>
-                   <td ><IconButton><Download /></IconButton></td> 
-                   </div>
+                <tr
+                  className="bg-white h-14 row-b-bottom"
+                  onClick={() => handleRowClick(index)}
+                >
+                  <td align="center">{row.file}</td>
+                  <td className="px-4" align="center">
+                    {row.size}
+                  </td>
+                  <td className="px-4" align="center">
+                    {row.date}
+                  </td>
+                  <td className="px-4" align="center">
+                    if_benmoumen@esi.dz
+                  </td>
+                  <td className="px-4" align="center">
+                    AES_256
+                  </td>
                 </tr>
+                {actions[index] && (
+                  <tr className="h-14 row-b-bottom slide-down actions-row">
+                    <td colSpan="5">
+                      <div style={{ display: "flex" }}>
+                        <div
+                          style={{ flex: 1 }}
+                          align="center"
+                          className="cursor-pointer hover:text-blue-500"
+                        >
+                          <UploadButton file_path={row.path} />
+                        </div>
+                        <div
+                          style={{ flex: 1 }}
+                          align="center"
+                          className="cursor-pointer hover:text-blue-500"
+                        >
+                          <ShareDialog />
+                        </div>
+                        <div
+                          style={{ flex: 1 }}
+                          align="center"
+                          className="cursor-pointer hover:text-blue-500"
+                        >
+                          <DecryptButton
+                            file_path={row.path}
+                            removeFileData={removeFileData}
+                          ></DecryptButton>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                )}
               </React.Fragment>
             ))}
           </tbody>

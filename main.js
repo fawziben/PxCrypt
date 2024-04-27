@@ -196,12 +196,20 @@ ipcMain.handle(
 );
 // Événement lorsque Electron est prêt
 app.whenReady().then(() => {
-  // Création de la fenêtre principale de l'application
-  runInBackground((fileData) => {
-    paths = fileData;
-    console.log(fileData);
+  // Création d'une promesse pour exécuter runInBackground
+  const runInBackgroundPromise = new Promise((resolve, reject) => {
+    // Exécution de runInBackground avec une fonction de rappel pour obtenir les données
+    runInBackground((fileData) => {
+      paths = fileData;
+      console.log(fileData);
+      resolve(); // Résoudre la promesse une fois runInBackground terminé
+    });
   });
-  createWindow();
+
+  // Attente de la résolution de la promesse avant de créer la fenêtre principale
+  runInBackgroundPromise.then(() => {
+    createWindow();
+  });
 
   // Gestion de l'événement 'activate' pour recréer la fenêtre si toutes les fenêtres sont fermées
   app.on("activate", () => {
@@ -210,7 +218,6 @@ app.whenReady().then(() => {
     }
   });
 });
-
 // Gestion de l'événement 'window-all-closed' pour quitter l'application lorsque toutes les fenêtres sont fermées, sauf sur macOS
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
