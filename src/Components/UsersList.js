@@ -9,18 +9,22 @@ import {
 } from "@mui/material";
 import { axiosInstance } from "../AxiosInstance";
 
-const UsersList = ({ recipients, setRecipients }) => {
+const UsersList = ({ recipients, setRecipients, file_id }) => {
   const [searchTerm, setSearchTerm] = useState("");
 
   const handleRecipientToggle = (index) => {
-    // Toggle the recipient's selection
     setRecipients((prevState) => {
-      const newStates = [...prevState];
-      newStates[index].state = !newStates[index].state;
-      return newStates;
+      return prevState.map((recipient, i) => {
+        // Si l'index correspond à l'ID du destinataire, basculer son état
+        if (recipient.id === index) {
+          return { ...recipient, state: !recipient.state };
+        } else {
+          // Sinon, retourner le destinataire inchangé
+          return recipient;
+        }
+      });
     });
   };
-
   const filteredRecipients = recipients.filter((recipient) =>
     recipient.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -33,7 +37,7 @@ const UsersList = ({ recipients, setRecipients }) => {
     try {
       let accessToken = localStorage.getItem("token");
 
-      const response = await axiosInstance.get("/users/", {
+      const response = await axiosInstance.get(`users/`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
@@ -71,7 +75,7 @@ const UsersList = ({ recipients, setRecipients }) => {
       />
       <List sx={{ maxHeight: 150, overflow: "auto" }}>
         {filteredRecipients.map((recipient, index) => (
-          <ListItem key={recipient}>
+          <ListItem key={recipient.id}>
             <Avatar
               sx={{
                 color: "#2353aa",
@@ -84,7 +88,7 @@ const UsersList = ({ recipients, setRecipients }) => {
             <ListItemText primary={recipient.name} />
             <Switch
               checked={recipient.state}
-              onChange={() => handleRecipientToggle(index)}
+              onChange={() => handleRecipientToggle(recipient.id)}
             />
           </ListItem>
         ))}

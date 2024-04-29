@@ -4,30 +4,15 @@ import ShareDialog from "./ShareDialog";
 import UploadButton from "./UploadButton";
 import DecryptIcon from "./DecryptButton";
 import DecryptButton from "./DecryptButton";
+import { formatDate } from "../utilities/utilisties";
+import Message from "./Message";
 
-export default function SharedFilesTable({ fileData, removeFileData }) {
+export default function SharedFilesTable({ sharedFiles }) {
   const tableRef = React.useRef(null);
   const [containerHeight, setContainerHeight] = React.useState(0);
   const [actions, setActions] = React.useState({});
   const [selectedRow, setSelectedRow] = React.useState(null);
-  function createData(file, size, date, algo) {
-    return { file, size, date, algo };
-  }
 
-  const rows = [
-    createData("TextFile1.docx", "33.2 KB", "February 4th 2024", "AES_256"),
-    createData("TextFile1.docx", "33.2 KB", "February 4th 2024", "AES_256"),
-    createData("TextFile1.docx", "33.2 KB", "February 4th 2024", "AES_256"),
-    createData("TextFile1.docx", "33.2 KB", "February 4th 2024", "AES_256"),
-    createData("TextFile1.docx", "33.2 KB", "February 4th 2024", "AES_256"),
-    createData("TextFile1.docx", "33.2 KB", "February 4th 2024", "AES_256"),
-    createData("TextFile1.docx", "33.2 KB", "February 4th 2024", "AES_256"),
-    createData("TextFile1.docx", "33.2 KB", "February 4th 2024", "AES_256"),
-
-    // Ajoutez d'autres données ici...
-  ];
-
-  // Fonction pour recalculer la hauteur du conteneur
   const updateContainerHeight = () => {
     if (tableRef.current) {
       const windowHeight = window.innerHeight;
@@ -87,24 +72,24 @@ export default function SharedFilesTable({ fileData, removeFileData }) {
             </tr>
           </thead>
           <tbody>
-            {rows.map((row, index) => (
+            {sharedFiles.map((row, index) => (
               <React.Fragment key={index}>
                 <tr
                   className="bg-white h-14 row-b-bottom"
                   onClick={() => handleRowClick(index)}
                 >
-                  <td align="center">{row.file}</td>
+                  <td align="center">{row.name}</td>
                   <td className="px-4" align="center">
                     {row.size}
                   </td>
                   <td className="px-4" align="center">
-                    {row.date}
+                    {formatDate(row.date)}
                   </td>
                   <td className="px-4" align="center">
-                    if_benmoumen@esi.dz
+                    {row.sender}
                   </td>
                   <td className="px-4" align="center">
-                    AES_256
+                    {row.algorithm}
                   </td>
                 </tr>
                 {actions[index] && (
@@ -116,7 +101,7 @@ export default function SharedFilesTable({ fileData, removeFileData }) {
                           align="center"
                           className="cursor-pointer hover:text-blue-500"
                         >
-                          <UploadButton file_path={row.path} />
+                          <UploadButton />
                         </div>
                         <div
                           style={{ flex: 1 }}
@@ -130,10 +115,7 @@ export default function SharedFilesTable({ fileData, removeFileData }) {
                           align="center"
                           className="cursor-pointer hover:text-blue-500"
                         >
-                          <DecryptButton
-                            file_path={row.path}
-                            removeFileData={removeFileData}
-                          ></DecryptButton>
+                          <DecryptButton></DecryptButton>
                         </div>
                       </div>
                     </td>

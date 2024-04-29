@@ -5,8 +5,8 @@ import { DownloadingOutlined } from "@mui/icons-material";
 import ShareDialog from "./ShareDialog";
 import { axiosInstance } from "../AxiosInstance";
 import { formatDate } from "../utilities/utilisties";
-import PDFViewer from "./PDFViewer";
 import DeleteButton from "./DeleteButton";
+import Message from "./Message";
 
 export default function UploadeFilesTable() {
   const tableRef = React.useRef(null);
@@ -14,6 +14,11 @@ export default function UploadeFilesTable() {
   const [actions, setActions] = React.useState({});
   const [selectedRow, setSelectedRow] = React.useState(null);
   const [uploadedData, setUploadedData] = React.useState([]);
+  const [snackbarOpen, setSnackbarOpen] = React.useState(false);
+
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
 
   async function getUFiles() {
     try {
@@ -31,7 +36,10 @@ export default function UploadeFilesTable() {
         setUploadedData(uploadedFiles);
       }
     } catch (e) {
-      alert(e);
+      // Dans votre gestionnaire d'erreur 404
+      if (e.response.status === 404) {
+        setSnackbarOpen(true);
+      }
     }
   }
   const updateContainerHeight = () => {
@@ -157,6 +165,11 @@ export default function UploadeFilesTable() {
           </tbody>
         </table>
       </div>
+      <Message
+        open={snackbarOpen}
+        message="No uploaded files"
+        handleClose={handleSnackbarClose}
+      />
     </div>
   );
 }
