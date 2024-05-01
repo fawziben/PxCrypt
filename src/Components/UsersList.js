@@ -53,6 +53,7 @@ const UsersList = ({ recipients, setRecipients, file_id }) => {
             id: user.id,
             name: `${user.first_name} ${user.last_name}`,
             state: false,
+            avatar: `${user.last_name[0].toUpperCase()}${user.first_name[0].toUpperCase()}`,
           };
         });
 
@@ -78,12 +79,12 @@ const UsersList = ({ recipients, setRecipients, file_id }) => {
           <ListItem key={recipient.id}>
             <Avatar
               sx={{
-                color: "#2353aa",
-                backgroundColor: "cyan",
+                color: "#ffffff",
+                backgroundColor: "#29508a",
                 marginRight: "20px",
               }}
             >
-              BF
+              {recipient.avatar}
             </Avatar>
             <ListItemText primary={recipient.name} />
             <Switch

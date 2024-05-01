@@ -76,14 +76,6 @@ export default function CryptOptions({ updateFileData }) {
             <MenuItem value="Blowfish">Blowfish</MenuItem>
           </Select>
         </FormControl>
-        <FormControlLabel
-          control={
-            <Switch checked={shareEnabled} onChange={handleShareToggle} />
-          }
-          label="Share"
-        />
-        <br></br>
-        {shareEnabled && <UsersList />}
       </DialogContent>
       <DialogActions>
         <Button color="primary" onClick={crypt}>

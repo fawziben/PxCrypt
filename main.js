@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain } = require("electron"); // Import des modules Electron nécessaires
+const { app, BrowserWindow, ipcMain, dialog } = require("electron"); // Import des modules Electron nécessaires
 const path = require("path"); // Import du module path pour gérer les chemins de fichiers
 const isDev = require("electron-is-dev"); // Import du module electron-is-dev pour détecter le mode de développement
 const fs = require("fs");
@@ -194,7 +194,59 @@ ipcMain.handle(
     }
   }
 );
-// Événement lorsque Electron est prêt
+ipcMain.handle(
+  "download-data",
+  async (event, fileId, fileName, accessToken) => {
+    try {
+      // Faites une requête GET pour récupérer le fichier du serveur
+      const formData = new FormData();
+      const response = await axiosInstance.get(`/files/${fileId}`, {
+        headers: {
+          ...formData.getHeaders(),
+          Authorization: `Bearer ${accessToken}`,
+        },
+        responseType: "arraybuffer",
+        responseEncoding: "binary",
+      });
+
+      // Extrayez le nom de fichier sans l'extension
+      const defaultFileName = path.basename(fileName, path.extname(fileName));
+
+      // Afficher une boîte de dialogue pour choisir l'emplacement de téléchargement
+      const { filePath } = await dialog.showSaveDialog({
+        defaultPath: defaultFileName, // Nom par défaut du fichier à télécharger sans l'extension
+      });
+
+      if (!filePath) {
+        console.log("Téléchargement annulé par l'utilisateur.");
+        return; // Arrêter le téléchargement si l'utilisateur annule
+      }
+
+      // Enregistrer le fichier au chemin choisi par l'utilisateur
+      fs.writeFile(
+        filePath,
+        Buffer.from(response.data),
+        "binary",
+        (writeErr) => {
+          if (writeErr) {
+            console.log("Erreur lors de l'écriture du fichier :", writeErr);
+          } else {
+            console.log("Fichier écrit avec succès :", filePath);
+          }
+        }
+      );
+
+      // Retournez le chemin de téléchargement si nécessaire
+      return {
+        filePath: filePath,
+      };
+    } catch (error) {
+      // Gérer les erreurs
+      console.error("Erreur lors du téléchargement du fichier :", error);
+      throw error;
+    }
+  }
+);
 app.whenReady().then(() => {
   // Création d'une promesse pour exécuter runInBackground
   const runInBackgroundPromise = new Promise((resolve, reject) => {

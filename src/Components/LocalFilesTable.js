@@ -4,6 +4,7 @@ import ShareDialog from "./ShareDialog";
 import UploadButton from "./UploadButton";
 import DecryptIcon from "./DecryptButton";
 import DecryptButton from "./DecryptButton";
+import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 
 const getFileName = (filePath) => {
   // Séparer le chemin en parties en utilisant le séparateur '\'
@@ -120,7 +121,7 @@ export default function LocalFilesTable({ fileData, removeFileData }) {
                           align="center"
                           className="cursor-pointer hover:text-blue-500"
                         >
-                          <ShareDialog />
+                          <VisibilityOutlinedIcon />
                         </div>
                         <div
                           style={{ flex: 1 }}

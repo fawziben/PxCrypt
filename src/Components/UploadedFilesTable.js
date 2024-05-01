@@ -7,6 +7,7 @@ import { axiosInstance } from "../AxiosInstance";
 import { formatDate } from "../utilities/utilisties";
 import DeleteButton from "./DeleteButton";
 import Message from "./Message";
+import DownloadButton from "./DownloadButton";
 
 export default function UploadeFilesTable() {
   const tableRef = React.useRef(null);
@@ -147,7 +148,10 @@ export default function UploadeFilesTable() {
                           className="cursor-pointer hover:text-blue-500"
                         >
                           {" "}
-                          <DownloadingOutlined />
+                          <DownloadButton
+                            file_id={row.id}
+                            file_name={row.name}
+                          />
                         </div>
                         <div
                           style={{ flex: 1 }}

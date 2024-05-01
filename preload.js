@@ -19,4 +19,11 @@ contextBridge.exposeInMainWorld("electronAPI", {
         .then((result) => resolve(result))
         .catch((error) => reject(error));
     }),
+  downloadData: (fileId, fileName, accessToken) =>
+    new Promise((resolve, reject) => {
+      ipcRenderer
+        .invoke("download-data", fileId, fileName, accessToken)
+        .then((result) => resolve(result))
+        .catch((error) => reject(error));
+    }),
 });

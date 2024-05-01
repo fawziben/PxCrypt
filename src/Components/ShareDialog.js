@@ -61,6 +61,7 @@ const ShareDialog = ({ file_id }) => {
         <DialogTitle>Users List</DialogTitle>
         <DialogContent sx={{ width: "400px" }}>
           <UsersList
+            file_id={file_id}
             recipients={recipients}
             setRecipients={setRecipients}
           ></UsersList>
