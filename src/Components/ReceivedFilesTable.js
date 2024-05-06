@@ -6,12 +6,49 @@ import DecryptIcon from "./DecryptButton";
 import DecryptButton from "./DecryptButton";
 import { formatDate } from "../utilities/utilisties";
 import Message from "./Message";
+import ShowFileIcon from "./ShowFileIcon";
+import { axiosInstance } from "../AxiosInstance";
+import DeleteButton from "./DeleteButton";
+import {
+  DeleteOutline,
+  DownloadOutlined,
+  DownloadingOutlined,
+} from "@mui/icons-material";
 
-export default function SharedFilesTable({ sharedFiles }) {
+export default function SharedFilesTable() {
   const tableRef = React.useRef(null);
   const [containerHeight, setContainerHeight] = React.useState(0);
   const [actions, setActions] = React.useState({});
   const [selectedRow, setSelectedRow] = React.useState(null);
+  const [sharedFiles, setSharedFiles] = React.useState([]);
+  const [snackbarOpen, setSnackbarOpen] = React.useState(false);
+
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
+
+  async function getSharedFiles() {
+    try {
+      let accessToken = localStorage.getItem("token");
+
+      const response = await axiosInstance.get("/files/shared", {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+
+      // Vérifiez si la réponse est valide et contient des données
+      if (response.status === 200) {
+        setSharedFiles(response.data);
+      }
+    } catch (error) {
+      if (error.response.status === 404) {
+        setSnackbarOpen(true);
+      } else {
+        alert("Internal Server Error");
+      }
+    }
+  }
 
   const updateContainerHeight = () => {
     if (tableRef.current) {
@@ -24,6 +61,7 @@ export default function SharedFilesTable({ sharedFiles }) {
 
   // Mettre à jour la hauteur du conteneur lorsque le composant est monté ou lorsque la fenêtre est redimensionnée
   React.useEffect(() => {
+    getSharedFiles();
     updateContainerHeight();
     window.addEventListener("resize", updateContainerHeight);
     return () => {
@@ -38,6 +76,13 @@ export default function SharedFilesTable({ sharedFiles }) {
     }));
   };
 
+  const handleDelete = (id) => {
+    // Filtrer les éléments pour exclure celui avec l'ID spécifié
+    const updatedData = sharedFiles.filter((item) => item.id !== id);
+
+    // Mettre à jour uploadedData avec la nouvelle liste filtrée
+    setSharedFiles(updatedData);
+  };
   const handleRowClick = (index) => {
     // Ferme la ligne précédemment ouverte
     if (selectedRow !== null && selectedRow !== index) {
@@ -101,21 +146,26 @@ export default function SharedFilesTable({ sharedFiles }) {
                           align="center"
                           className="cursor-pointer hover:text-blue-500"
                         >
-                          <UploadButton />
+                          {" "}
+                          <DeleteButton
+                            file_id={row.id}
+                            handleDelete={handleDelete}
+                            code={2}
+                          />
                         </div>
                         <div
                           style={{ flex: 1 }}
                           align="center"
                           className="cursor-pointer hover:text-blue-500"
                         >
-                          <ShareDialog />
+                          <ShowFileIcon file_id={row.file_id} />
                         </div>
                         <div
                           style={{ flex: 1 }}
                           align="center"
                           className="cursor-pointer hover:text-blue-500"
                         >
-                          <DecryptButton></DecryptButton>
+                          <DownloadingOutlined></DownloadingOutlined>
                         </div>
                       </div>
                     </td>
@@ -126,6 +176,11 @@ export default function SharedFilesTable({ sharedFiles }) {
           </tbody>
         </table>
       </div>
+      <Message
+        open={snackbarOpen}
+        message="No Shared files with you"
+        handleClose={handleSnackbarClose}
+      />
     </div>
   );
 }

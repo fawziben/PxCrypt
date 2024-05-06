@@ -5,6 +5,8 @@ import UploadButton from "./UploadButton";
 import DecryptIcon from "./DecryptButton";
 import DecryptButton from "./DecryptButton";
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
+import ShowFileIcon from "./ShowFileIcon";
+import { ViewAgenda } from "@mui/icons-material";
 
 const getFileName = (filePath) => {
   // Séparer le chemin en parties en utilisant le séparateur '\'

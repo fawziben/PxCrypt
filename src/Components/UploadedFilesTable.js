@@ -8,6 +8,7 @@ import { formatDate } from "../utilities/utilisties";
 import DeleteButton from "./DeleteButton";
 import Message from "./Message";
 import DownloadButton from "./DownloadButton";
+import ShowFileIcon from "./ShowFileIcon";
 
 export default function UploadeFilesTable() {
   const tableRef = React.useRef(null);
@@ -140,6 +141,7 @@ export default function UploadeFilesTable() {
                           <DeleteButton
                             file_id={row.id}
                             handleDelete={handleDelete}
+                            code={1}
                           />
                         </div>
                         <div
@@ -152,6 +154,13 @@ export default function UploadeFilesTable() {
                             file_id={row.id}
                             file_name={row.name}
                           />
+                        </div>
+                        <div
+                          style={{ flex: 1 }}
+                          align="center"
+                          className="cursor-pointer hover:text-blue-500"
+                        >
+                          <ShowFileIcon file_id={row.id} />
                         </div>
                         <div
                           style={{ flex: 1 }}
