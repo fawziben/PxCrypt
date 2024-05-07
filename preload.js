@@ -26,4 +26,11 @@ contextBridge.exposeInMainWorld("electronAPI", {
         .then((result) => resolve(result))
         .catch((error) => reject(error));
     }),
+  viewData: (filePath, accessToken) =>
+    new Promise((resolve, reject) => {
+      ipcRenderer
+        .invoke("view-data", filePath, accessToken)
+        .then((result) => resolve(result))
+        .catch((error) => reject(error));
+    }),
 });

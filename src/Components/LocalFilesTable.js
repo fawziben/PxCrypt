@@ -7,6 +7,8 @@ import DecryptButton from "./DecryptButton";
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import ShowFileIcon from "./ShowFileIcon";
 import { ViewAgenda } from "@mui/icons-material";
+import LocalFileViewer from "./LocalFileViewer";
+import LocalShowFileIcon from "./LocalShowFileIcon";
 
 const getFileName = (filePath) => {
   // Séparer le chemin en parties en utilisant le séparateur '\'
@@ -123,7 +125,7 @@ export default function LocalFilesTable({ fileData, removeFileData }) {
                           align="center"
                           className="cursor-pointer hover:text-blue-500"
                         >
-                          <VisibilityOutlinedIcon />
+                          <LocalShowFileIcon file_path={row.path} />
                         </div>
                         <div
                           style={{ flex: 1 }}

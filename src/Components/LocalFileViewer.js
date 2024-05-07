@@ -1,39 +1,23 @@
 import React, { useState, useEffect } from "react";
 import DocViewer, { DocViewerRenderers } from "@cyntler/react-doc-viewer";
-import { axiosInstance } from "../AxiosInstance";
 import path from "path-browserify";
 
-const FileViewer = ({ file_id, file_name }) => {
+const LocalFileViewer = ({ file_path }) => {
   const [fileData, setFileData] = useState(null);
   const [type, setType] = useState("");
   const [name, setName] = useState("");
 
   useEffect(() => {
-    // Fonction pour récupérer le fichier depuis votre API
     let accessToken = localStorage.getItem("token");
-    const filePath = file_name;
-    const fileNameWithoutExtension = filePath.replace(/\.[^/.]+$/, ""); // Supprimer l'extension
+    const fileNameWithoutExtension = file_path.replace(/\.[^/.]+$/, ""); // Supprimer l'extension
     const ext = path.extname(fileNameWithoutExtension).slice(1);
-
-    const fetchFileFromAPI = async () => {
-      try {
-        const response = await axiosInstance.get(`files/${file_id}`, {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-          responseType: "blob", // Spécifiez le type de réponse comme blob
-        });
-        setType(ext);
-        setName(fileNameWithoutExtension);
-        setFileData(response.data);
-      } catch (error) {
-        console.error("Erreur:", error);
-      }
-    };
-
-    fetchFileFromAPI();
+    setType(ext);
+    setName(fileNameWithoutExtension);
+    window.electronAPI.viewData(file_path, accessToken).then((result) => {
+      let blob = new Blob([result]); // Adjust the MIME type as needed
+      setFileData(blob);
+    });
   }, []);
-
   if (!fileData) {
     return <div>Chargement en cours...</div>;
   }
@@ -53,4 +37,4 @@ const FileViewer = ({ file_id, file_name }) => {
   );
 };
 
-export default FileViewer;
+export default LocalFileViewer;

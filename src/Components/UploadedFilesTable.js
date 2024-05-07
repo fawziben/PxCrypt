@@ -160,7 +160,7 @@ export default function UploadeFilesTable() {
                           align="center"
                           className="cursor-pointer hover:text-blue-500"
                         >
-                          <ShowFileIcon file_id={row.id} />
+                          <ShowFileIcon file_id={row.id} file_name={row.name} />
                         </div>
                         <div
                           style={{ flex: 1 }}

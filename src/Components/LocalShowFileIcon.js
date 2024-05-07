@@ -7,8 +7,9 @@ import { Button } from "@mui/base/Button";
 import { DownloadDoneOutlined } from "@mui/icons-material";
 import FileViewer from "./FileViewer";
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
+import LocalFileViewer from "./LocalFileViewer";
 
-export default function ShowFileIcon({ file_id, file_name }) {
+export default function LocalShowFileIcon({ file_path }) {
   const [open, setOpen] = React.useState(false);
   const [downloaded, setDownloaded] = React.useState(false); // État du téléchargement
 
@@ -31,7 +32,7 @@ export default function ShowFileIcon({ file_id, file_name }) {
       >
         <Fade in={open}>
           <ModalContent sx={style}>
-            <FileViewer file_id={file_id} file_name={file_name}></FileViewer>
+            <LocalFileViewer file_path={file_path}></LocalFileViewer>
             {/* Conditionne le rendu de FileViewer */}
           </ModalContent>
         </Fade>

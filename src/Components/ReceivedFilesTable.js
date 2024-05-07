@@ -158,7 +158,10 @@ export default function SharedFilesTable() {
                           align="center"
                           className="cursor-pointer hover:text-blue-500"
                         >
-                          <ShowFileIcon file_id={row.file_id} />
+                          <ShowFileIcon
+                            file_id={row.file_id}
+                            file_name={row.name}
+                          />
                         </div>
                         <div
                           style={{ flex: 1 }}

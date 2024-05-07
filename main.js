@@ -247,6 +247,27 @@ ipcMain.handle(
     }
   }
 );
+
+ipcMain.handle("view-data", async (event, filePath, accessToken) => {
+  try {
+    const formData = new FormData();
+    formData.append("file", fs.createReadStream(filePath));
+    const response = await axiosInstance.post("/decrypt", formData, {
+      headers: {
+        ...formData.getHeaders(),
+        Authorization: `Bearer ${accessToken}`,
+      },
+      responseType: "arraybuffer",
+      responseEncoding: "binary",
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error("Erreur lors de la lecture du fichier:", error);
+    throw error;
+  }
+});
+
 app.whenReady().then(() => {
   // Création d'une promesse pour exécuter runInBackground
   const runInBackgroundPromise = new Promise((resolve, reject) => {
