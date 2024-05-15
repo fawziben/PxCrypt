@@ -14,6 +14,7 @@ import {
   DownloadOutlined,
   DownloadingOutlined,
 } from "@mui/icons-material";
+import DownloadButton from "./DownloadButton";
 
 export default function SharedFilesTable() {
   const tableRef = React.useRef(null);
@@ -168,7 +169,10 @@ export default function SharedFilesTable() {
                           align="center"
                           className="cursor-pointer hover:text-blue-500"
                         >
-                          <DownloadingOutlined></DownloadingOutlined>
+                          <DownloadButton
+                            file_id={row.file_id}
+                            file_name={row.name}
+                          />
                         </div>
                       </div>
                     </td>

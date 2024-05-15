@@ -1,14 +1,9 @@
 import * as React from "react";
 import "./CustomTable.css";
-import ShareDialog from "./ShareDialog";
 import UploadButton from "./UploadButton";
-import DecryptIcon from "./DecryptButton";
 import DecryptButton from "./DecryptButton";
-import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
-import ShowFileIcon from "./ShowFileIcon";
-import { ViewAgenda } from "@mui/icons-material";
-import LocalFileViewer from "./LocalFileViewer";
 import LocalShowFileIcon from "./LocalShowFileIcon";
+import { convertSize } from "../utilities/utilisties";
 
 const getFileName = (filePath) => {
   // Séparer le chemin en parties en utilisant le séparateur '\'
@@ -97,7 +92,7 @@ export default function LocalFilesTable({ fileData, removeFileData }) {
                 >
                   <td align="center">{getFileName(row.path)}</td>
                   <td className="px-4" align="center">
-                    {row.size}
+                    {convertSize(row.size)}
                   </td>
                   <td className="px-4" align="center">
                     {row.accessDate}

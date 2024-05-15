@@ -1,7 +1,5 @@
 import * as React from "react";
 import "./CustomTable.css";
-import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
-import { DownloadingOutlined } from "@mui/icons-material";
 import ShareDialog from "./ShareDialog";
 import { axiosInstance } from "../AxiosInstance";
 import { formatDate } from "../utilities/utilisties";
@@ -9,6 +7,7 @@ import DeleteButton from "./DeleteButton";
 import Message from "./Message";
 import DownloadButton from "./DownloadButton";
 import ShowFileIcon from "./ShowFileIcon";
+import { convertSize } from "../utilities/utilisties";
 
 export default function UploadeFilesTable() {
   const tableRef = React.useRef(null);
@@ -119,7 +118,7 @@ export default function UploadeFilesTable() {
                 >
                   <td align="center">{row.name}</td>
                   <td className="px-4" align="center">
-                    {row.size}
+                    {convertSize(row.size)}
                   </td>
                   <td className="px-4" align="center">
                     {formatDate(row.upload_at)}

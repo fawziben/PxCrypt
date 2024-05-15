@@ -26,6 +26,7 @@ import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
 import SearchIcon from "@mui/icons-material/Search";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import GroupsIcon from "@mui/icons-material/Groups";
 
 export default function Layout({ children }) {
   const minWidth = 100;
@@ -88,11 +89,7 @@ export default function Layout({ children }) {
     },
     {
       text: "Setting",
-      icon: (
-        <SettingsOutlinedIcon
-          sx={{ color: "#000000", ...classes.drawerIcons }}
-        />
-      ),
+      icon: <GroupsIcon sx={{ color: "#000000", ...classes.drawerIcons }} />,
       path: "/add",
     },
     {
