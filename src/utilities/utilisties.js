@@ -1,6 +1,6 @@
 const convertSize = (sizeInBytes) => {
   const units = ["B", "KB", "MB", "GB"];
-  let size = sizeInBytes;
+  let size = Number(sizeInBytes);
   let unitIndex = 0;
 
   while (size >= 1024 && unitIndex < units.length - 1) {

@@ -39,7 +39,7 @@ export default function CryptOptions({ updateFileData }) {
       const file = {
         path: `${path}.pxc`,
         accessDate: "March 28, 2024",
-        size: convertSize(size),
+        size: size,
       };
 
       if (response.status === 200) {

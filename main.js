@@ -70,7 +70,6 @@ function runInBackground(callback) {
           );
 
           // Convertir la taille en Ko, Mo ou Go
-          const formattedSize = convertSize(parseInt(size));
 
           return { path, size: size, accessDate: formattedAccessDate }; // Créer un objet avec les clés "path", "size" et "accessDate"
         })
