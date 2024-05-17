@@ -8,6 +8,7 @@ import "./FileStats.css";
 
 import sourceData from "../data/sourceData.json";
 import { Stack } from "@mui/material";
+import ProgressComponent from "../ProgressComponent/ProgressComponent";
 
 Chart.register(ArcElement);
 
@@ -86,6 +87,7 @@ export default function FileStats() {
             ],
           }}
           options={{
+            cutout: "70%",
             plugins: {
               title: {
                 text: "Repartition des fichiers cryptes sur le serveur",
@@ -93,7 +95,11 @@ export default function FileStats() {
             },
           }}
         />
+        <div className="centered">
+          {results.reduce((total, result) => total + result.count, 0)} Files
+        </div>
       </div>
+
       <div className="dataCard categoryCard">
         <Doughnut
           data={{
@@ -116,6 +122,7 @@ export default function FileStats() {
             ],
           }}
           options={{
+            cutout: "70%",
             plugins: {
               title: {
                 text: "Repartition des fichiers cryptes",
@@ -125,7 +132,7 @@ export default function FileStats() {
         />
       </div>
       <div className="dataCard revenueCard" style={{ width }}>
-        <LinearProgress variant="determinate" value={60} />
+        <ProgressComponent usedStorage={33.2} totalStorage={100} />
       </div>
     </div>
   );

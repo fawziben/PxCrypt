@@ -13,7 +13,6 @@ import { axiosInstance } from "../AxiosInstance";
 async function ShareFile(users_id, file_id) {
   try {
     let accessToken = localStorage.getItem("token");
-    alert(file_id);
     const response = await axiosInstance.post(
       `files/share/${file_id.toString()}`,
       users_id,
@@ -24,12 +23,12 @@ async function ShareFile(users_id, file_id) {
       }
     );
 
-    // Vérifiez si la réponse est valide et contient des données
     if (response.status === 200) alert("file shared successfully");
   } catch (e) {
     alert(e);
   }
 }
+
 const ShareDialog = ({ file_id }) => {
   const [recipients, setRecipients] = useState([]);
   const [openDialog, setOpenDialog] = useState(false);
@@ -47,28 +46,24 @@ const ShareDialog = ({ file_id }) => {
       .filter((recipient) => recipient.state)
       .map((recipient) => recipient.id);
 
-    alert(selectedRecipientIds[0]);
     ShareFile(selectedRecipientIds, file_id);
-
-    // Utilisez selectedRecipientIds dans votre requête
-    // Par exemple :
-    // axios.post('/share', { recipientIds: selectedRecipientIds });
   };
+
   return (
     <div>
-      <ShareOutlined onClick={handleShareClick} />
-      <Dialog open={openDialog} onClose={handleCloseDialog}>
-        <DialogTitle>Users List</DialogTitle>
-        <DialogContent sx={{ width: "400px" }}>
+      <ShareOutlined onClick={handleShareClick} style={{ cursor: "pointer" }} />
+      <Dialog open={openDialog} onClose={handleCloseDialog} maxWidth="md">
+        <DialogTitle>Partager le fichier</DialogTitle>
+        <DialogContent sx={{ width: "500px", height: "300px" }}>
           <UsersList
             file_id={file_id}
             recipients={recipients}
             setRecipients={setRecipients}
-          ></UsersList>
+          />
         </DialogContent>
         <DialogActions>
           <Button variant="contained" onClick={Share}>
-            Share
+            Partager
           </Button>
         </DialogActions>
       </Dialog>

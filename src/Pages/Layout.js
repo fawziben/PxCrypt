@@ -27,6 +27,8 @@ import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNone
 import SearchIcon from "@mui/icons-material/Search";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import GroupsIcon from "@mui/icons-material/Groups";
+import Compte from "../Components/Compte";
+import Notifications from "../Components/Notification";
 
 export default function Layout({ children }) {
   const minWidth = 100;
@@ -164,14 +166,11 @@ export default function Layout({ children }) {
             color="inherit"
           >
             <Container>
-              <Badge badgeContent={3} color="error">
-                <NotificationsNoneOutlinedIcon
-                  sx={{ color: "#000000", height: 30, width: 30 }}
-                />
-              </Badge>
+              <Notifications></Notifications>
             </Container>
           </IconButton>
-          <Avatar sx={{ backgroundColor: "#C27821" }}>FB</Avatar>
+          {/* <Avatar sx={{ backgroundColor: "#C27821" }}>FB</Avatar> */}
+          <Compte></Compte>
         </Toolbar>
       </AppBar>
       <Drawer

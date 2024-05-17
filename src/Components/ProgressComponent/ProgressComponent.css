@@ -1,0 +1,45 @@
+.progress-container {
+  width: 100%;
+}
+
+.progress-label {
+  margin-bottom: 10px;
+  font-size: 18px;
+  font-weight: bold;
+  font-family: "outfit";
+  color: #000;
+  padding-top: 0%;
+  margin-top: 0%;
+}
+
+.progress-bar-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.progress-bar {
+  flex-grow: 1;
+  margin-right: 10px;
+  width: 80%;
+  background-color: #e0e0de;
+  border-radius: 5px;
+  overflow: hidden;
+  height: 10px;
+}
+
+.progress {
+  height: 10px;
+  background: #9e7ee3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+  border-radius: 5px;
+}
+
+.progress-value {
+  padding: 0 10px;
+  font-weight: bold;
+}
