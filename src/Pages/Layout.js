@@ -90,9 +90,9 @@ export default function Layout({ children }) {
       path: "/dashboard/analytics",
     },
     {
-      text: "Setting",
+      text: "Groups",
       icon: <GroupsIcon sx={{ color: "#000000", ...classes.drawerIcons }} />,
-      path: "/add",
+      path: "/dashboard/groups",
     },
     {
       text: "Notifications",
@@ -165,9 +165,7 @@ export default function Layout({ children }) {
             aria-label="show 17 new notifications"
             color="inherit"
           >
-            <Container>
-              <Notifications></Notifications>
-            </Container>
+            <Notifications></Notifications>
           </IconButton>
           {/* <Avatar sx={{ backgroundColor: "#C27821" }}>FB</Avatar> */}
           <Compte></Compte>

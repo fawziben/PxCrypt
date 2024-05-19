@@ -43,7 +43,7 @@ export default function SharedFilesTable() {
         setSharedFiles(response.data);
       }
     } catch (error) {
-      if (error.response.status === 404) {
+      if (error.response && error.response.status === 404) {
         setSnackbarOpen(true);
       } else {
         alert("Internal Server Error");

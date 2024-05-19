@@ -7,6 +7,7 @@ import Layout from "./Pages/Layout";
 import MainPage from "./Pages/MainPage";
 import SharedFiles from "./Pages/SharedFiles";
 import FileStats from "./Components/FileStats/FileStats";
+import GroupsList from "./Pages/GroupsList";
 
 const customTheme = createTheme({
   palette: {
@@ -31,6 +32,7 @@ function App() {
             <Route index element={<MainPage />} />
             <Route path="sharedfiles" element={<SharedFiles />} />
             <Route path="analytics" element={<FileStats />} />
+            <Route path="groups" element={<GroupsList />} />
           </Route>
         </Routes>
       </Router>

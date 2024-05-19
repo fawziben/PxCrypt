@@ -1,36 +1,51 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   TextField,
-  Switch,
+  InputAdornment,
   List,
   ListItem,
   ListItemText,
   Avatar,
+  Switch,
+  Box,
+  Typography,
+  AvatarGroup,
+  DialogContent,
 } from "@mui/material";
+import { Search, Download, Message } from "@mui/icons-material";
 import { axiosInstance } from "../AxiosInstance";
-import { Download, Message } from "@mui/icons-material";
+import { blue } from "@mui/material/colors";
 
 const UsersList = ({ recipients, setRecipients, file_id }) => {
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedRecipients, setSelectedRecipients] = useState([]);
 
   const handleRecipientToggle = (index) => {
     setRecipients((prevState) => {
-      return prevState.map((recipient) => {
-        // Si l'index correspond à l'ID du destinataire, basculer son état
+      const updatedRecipients = prevState.map((recipient) => {
         if (recipient.id === index) {
+          if (!recipient.state) {
+            setSelectedRecipients((prevSelected) => [
+              ...prevSelected,
+              recipient,
+            ]);
+          } else {
+            setSelectedRecipients((prevSelected) =>
+              prevSelected.filter((r) => r.id !== index)
+            );
+          }
           return { ...recipient, state: !recipient.state, moreState: false };
         } else {
-          // Sinon, retourner le destinataire inchangé
           return recipient;
         }
       });
+      return updatedRecipients;
     });
   };
 
   const handleRecipientDownload = (index) => {
     setRecipients((prevState) => {
       return prevState.map((recipient) => {
-        // Si l'index correspond à l'ID du destinataire, basculer son état
         if (recipient.id === index) {
           return {
             ...recipient,
@@ -38,7 +53,6 @@ const UsersList = ({ recipients, setRecipients, file_id }) => {
             color: !recipient.download ? "#25525D" : "",
           };
         } else {
-          // Sinon, retourner le destinataire inchangé
           return recipient;
         }
       });
@@ -49,7 +63,7 @@ const UsersList = ({ recipients, setRecipients, file_id }) => {
     recipient.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  React.useEffect(() => {
+  useEffect(() => {
     getUsers();
   }, []);
 
@@ -84,11 +98,9 @@ const UsersList = ({ recipients, setRecipients, file_id }) => {
         },
       });
 
-      // Vérifiez si la réponse est valide et contient des données
       if (response && response.data && response.data.length > 0) {
         const usersData = response.data;
 
-        // Concaténer les first_name et last_name de chaque utilisateur
         const newRecipients = usersData.map((user) => {
           return {
             id: user.id,
@@ -102,7 +114,6 @@ const UsersList = ({ recipients, setRecipients, file_id }) => {
           };
         });
 
-        // Mettre à jour la liste des destinataires
         setRecipients(newRecipients);
       }
     } catch (e) {
@@ -112,63 +123,101 @@ const UsersList = ({ recipients, setRecipients, file_id }) => {
 
   return (
     <div>
-      <TextField
-        label="User Name"
-        variant="filled"
-        fullWidth
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-        sx={{ marginBottom: 2 }}
-      />
-      <List sx={{ height: 205, overflow: "auto" }}>
-        {filteredRecipients.map((recipient) => (
-          <div key={recipient.id}>
-            <ListItem>
+      <DialogContent
+        sx={{ width: "500px", maxHeight: "300px", overflow: "hidden" }}
+      >
+        <TextField
+          label="User Name"
+          variant="filled"
+          fullWidth
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          sx={{ marginBottom: 2 }}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <Search />
+              </InputAdornment>
+            ),
+          }}
+        />
+        <List sx={{ height: 205, overflow: "auto" }}>
+          {filteredRecipients.map((recipient) => (
+            <div key={recipient.id}>
+              <ListItem>
+                <Avatar
+                  sx={{
+                    color: "#ffffff",
+                    backgroundColor: "#29508a",
+                    marginRight: "20px",
+                  }}
+                >
+                  {recipient.avatar}
+                </Avatar>
+                <ListItemText primary={recipient.name} />
+                {recipient.state && (
+                  <div>
+                    <Message
+                      sx={{ marginRight: "10px", cursor: "pointer" }}
+                      onClick={() => handleMessage(recipient.id)}
+                    />
+                    <Download
+                      sx={{ cursor: "pointer", color: recipient.color }}
+                      onClick={() => handleRecipientDownload(recipient.id)}
+                    />
+                  </div>
+                )}
+                <Switch
+                  checked={recipient.state}
+                  onChange={() => handleRecipientToggle(recipient.id)}
+                />
+              </ListItem>
+              <ListItem>
+                {recipient.moreState && recipient.state && (
+                  <div style={{ width: "100%" }}>
+                    <TextField
+                      sx={{ width: "100%" }}
+                      placeholder="Add a message"
+                      variant="filled"
+                      value={recipient.message}
+                      onChange={(e) =>
+                        handleMessageWrite(recipient.id, e.target.value)
+                      }
+                    />
+                  </div>
+                )}
+              </ListItem>
+            </div>
+          ))}
+        </List>
+      </DialogContent>
+      {selectedRecipients.length > 0 && (
+        <div
+          style={{
+            width: "450px",
+            marginTop: "30px",
+            marginRight: "auto",
+            padding: "20px",
+            marginLeft: "auto",
+            display: "flex",
+            justifyContent: "flex-start",
+            backgroundColor: blue[100],
+            borderRadius: "10px",
+          }}
+        >
+          <div>Liste des utilisateurs sélectionné</div>
+          <AvatarGroup max={3}>
+            {selectedRecipients.map((recipient) => (
               <Avatar
-                sx={{
-                  color: "#ffffff",
-                  backgroundColor: "#29508a",
-                  marginRight: "20px",
-                }}
+                key={recipient.id}
+                sx={{ color: "#ffffff", backgroundColor: "#29508a" }}
               >
                 {recipient.avatar}
               </Avatar>
-              <ListItemText primary={recipient.name} />
-              {recipient.state && (
-                <div>
-                  <Message
-                    sx={{ marginRight: "10px", cursor: "pointer" }}
-                    onClick={() => handleMessage(recipient.id)}
-                  ></Message>
-                  <Download
-                    sx={{ cursor: "pointer", color: recipient.color }}
-                    onClick={() => handleRecipientDownload(recipient.id)}
-                  ></Download>
-                </div>
-              )}
-              <Switch
-                checked={recipient.state}
-                onChange={() => handleRecipientToggle(recipient.id)}
-              />
-            </ListItem>
-            <ListItem>
-              {recipient.moreState && recipient.state && (
-                <div style={{ width: "100%" }}>
-                  <TextField
-                    sx={{ width: "100%" }}
-                    placeholder="Add a message"
-                    variant="filled"
-                    value={recipient.message}
-                    onChange={(e) =>
-                      handleMessageWrite(recipient.id, e.target.value)
-                    }
-                  ></TextField>
-                </div>
-              )}
-            </ListItem>
-          </div>
-        ))}
-      </List>
+            ))}
+          </AvatarGroup>
+        </div>
+      )}
     </div>
   );
 };
