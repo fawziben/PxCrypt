@@ -87,7 +87,7 @@ export default function LocalFilesTable({ fileData, removeFileData }) {
             {fileData.map((row, index) => (
               <React.Fragment key={index}>
                 <tr
-                  className="bg-white h-14 row-b-bottom"
+                  className="bg-white h-14 row-b-bottom cursor-pointer"
                   onClick={() => handleRowClick(index)}
                 >
                   <td align="center">{getFileName(row.path)}</td>

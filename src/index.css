@@ -2,9 +2,3 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-.root {
-  overflow-y: hidden;
-  font-family: "outfit";
-  font-style: italic;
-}

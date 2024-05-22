@@ -38,6 +38,7 @@ export default function Layout({ children }) {
   const [showNewIcon, setNewIcon] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+  const [search, setSearch] = useState(true);
 
   const classes = {
     arrowButton: {
@@ -110,6 +111,9 @@ export default function Layout({ children }) {
     setNewIcon(!showNewIcon);
   };
   const changeWindow = (item) => {
+    item.path == "/dashboard/analytics" || item.path == "/dashboard/groups"
+      ? setSearch(false)
+      : setSearch(true);
     navigate(item.path);
   };
 
@@ -133,29 +137,31 @@ export default function Layout({ children }) {
         elevation={0}
       >
         <Toolbar>
-          <Container>
-            <Box
-              sx={{
-                display: "flex",
-                backgroundColor: "#ffffff",
-                width: "70%",
-                borderRadius: "10px",
-              }}
-            >
-              <Box>
-                <SearchIcon />
-              </Box>
-              <InputBase
+          {search && (
+            <Container>
+              <Box
                 sx={{
-                  height: "40px",
-                  transition: "transform 0.5s ease-in-out",
+                  display: "flex",
+                  backgroundColor: "#ffffff",
+                  width: "70%",
+                  borderRadius: "10px",
                 }}
-                fullWidth
-                placeholder="Search…"
-                inputProps={{ "aria-label": "search" }}
-              />
-            </Box>
-          </Container>
+              >
+                <Box>
+                  <SearchIcon />
+                </Box>
+                <InputBase
+                  sx={{
+                    height: "40px",
+                    transition: "transform 0.5s ease-in-out",
+                  }}
+                  fullWidth
+                  placeholder="Search…"
+                  inputProps={{ "aria-label": "search" }}
+                />
+              </Box>
+            </Container>
+          )}
           <Box sx={{ flexGrow: 1 }}></Box>
           {/* <Typography variant='h6' sx={classes.date}>
                     {format(new Date(),'do MMMM Y')}

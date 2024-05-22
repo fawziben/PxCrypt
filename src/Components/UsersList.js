@@ -195,27 +195,30 @@ const UsersList = ({ recipients, setRecipients, file_id }) => {
         <div
           style={{
             width: "450px",
-            marginTop: "30px",
+            marginTop: "20px",
             marginRight: "auto",
             padding: "20px",
+            paddingTop: "10px",
             marginLeft: "auto",
-            display: "flex",
-            justifyContent: "flex-start",
-            backgroundColor: blue[100],
+            backgroundColor: "#CBD7D9",
             borderRadius: "10px",
           }}
         >
-          <div>Liste des utilisateurs sélectionné</div>
-          <AvatarGroup max={3}>
-            {selectedRecipients.map((recipient) => (
-              <Avatar
-                key={recipient.id}
-                sx={{ color: "#ffffff", backgroundColor: "#29508a" }}
-              >
-                {recipient.avatar}
-              </Avatar>
-            ))}
-          </AvatarGroup>
+          <div style={{ marginBottom: "10px" }}>
+            Liste des utilisateur sélectionnés :
+          </div>
+          <div style={{ display: "flex", justifyContent: "flex-start" }}>
+            <AvatarGroup max={10}>
+              {selectedRecipients.map((recipient) => (
+                <Avatar
+                  key={recipient.id}
+                  sx={{ color: "#ffffff", backgroundColor: "#29508a" }}
+                >
+                  {recipient.avatar}
+                </Avatar>
+              ))}
+            </AvatarGroup>
+          </div>
         </div>
       )}
     </div>

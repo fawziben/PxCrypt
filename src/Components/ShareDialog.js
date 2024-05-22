@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ShareOutlined } from "@mui/icons-material";
+import { ShareOutlined, ShareRounded } from "@mui/icons-material";
 import {
   Avatar,
   AvatarGroup,
@@ -11,6 +11,7 @@ import {
 } from "@mui/material";
 import UsersList from "./UsersList";
 import { axiosInstance } from "../AxiosInstance";
+import ShareTabs from "./ShareTabs";
 
 const ShareDialog = ({ file_id }) => {
   const [recipients, setRecipients] = useState([]);
@@ -60,14 +61,15 @@ const ShareDialog = ({ file_id }) => {
     <div>
       <ShareOutlined onClick={handleShareClick} style={{ cursor: "pointer" }} />
       <Dialog open={openDialog} onClose={handleCloseDialog} maxWidth="md">
-        <DialogTitle sx={{ marginLeft: "auto", marginRight: "auto" }}>
-          Partager le fichier
-        </DialogTitle>
-        <UsersList
+        <div>
+          {/* Partager le fichier */}
+          {/* <ShareRounded style={{ marginLeft: "15px" }}></ShareRounded> */}
+        </div>
+        <ShareTabs
           file_id={file_id}
           recipients={recipients}
           setRecipients={setRecipients}
-        />
+        ></ShareTabs>
         <DialogActions>
           <Button variant="contained" onClick={Share}>
             Partager
