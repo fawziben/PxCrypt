@@ -1,54 +1,52 @@
-import { Avatar, AvatarGroup, InputAdornment, TextField } from "@mui/material";
-import { blue } from "@mui/material/colors";
-import React from "react";
-import PersonAddIcon from "@mui/icons-material/PersonAdd";
-import { Search } from "@mui/icons-material";
+import {
+  Avatar,
+  AvatarGroup,
+  InputAdornment,
+  ListItem,
+  ListItemText,
+  TextField,
+} from "@mui/material";
+import React, { useEffect, useState } from "react";
+import { DeleteOutline, Search } from "@mui/icons-material";
+import AddGroup from "../Components/AddGroup";
+import GroupsList from "../Components/GroupsList";
+import { axiosInstance } from "../AxiosInstance";
+import GroupUsers from "../Components/GroupUsers";
 
 const UserGroups = () => {
+  async function getGroups() {
+    try {
+      let accessToken = localStorage.getItem("token");
+
+      const response = await axiosInstance.get("/groups/", {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+
+      // Vérifiez si la réponse est valide et contient des données
+      if (response.status === 200) {
+        setGroups(response.data);
+      }
+    } catch (error) {
+      if (error.response && error.response.status === 404) {
+        alert("You have no sharing lists");
+      } else {
+        alert("Internal Server Error 2");
+      }
+    }
+  }
+  const [groups, setGroups] = useState([]);
+  const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+    getGroups();
+  }, []);
+
   const exemples = ["test", "test", "test", "test", "test", "test"];
   return (
     <div className="mt-[100px] w-full flex flex-row h-[calc(100vh-100px)] ml-5">
-      <div className="rounded-lg w-2/5 overflow-auto border border-black">
-        {exemples.map((exemple, index) => (
-          <div
-            key={index}
-            className="mt-5 mx-auto p-5 pt-2.5 bg-blue-50 rounded-lg w-[95%] shadow-[5px_5px_15px_rgba(0,0,0,0.3)]"
-          >
-            <div className="font-bold">Groupe : Informatique</div>
-            <div className="mb-2.5">
-              <b>Description :</b> Groupe contenant tout les employes du
-              departemant informatique
-            </div>
-            <div className="flex justify-start">
-              <AvatarGroup max={10}>
-                <Avatar sx={{ color: "#ffffff", backgroundColor: "#29508a" }}>
-                  F
-                </Avatar>
-                <Avatar sx={{ color: "#ffffff", backgroundColor: "#29508a" }}>
-                  F
-                </Avatar>
-              </AvatarGroup>
-            </div>
-          </div>
-        ))}
-        <div className="mt-5 mx-auto p-5 pt-2.5 bg-[#CBD7D9] rounded-lg w-[95%] shadow-[5px_5px_15px_rgba(0,0,0,0.3)]">
-          <div className="mb-2.5 font-bold">Groupe : Informatique</div>
-          <div className="mb-2.5">
-            <b>Description :</b> Groupe contenant tout les employes du
-            departemant informatique
-          </div>
-          <div className="flex justify-start">
-            <AvatarGroup max={10}>
-              <Avatar sx={{ color: "#ffffff", backgroundColor: "#29508a" }}>
-                F
-              </Avatar>
-              <Avatar sx={{ color: "#ffffff", backgroundColor: "#29508a" }}>
-                F
-              </Avatar>
-            </AvatarGroup>
-          </div>
-        </div>
-      </div>
+      <GroupsList groups={groups} setUsers={setUsers}></GroupsList>
       <div className="rounded-lg w-[70%] flex flex-col pl-5 mr-5">
         <div className="w-full flex">
           <div className="h-[100px] rounded-md mr-5 bg-blue-50 shadow-[5px_5px_15px_rgba(0,0,0,0.3)] p-5 pt-2.5 w-[40%]">
@@ -73,33 +71,9 @@ const UserGroups = () => {
             }}
           />
           <div className="w-full bg-blue-50 flex-1 shadow-[5px_5px_15px_rgba(0,0,0,0.3)] rounded-lg mt-2.5 overflow-auto">
-            {exemples.map((exemple, index) => (
-              <div
-                key={index}
-                className="mt-5 mx-auto p-5 pt-2.5 bg-blue-50 rounded-lg w-[95%] shadow-[5px_5px_15px_rgba(0,0,0,0.3)]"
-              >
-                <div className="font-bold">Groupe : Informatique</div>
-                <div className="mb-2.5">
-                  <b>Description :</b> Groupe contenant tout les employes du
-                  departemant informatique
-                </div>
-                <div className="flex justify-start">
-                  <AvatarGroup max={10}>
-                    <Avatar
-                      sx={{ color: "#ffffff", backgroundColor: "#29508a" }}
-                    >
-                      F
-                    </Avatar>
-                    <Avatar
-                      sx={{ color: "#ffffff", backgroundColor: "#29508a" }}
-                    >
-                      F
-                    </Avatar>
-                  </AvatarGroup>
-                </div>
-              </div>
-            ))}
+            <GroupUsers users={users}></GroupUsers>
           </div>
+          <AddGroup />
         </div>
       </div>
     </div>
