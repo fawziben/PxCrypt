@@ -38,6 +38,8 @@ const UserGroups = () => {
   }
   const [groups, setGroups] = useState([]);
   const [users, setUsers] = useState([]);
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
 
   useEffect(() => {
     getGroups();
@@ -46,15 +48,19 @@ const UserGroups = () => {
   const exemples = ["test", "test", "test", "test", "test", "test"];
   return (
     <div className="mt-[100px] w-full flex flex-row h-[calc(100vh-100px)] ml-5">
-      <GroupsList groups={groups} setUsers={setUsers}></GroupsList>
+      <GroupsList
+        groups={groups}
+        setUsers={setUsers}
+        setTitle={setTitle}
+        setDescription={setDescription}
+      ></GroupsList>
       <div className="rounded-lg w-[70%] flex flex-col pl-5 mr-5">
         <div className="w-full flex">
           <div className="h-[100px] rounded-md mr-5 bg-blue-50 shadow-[5px_5px_15px_rgba(0,0,0,0.3)] p-5 pt-2.5 w-[40%]">
-            <b>Title : </b> Informatique
+            <b>Title : </b> {title}
           </div>
           <div className="h-[100px] rounded-md mr-2.5 bg-blue-50 shadow-[5px_5px_15px_rgba(0,0,0,0.3)] p-5 pt-2.5 w-[60%] overflow-auto">
-            <b>Description : </b> Groupe contenant tout les employes du
-            departemant informatique
+            <b>Description : </b> {description}
           </div>
         </div>
         <div className="usersName flex-1 flex flex-col mt-5 overflow-auto">

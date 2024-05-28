@@ -1,17 +1,34 @@
-import React, { useEffect, useState } from "react";
-import { axiosInstance } from "../AxiosInstance";
+import React, { useState } from "react";
 import { Avatar, AvatarGroup } from "@mui/material";
 import AddGroup from "./AddGroup";
 
-const GroupsList = ({ groups, setUsers }) => {
+const GroupsList = ({ groups, setUsers, setTitle, setDescription }) => {
+  const [activeIndex, setActiveIndex] = useState(null); // Ajout de l'état pour suivre le groupe sélectionné
+
+  const handleGroupClick = (index, users, title, description) => {
+    setActiveIndex(index); // Met à jour l'index du groupe sélectionné
+    setUsers(users); // Met à jour les utilisateurs
+    setTitle(title);
+    setDescription(description);
+  };
+
   return (
     <div className="rounded-lg w-2/5 overflow-auto border border-black">
       <div>
         {groups.map((group, index) => (
           <div
             key={index}
-            className="mt-5 mx-auto p-5 pt-2.5 bg-blue-50 rounded-lg w-[95%] shadow-[5px_5px_15px_rgba(0,0,0,0.3)] cursor-pointer"
-            onClick={() => setUsers(group.users)}
+            className={`mt-5 mx-auto p-5 pt-2.5 rounded-lg w-[95%] shadow-[5px_5px_15px_rgba(0,0,0,0.3)] cursor-pointer test ${
+              activeIndex === index ? "bg-[#CBD7D9]" : "bg-blue-50"
+            }`}
+            onClick={() =>
+              handleGroupClick(
+                index,
+                group.users,
+                group.title,
+                group.description
+              )
+            }
           >
             <div className="font-bold">Groupe : {group.title}</div>
             <div className="mb-2.5">
@@ -32,40 +49,7 @@ const GroupsList = ({ groups, setUsers }) => {
           </div>
         ))}
       </div>
-      <div className="mt-5 mx-auto p-5 pt-2.5 bg-[#CBD7D9] rounded-lg w-[95%] shadow-[5px_5px_15px_rgba(0,0,0,0.3)]">
-        <div className="mb-2.5 font-bold">Groupe : Informatique</div>
-        <div className="mb-2.5">
-          <b>Description :</b> Groupe contenant tout les employes du departemant
-          informatique
-        </div>
-        <div className="flex justify-start">
-          <AvatarGroup max={10}>
-            <Avatar sx={{ color: "#ffffff", backgroundColor: "#29508a" }}>
-              F
-            </Avatar>
-            <Avatar sx={{ color: "#ffffff", backgroundColor: "#29508a" }}>
-              F
-            </Avatar>
-          </AvatarGroup>
-        </div>
-      </div>
-      <div className="mt-5 mx-auto p-5 pt-2.5 bg-[#CBD7D9] rounded-lg w-[95%] shadow-[5px_5px_15px_rgba(0,0,0,0.3)]">
-        <div className="mb-2.5 font-bold">Groupe : Informatique</div>
-        <div className="mb-2.5">
-          <b>Description :</b> Groupe contenant tout les employes du departemant
-          informatique
-        </div>
-        <div className="flex justify-start">
-          <AvatarGroup max={10}>
-            <Avatar sx={{ color: "#ffffff", backgroundColor: "#29508a" }}>
-              F
-            </Avatar>
-            <Avatar sx={{ color: "#ffffff", backgroundColor: "#29508a" }}>
-              F
-            </Avatar>
-          </AvatarGroup>
-        </div>
-      </div>
+      {/* ... Autres éléments de la liste des groupes */}
       <div
         style={{
           position: "sticky", // Utilisez "absolute" pour fixer le bouton en bas à droite du div

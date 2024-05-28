@@ -28,7 +28,16 @@ const GroupUsers = ({ users }) => {
                 user.email +
                 " )"}
             </ListItemText>
-            <DeleteOutline></DeleteOutline>
+            <DeleteOutline
+              sx={{
+                cursor: "pointer",
+                color: "inherit",
+                transition: "color 0.3s",
+                "&:hover": {
+                  color: "red",
+                },
+              }}
+            ></DeleteOutline>
           </ListItem>
         </div>
       ))}
