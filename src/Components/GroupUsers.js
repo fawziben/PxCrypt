@@ -1,8 +1,44 @@
 import { DeleteOutline } from "@mui/icons-material";
 import { Avatar, ListItem, ListItemText } from "@mui/material";
 import React from "react";
+import { axiosInstance } from "../AxiosInstance";
 
-const GroupUsers = ({ users }) => {
+const GroupUsers = ({ groupIndex, users, setUsers, groups, setGroups }) => {
+  async function deleteUser(id) {
+    try {
+      let accessToken = localStorage.getItem("token");
+
+      const response = await axiosInstance.delete(`/groups/user_group/${id}`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+
+      // Vérifiez si la réponse est valide et contient des données
+      if (response.status === 204) {
+        alert("user deleted successfully");
+      }
+    } catch (error) {
+      if (error.response && error.response.status === 404) {
+        alert("You have no sharing lists");
+      } else {
+        alert("Internal Server Error 2");
+      }
+    }
+  }
+  const handleDelete = (index, user_group) => {
+    // Filter out the user at the specified index
+    const updatedUsers = users.filter((_, i) => i !== index);
+    // Update the users state with the new list
+    setUsers(updatedUsers);
+    deleteUser(user_group);
+    const updatedGroups = [...groups];
+
+    updatedGroups[groupIndex].users = updatedUsers;
+
+    setGroups(updatedGroups);
+  };
+
   return (
     <div>
       {users.map((user, index) => (
@@ -37,6 +73,7 @@ const GroupUsers = ({ users }) => {
                   color: "red",
                 },
               }}
+              onClick={() => handleDelete(index, user.user_group)}
             ></DeleteOutline>
           </ListItem>
         </div>

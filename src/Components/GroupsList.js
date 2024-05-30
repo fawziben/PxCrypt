@@ -2,14 +2,19 @@ import React, { useState } from "react";
 import { Avatar, AvatarGroup } from "@mui/material";
 import AddGroup from "./AddGroup";
 
-const GroupsList = ({ groups, setUsers, setTitle, setDescription }) => {
-  const [activeIndex, setActiveIndex] = useState(null); // Ajout de l'état pour suivre le groupe sélectionné
-
+const GroupsList = ({
+  groupIndex,
+  setGroupIndex,
+  groups,
+  setUsers,
+  setTitle,
+  setDescription,
+}) => {
   const handleGroupClick = (index, users, title, description) => {
-    setActiveIndex(index); // Met à jour l'index du groupe sélectionné
     setUsers(users); // Met à jour les utilisateurs
     setTitle(title);
     setDescription(description);
+    setGroupIndex(index);
   };
 
   return (
@@ -19,7 +24,7 @@ const GroupsList = ({ groups, setUsers, setTitle, setDescription }) => {
           <div
             key={index}
             className={`mt-5 mx-auto p-5 pt-2.5 rounded-lg w-[95%] shadow-[5px_5px_15px_rgba(0,0,0,0.3)] cursor-pointer test ${
-              activeIndex === index ? "bg-[#CBD7D9]" : "bg-blue-50"
+              groupIndex === index ? "bg-[#CBD7D9]" : "bg-blue-50"
             }`}
             onClick={() =>
               handleGroupClick(
