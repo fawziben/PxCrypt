@@ -23,7 +23,7 @@ const AddGroup = () => {
       >
         <AddOutlined />
       </Fab>
-      {open && <AddGroupDialog></AddGroupDialog>}
+      <AddGroupDialog open={open} setOpen={setOpen}></AddGroupDialog>
     </div>
   );
 };

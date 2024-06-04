@@ -27,9 +27,7 @@ const GroupUsers = ({ groupIndex, users, setUsers, groups, setGroups }) => {
     }
   }
   const handleDelete = (index, user_group) => {
-    // Filter out the user at the specified index
     const updatedUsers = users.filter((_, i) => i !== index);
-    // Update the users state with the new list
     setUsers(updatedUsers);
     deleteUser(user_group);
     const updatedGroups = [...groups];

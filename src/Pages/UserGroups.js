@@ -7,42 +7,19 @@ import {
   TextField,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { DeleteOutline, Search } from "@mui/icons-material";
+import { DeleteOutline, Done, Search } from "@mui/icons-material";
 import AddGroup from "../Components/AddGroup";
 import GroupsList from "../Components/GroupsList";
 import { axiosInstance } from "../AxiosInstance";
 import GroupUsers from "../Components/GroupUsers";
-import EditIcon from "@mui/icons-material/Edit";
+import GroupInfo from "../Components/GroupInfo";
 
 const UserGroups = () => {
-  async function getGroups() {
-    try {
-      let accessToken = localStorage.getItem("token");
-
-      const response = await axiosInstance.get("/groups/", {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
-
-      // Vérifiez si la réponse est valide et contient des données
-      if (response.status === 200) {
-        setGroups(response.data);
-      }
-    } catch (error) {
-      if (error.response && error.response.status === 404) {
-        alert("You have no sharing lists");
-      } else {
-        alert("Internal Server Error 2");
-      }
-    }
-  }
-
   const [groups, setGroups] = useState([]);
   const [users, setUsers] = useState([]);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [groupIndex, setGroupIndex] = useState(0);
+  const [groupIndex, setGroupIndex] = useState(null);
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [isEditingDescription, setIsEditingDescription] = useState(false);
 
@@ -50,30 +27,33 @@ const UserGroups = () => {
     getGroups();
   }, []);
 
-  const handleEditClick = (field) => {
-    if (field === "title") {
-      setIsEditingTitle(true);
-    } else if (field === "description") {
-      setIsEditingDescription(true);
+  const getGroups = async () => {
+    try {
+      let accessToken = localStorage.getItem("token");
+      const response = await axiosInstance.get("/groups/", {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      if (response.status === 200) {
+        setGroups(response.data);
+      }
+    } catch (error) {
+      if (error.response && error.response.status === 404) {
+        alert("You have no sharing lists");
+      } else {
+        alert("Internal Server Error");
+      }
     }
   };
 
-  const handleTitleChange = (e) => {
-    setTitle(e.target.value);
-  };
-
-  const handleDescriptionChange = (e) => {
-    setDescription(e.target.value);
-  };
-
-  const handleTitleBlur = () => {
+  const handleGroupClick = (index, users, title, description) => {
+    setGroupIndex(index);
+    setUsers(users);
+    setTitle(title);
+    setDescription(description);
     setIsEditingTitle(false);
-    // Vous pouvez également ajouter du code ici pour sauvegarder le titre modifié
-  };
-
-  const handleDescriptionBlur = () => {
     setIsEditingDescription(false);
-    // Vous pouvez également ajouter du code ici pour sauvegarder la description modifiée
   };
 
   return (
@@ -86,55 +66,25 @@ const UserGroups = () => {
         setUsers={setUsers}
         setTitle={setTitle}
         setDescription={setDescription}
-      ></GroupsList>
+        handleGroupClick={handleGroupClick}
+      />
       <div className="rounded-lg w-[70%] flex flex-col pl-5 mr-5">
-        <div className="w-full flex">
-          <div className="h-[100px] rounded-md mr-5 bg-blue-50 shadow-[5px_5px_15px_rgba(0,0,0,0.3)] p-5 pt-2.5 w-[40%] flex">
-            <div className="grow">
-              <span>
-                <b>Title : </b>
-              </span>
-              {isEditingTitle ? (
-                <TextField
-                  value={title}
-                  onChange={handleTitleChange}
-                  onBlur={handleTitleBlur}
-                  autoFocus
-                  variant="standard"
-                />
-              ) : (
-                <span>{title}</span>
-              )}
-            </div>
-            <EditIcon
-              sx={{ cursor: "pointer" }}
-              onClick={() => handleEditClick("title")}
-            ></EditIcon>
-          </div>
-          <div className="h-[100px] rounded-md mr-2.5 bg-blue-50 shadow-[5px_5px_15px_rgba(0,0,0,0.3)] p-5 pt-2.5 w-[60%] overflow-auto flex">
-            <div className="grow">
-              <span>
-                <b>Description : </b>
-              </span>
-              {isEditingDescription ? (
-                <TextField
-                  value={description}
-                  onChange={handleDescriptionChange}
-                  onBlur={handleDescriptionBlur}
-                  autoFocus
-                  variant="standard"
-                  minRows={3}
-                />
-              ) : (
-                <span>{description}</span>
-              )}
-            </div>
-            <EditIcon
-              sx={{ cursor: "pointer" }}
-              onClick={() => handleEditClick("description")}
-            ></EditIcon>
-          </div>
-        </div>
+        {groupIndex !== null && ( // Conditional rendering
+          <GroupInfo
+            title={title}
+            description={description}
+            groupId={groups[groupIndex].id}
+            isEditingTitle={isEditingTitle}
+            setIsEditingTitle={setIsEditingTitle}
+            isEditingDescription={isEditingDescription}
+            setIsEditingDescription={setIsEditingDescription}
+            setTitle={setTitle}
+            setDescription={setDescription}
+            groups={groups}
+            setGroups={setGroups}
+            groupIndex={groupIndex}
+          />
+        )}
         <div className="usersName flex-1 flex flex-col mt-5 overflow-auto">
           <TextField
             sx={{ width: "60%", marginLeft: "auto", marginRight: "auto" }}
@@ -155,7 +105,7 @@ const UserGroups = () => {
               groups={groups}
               setGroups={setGroups}
               groupIndex={groupIndex}
-            ></GroupUsers>
+            />
           </div>
           <AddGroup />
         </div>

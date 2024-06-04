@@ -35,21 +35,23 @@ const GroupsList = ({
               )
             }
           >
-            <div className="font-bold">Groupe : {group.title}</div>
-            <div className="mb-2.5">
-              <b>Description :</b> {group.description}
-            </div>
-            <div className="flex justify-start">
-              <AvatarGroup max={10}>
-                {group.users.map((user, index) => (
-                  <Avatar
-                    key={index}
-                    sx={{ color: "#ffffff", backgroundColor: "#29508a" }}
-                  >
-                    {user.first_name[0] + user.last_name[0]}
-                  </Avatar>
-                ))}
-              </AvatarGroup>
+            <div className="max-w-full break-words	">
+              <div className="font-bold">Groupe : {group.title}</div>
+              <div className="mb-2.5">
+                <b>Description :</b> {group.description}
+              </div>
+              <div className="flex justify-start">
+                <AvatarGroup max={10}>
+                  {group.users.map((user, index) => (
+                    <Avatar
+                      key={index}
+                      sx={{ color: "#ffffff", backgroundColor: "#29508a" }}
+                    >
+                      {user.first_name[0] + user.last_name[0]}
+                    </Avatar>
+                  ))}
+                </AvatarGroup>
+              </div>
             </div>
           </div>
         ))}

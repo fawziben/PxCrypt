@@ -1,41 +1,85 @@
-import React from "react";
-import { FaUsers } from "react-icons/fa";
-import { Button } from "@mui/material";
+import React, { useState } from "react";
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  TextField,
+} from "@mui/material";
+import { axiosInstance } from "../AxiosInstance";
 
-export default function AddGroupDialog() {
+const createNewGroup = async (title, description) => {
+  try {
+    const accessToken = localStorage.getItem("token");
+    const response = await axiosInstance.post(
+      `/groups/create`,
+      { title: title, description: description },
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json", // Assurez-vous d'ajouter cet en-tête
+        },
+      }
+    );
+  } catch (error) {
+    console.error(
+      "Erreur lors de la mise à jour de la description du groupe :",
+      error
+    );
+  }
+};
+
+export default function AddGroupDialog({ open, setOpen }) {
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+
+  const handleCloseDialog = () => {
+    setOpen(false);
+  };
+
+  const handleCreateGroup = () => {
+    createNewGroup(title, description);
+    handleCloseDialog();
+  };
+
   return (
-    <div
-      className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center"
-      style={{ zIndex: 50 }}
-    >
-      <div className=" w-1/3 h-fit bg-white p-4 rounded-md space-y-8">
-        <div className="space-y-2">
-          <div className="flex items-center justify-center space-x-2">
-            <p className="text-lg font-bold text-bleuF text-center">
-              Nouveau Groupe
-            </p>
-            <FaUsers size={30} className="text-bleuF" />
-          </div>
-          <div>
-            <p className="text-sm text-bleuF font-semibold">Nom du groupe</p>
-            <textarea
-              className="w-full bg-violet border text-bleuF border-gray-400 rounded-md p-1 focus:outline-none focus:border-blue-500"
-              rows="1"
-            ></textarea>
-          </div>
-          <div>
-            <p className="text-sm text-bleuF font-semibold">Description</p>
-            <textarea
-              className="w-full bg-violet border text-bleuF border-gray-400 rounded-md p-1 focus:outline-none focus:border-blue-500"
-              rows="3"
-            ></textarea>
-          </div>
+    <div>
+      <Dialog open={open} onClose={handleCloseDialog}>
+        <div className="w-[400px]">
+          <DialogTitle
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            Add a new group
+          </DialogTitle>
+          <DialogContent>
+            <TextField
+              sx={{ width: "100%" }}
+              label="Group Title"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              minRows={3}
+            />
+            <br />
+            <br />
+            <TextField
+              sx={{ width: "100%" }}
+              label="Group Description"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCreateGroup} variant="contained">
+              Create
+            </Button>
+          </DialogActions>
         </div>
-        <div className="flex justify-end space-x-2">
-          <Button>Annuler</Button>
-          <Button>Créer</Button>
-        </div>
-      </div>
+      </Dialog>
     </div>
   );
 }

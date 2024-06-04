@@ -3,7 +3,6 @@ import MainPageTabs from "../Components/MainPageTabs";
 import LocalFilesTable from "../Components/LocalFilesTable";
 import UploadeFilesTable from "../Components/UploadedFilesTable";
 import KeyFab from "../Components/KeyFab";
-import CircularProgress from "@mui/material/CircularProgress"; // Importer le composant de chargement
 
 export default function MainPage() {
   const [isDataLoaded, setIsDataLoaded] = useState(false); // État pour suivre si les données sont chargées ou non
