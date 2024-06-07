@@ -40,9 +40,9 @@ const UserGroups = () => {
       }
     } catch (error) {
       if (error.response && error.response.status === 404) {
-        alert("You have no sharing lists");
+        console.log("You have no sharing lists");
       } else {
-        alert("Internal Server Error");
+        console.log("Internal Server Error");
       }
     }
   };
@@ -67,24 +67,26 @@ const UserGroups = () => {
         setTitle={setTitle}
         setDescription={setDescription}
         handleGroupClick={handleGroupClick}
+        setGroups={setGroups}
       />
       <div className="rounded-lg w-[70%] flex flex-col pl-5 mr-5">
-        {groupIndex !== null && ( // Conditional rendering
-          <GroupInfo
-            title={title}
-            description={description}
-            groupId={groups[groupIndex].id}
-            isEditingTitle={isEditingTitle}
-            setIsEditingTitle={setIsEditingTitle}
-            isEditingDescription={isEditingDescription}
-            setIsEditingDescription={setIsEditingDescription}
-            setTitle={setTitle}
-            setDescription={setDescription}
-            groups={groups}
-            setGroups={setGroups}
-            groupIndex={groupIndex}
-          />
-        )}
+        {groupIndex !== null &&
+          groups[groupIndex] && ( // Conditional rendering
+            <GroupInfo
+              title={title}
+              description={description}
+              groupId={groups[groupIndex].id}
+              isEditingTitle={isEditingTitle}
+              setIsEditingTitle={setIsEditingTitle}
+              isEditingDescription={isEditingDescription}
+              setIsEditingDescription={setIsEditingDescription}
+              setTitle={setTitle}
+              setDescription={setDescription}
+              groups={groups}
+              setGroups={setGroups}
+              groupIndex={groupIndex}
+            />
+          )}
         <div className="usersName flex-1 flex flex-col mt-5 overflow-auto">
           <TextField
             sx={{ width: "60%", marginLeft: "auto", marginRight: "auto" }}
@@ -107,7 +109,6 @@ const UserGroups = () => {
               groupIndex={groupIndex}
             />
           </div>
-          <AddGroup />
         </div>
       </div>
     </div>

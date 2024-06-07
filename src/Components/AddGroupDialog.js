@@ -9,28 +9,7 @@ import {
 } from "@mui/material";
 import { axiosInstance } from "../AxiosInstance";
 
-const createNewGroup = async (title, description) => {
-  try {
-    const accessToken = localStorage.getItem("token");
-    const response = await axiosInstance.post(
-      `/groups/create`,
-      { title: title, description: description },
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          "Content-Type": "application/json", // Assurez-vous d'ajouter cet en-tête
-        },
-      }
-    );
-  } catch (error) {
-    console.error(
-      "Erreur lors de la mise à jour de la description du groupe :",
-      error
-    );
-  }
-};
-
-export default function AddGroupDialog({ open, setOpen }) {
+export default function AddGroupDialog({ open, setOpen, setGroups, groups }) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
 
@@ -41,6 +20,41 @@ export default function AddGroupDialog({ open, setOpen }) {
   const handleCreateGroup = () => {
     createNewGroup(title, description);
     handleCloseDialog();
+  };
+  const createNewGroup = async (title, description) => {
+    try {
+      const accessToken = localStorage.getItem("token");
+      const response = await axiosInstance.post(
+        `/groups/create`,
+        { title: title, description: description },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        // Create a new group object
+        const newGroup = {
+          id: response.data.id,
+          title: title,
+          description: description,
+          users: [],
+        };
+        // Append the new group to the existing groups array
+        const updatedGroups = [...groups, newGroup];
+        setGroups(updatedGroups);
+        console.log(newGroup);
+        console.log(groups[10].title);
+        setGroups((prevGroups) => [...prevGroups]);
+      } else {
+        console.log("Internal server error");
+      }
+    } catch (error) {
+      console.error("Erreur lors de la création du groupe :", error);
+    }
   };
 
   return (

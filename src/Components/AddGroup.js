@@ -1,30 +1,26 @@
-import { AddOutlined, AddReactionOutlined } from "@mui/icons-material";
 import React, { useState } from "react";
 import AddGroupDialog from "./AddGroupDialog";
-import { Fab } from "@mui/material";
+import { Box, Fab } from "@mui/material";
+import { AddOutlined } from "@mui/icons-material";
 
-const AddGroup = () => {
+const AddGroup = ({ setGroups, groups }) => {
   const [open, setOpen] = useState(false);
   const handleAddClick = () => {
     setOpen(true);
   };
 
   return (
-    <div style={{ position: "relative" }}>
-      <Fab
-        sx={{
-          position: "absolute", // Utilisez "absolute" pour fixer le bouton en bas à droite du div
-          bottom: "16px",
-          right: "16px",
-        }}
-        color="primary"
-        aria-label="add"
-        onClick={handleAddClick}
-      >
+    <Box sx={{ position: "absolute", bottom: "10px", right: "10px" }}>
+      <Fab color="primary" aria-label="add" onClick={handleAddClick}>
         <AddOutlined />
       </Fab>
-      <AddGroupDialog open={open} setOpen={setOpen}></AddGroupDialog>
-    </div>
+      <AddGroupDialog
+        open={open}
+        setOpen={setOpen}
+        setGroups={setGroups}
+        groups={groups}
+      />
+    </Box>
   );
 };
 
