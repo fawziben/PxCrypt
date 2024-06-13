@@ -13,6 +13,8 @@ import GroupsList from "../Components/GroupsList";
 import { axiosInstance } from "../AxiosInstance";
 import GroupUsers from "../Components/GroupUsers";
 import GroupInfo from "../Components/GroupInfo";
+import AddUser from "../Components/AddUser";
+import AddUserDialog from "../Components/AddUserDialog";
 
 const UserGroups = () => {
   const [groups, setGroups] = useState([]);
@@ -26,6 +28,10 @@ const UserGroups = () => {
   useEffect(() => {
     getGroups();
   }, []);
+
+  const refresh = (users) => {
+    setUsers((prevUsers) => [...prevUsers, ...users]);
+  };
 
   const getGroups = async () => {
     try {
@@ -67,7 +73,6 @@ const UserGroups = () => {
         setTitle={setTitle}
         setDescription={setDescription}
         handleGroupClick={handleGroupClick}
-        setGroups={setGroups}
       />
       <div className="rounded-lg w-[70%] flex flex-col pl-5 mr-5">
         {groupIndex !== null &&
@@ -108,6 +113,16 @@ const UserGroups = () => {
               setGroups={setGroups}
               groupIndex={groupIndex}
             />
+            {groupIndex != null && (
+              <AddUserDialog
+                users={users}
+                groupId={groups[groupIndex].id}
+                groups={groups}
+                setGroups={setGroups}
+                groupIndex={groupIndex}
+                refresh={refresh}
+              ></AddUserDialog>
+            )}
           </div>
         </div>
       </div>

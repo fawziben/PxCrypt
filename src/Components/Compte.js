@@ -11,14 +11,14 @@ import {
   IconButton,
   Popover,
 } from "@mui/material";
-
+import myImg from "../Components/IMG_7271.jpg";
 // ----------------------------------------------------------------------
 
 export default function Compte() {
   // Définir un compte statique pour les tests
   const account = {
-    username: "testuser",
-    email: "testuser@example.com",
+    username: "Fawzi Ben",
+    email: "admin@gmail.com",
     image: "/path/to/static/image.jpg",
     type: "chercheur",
   };
@@ -38,19 +38,6 @@ export default function Compte() {
       url: "/" + account.type + "/profile",
     },
   ];
-
-  if (account.type === "chercheur") {
-    MENU_OPTIONS.push({
-      label: "Enregistrements",
-      icon: "eva:settings-2-fill",
-      url: "/chercheur/enregistrements",
-    });
-    MENU_OPTIONS.push({
-      label: "Favoris",
-      icon: "eva:settings-2-fill",
-      url: "/chercheur/favoris",
-    });
-  }
 
   MENU_OPTIONS.push({
     label: "Paramètres",
@@ -93,7 +80,9 @@ export default function Compte() {
           }),
         }}
       >
-        <Avatar sx={{ backgroundColor: "#C27821" }}>FB</Avatar>
+        <Avatar sx={{ backgroundColor: "#C27821" }}>
+          <img src={myImg} />
+        </Avatar>
       </IconButton>
 
       <Popover

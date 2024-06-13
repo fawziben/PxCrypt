@@ -23,16 +23,16 @@ import {
 const STATIC_NOTIFICATIONS = [
   {
     _id: "1",
-    type: "nouvelle_offre",
-    contenu: "Nouvelle offre disponible.",
+    type: "fichier_recu",
+    contenu: "Vous avez recun un nouveau fichier.",
     lien: "/offres/1",
     date_creation: set(new Date(), { hours: 10, minutes: 30 }).toISOString(),
     statut: "non lu",
   },
   {
     _id: "2",
-    type: "candidature_refusee",
-    contenu: "Candidature refusée.",
+    type: "fichier_recu",
+    contenu: "Vous avez recun un nouveau fichier.",
     lien: "/offres/2",
     date_creation: sub(new Date(), { hours: 3, minutes: 30 }).toISOString(),
     statut: "non lu",
