@@ -3,7 +3,14 @@ import { Avatar, ListItem, ListItemText } from "@mui/material";
 import React from "react";
 import { axiosInstance } from "../AxiosInstance";
 
-const GroupUsers = ({ groupIndex, users, setUsers, groups, setGroups }) => {
+const GroupUsers = ({
+  groupIndex,
+  users,
+  setUsers,
+  groups,
+  setGroups,
+  searchText,
+}) => {
   async function deleteUser(id) {
     try {
       let accessToken = localStorage.getItem("token");
@@ -14,9 +21,8 @@ const GroupUsers = ({ groupIndex, users, setUsers, groups, setGroups }) => {
         },
       });
 
-      // Vérifiez si la réponse est valide et contient des données
       if (response.status === 204) {
-        alert("user deleted successfully");
+        console.log("user deleted successfully");
       }
     } catch (error) {
       if (error.response && error.response.status === 404) {
@@ -26,20 +32,28 @@ const GroupUsers = ({ groupIndex, users, setUsers, groups, setGroups }) => {
       }
     }
   }
-  const handleDelete = (index, user_group) => {
-    const updatedUsers = users.filter((_, i) => i !== index);
-    setUsers(updatedUsers);
-    deleteUser(user_group);
-    const updatedGroups = [...groups];
 
+  const handleDelete = (userToDelete) => {
+    const updatedUsers = users.filter((user) => user.id !== userToDelete.id);
+    setUsers(updatedUsers);
+    deleteUser(userToDelete.user_group);
+
+    const updatedGroups = [...groups];
     updatedGroups[groupIndex].users = updatedUsers;
 
     setGroups(updatedGroups);
   };
 
+  const filteredUsers = users.filter(
+    (user) =>
+      user.first_name.toLowerCase().includes(searchText.toLowerCase()) ||
+      user.last_name.toLowerCase().includes(searchText.toLowerCase()) ||
+      user.email.toLowerCase().includes(searchText.toLowerCase())
+  );
+
   return (
     <div>
-      {users.map((user, index) => (
+      {filteredUsers.map((user, index) => (
         <div
           key={index}
           className="mt-5 mx-auto p-5 pt-2.5 bg-blue-50 rounded-lg w-[80%] shadow-[5px_5px_15px_rgba(0,0,0,0.3)]"
@@ -71,7 +85,7 @@ const GroupUsers = ({ groupIndex, users, setUsers, groups, setGroups }) => {
                   color: "red",
                 },
               }}
-              onClick={() => handleDelete(index, user.user_group)}
+              onClick={() => handleDelete(user)}
             ></DeleteOutline>
           </ListItem>
         </div>

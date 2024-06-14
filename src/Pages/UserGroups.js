@@ -24,6 +24,7 @@ const UserGroups = () => {
   const [groupIndex, setGroupIndex] = useState(null);
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [isEditingDescription, setIsEditingDescription] = useState(false);
+  const [searchText, setSearchText] = useState(""); // Nouvel état pour le texte de recherche
 
   useEffect(() => {
     getGroups();
@@ -62,6 +63,10 @@ const UserGroups = () => {
     setIsEditingDescription(false);
   };
 
+  const handleSearchChange = (event) => {
+    setSearchText(event.target.value);
+  };
+
   return (
     <div className="mt-[100px] w-full flex flex-row h-[calc(100vh-100px)] ml-5">
       <GroupsList
@@ -75,28 +80,29 @@ const UserGroups = () => {
         handleGroupClick={handleGroupClick}
       />
       <div className="rounded-lg w-[70%] flex flex-col pl-5 mr-5">
-        {groupIndex !== null &&
-          groups[groupIndex] && ( // Conditional rendering
-            <GroupInfo
-              title={title}
-              description={description}
-              groupId={groups[groupIndex].id}
-              isEditingTitle={isEditingTitle}
-              setIsEditingTitle={setIsEditingTitle}
-              isEditingDescription={isEditingDescription}
-              setIsEditingDescription={setIsEditingDescription}
-              setTitle={setTitle}
-              setDescription={setDescription}
-              groups={groups}
-              setGroups={setGroups}
-              groupIndex={groupIndex}
-            />
-          )}
+        {groupIndex !== null && groups[groupIndex] && (
+          <GroupInfo
+            title={title}
+            description={description}
+            groupId={groups[groupIndex].id}
+            isEditingTitle={isEditingTitle}
+            setIsEditingTitle={setIsEditingTitle}
+            isEditingDescription={isEditingDescription}
+            setIsEditingDescription={setIsEditingDescription}
+            setTitle={setTitle}
+            setDescription={setDescription}
+            groups={groups}
+            setGroups={setGroups}
+            groupIndex={groupIndex}
+          />
+        )}
         <div className="usersName flex-1 flex flex-col mt-5 overflow-auto">
           <TextField
             sx={{ width: "60%", marginLeft: "auto", marginRight: "auto" }}
             variant="filled"
             label="search for a user"
+            value={searchText}
+            onChange={handleSearchChange}
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
@@ -112,6 +118,7 @@ const UserGroups = () => {
               groups={groups}
               setGroups={setGroups}
               groupIndex={groupIndex}
+              searchText={searchText}
             />
             {groupIndex != null && (
               <AddUserDialog
@@ -121,7 +128,7 @@ const UserGroups = () => {
                 setGroups={setGroups}
                 groupIndex={groupIndex}
                 refresh={refresh}
-              ></AddUserDialog>
+              />
             )}
           </div>
         </div>
