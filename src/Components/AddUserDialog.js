@@ -98,6 +98,7 @@ const AddUserDialog = ({
       .filter((recipient) => recipient.state) // Filtrer les destinataires avec `state` à `true`
       .map((recipient) => recipient.id);
     addUsers(groupId, selectedRecipients, rec);
+    setOpenDialog(false);
   };
 
   return (

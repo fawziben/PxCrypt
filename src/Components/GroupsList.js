@@ -1,7 +1,13 @@
-import React from "react";
-import { Avatar, AvatarGroup, Box } from "@mui/material";
+import React, { useState } from "react";
+import {
+  Avatar,
+  AvatarGroup,
+  Box,
+  InputAdornment,
+  TextField,
+} from "@mui/material";
 import AddGroup from "./AddGroup";
-import { DeleteOutline } from "@mui/icons-material";
+import { DeleteOutline, Search } from "@mui/icons-material";
 import { axiosInstance } from "../AxiosInstance";
 
 async function deleteGroup(group_id) {
@@ -27,11 +33,23 @@ const GroupsList = ({
   setDescription,
   setGroups,
 }) => {
-  const handleGroupClick = (index, users, title, description) => {
+  const [searchTerm, setSearchTerm] = useState(""); // Ajouter un état pour le terme de recherche
+
+  const handleGroupClick = (groupId, users, title, description) => {
+    const originalIndex = groups.findIndex((group) => group.id === groupId);
     setUsers(users);
     setTitle(title);
     setDescription(description);
-    setGroupIndex(index);
+    setGroupIndex(originalIndex); // Set groupIndex to the original index
+  };
+
+  const filteredGroups = groups.filter((group) =>
+    group.title.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const handleSearchChange = (event) => {
+    setSearchTerm(event.target.value);
+    // Mettre à jour le terme de recherche lorsque l'utilisateur tape
   };
 
   const handleGroupDelete = (e, id) => {
@@ -45,17 +63,42 @@ const GroupsList = ({
 
   return (
     <div className="rounded-lg w-2/5 overflow-auto border border-black relative">
+      <div
+        style={{
+          position: "sticky",
+          top: 0,
+          zIndex: 1,
+          backgroundColor: "white",
+        }}
+      >
+        <TextField
+          sx={{ width: "100%", marginLeft: "auto", marginRight: "auto" }}
+          variant="filled"
+          label="search for a group"
+          value={searchTerm}
+          onChange={handleSearchChange}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <Search />
+              </InputAdornment>
+            ),
+          }}
+        />
+      </div>
       <div>
-        {groups.length > 0 &&
-          groups.map((group, index) => (
+        {filteredGroups.length > 0 &&
+          filteredGroups.map((group) => (
             <div
-              key={index}
+              key={group.id}
               className={`mt-5 mx-auto p-5 pt-2.5 rounded-lg w-[95%] shadow-[5px_5px_15px_rgba(0,0,0,0.3)] cursor-pointer ${
-                groupIndex === index ? "bg-[#CBD7D9]" : "bg-blue-50"
+                groupIndex === groups.findIndex((g) => g.id === group.id)
+                  ? "bg-[#CBD7D9]"
+                  : "bg-blue-50"
               }`}
               onClick={() =>
                 handleGroupClick(
-                  index,
+                  group.id,
                   group.users,
                   group.title,
                   group.description
@@ -73,7 +116,10 @@ const GroupsList = ({
                       {group.users.map((user, index) => (
                         <Avatar
                           key={index}
-                          sx={{ color: "#ffffff", backgroundColor: "#29508a" }}
+                          sx={{
+                            color: "#ffffff",
+                            backgroundColor: "#29508a",
+                          }}
                         >
                           {user.first_name[0] + user.last_name[0]}
                         </Avatar>
