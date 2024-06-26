@@ -8,25 +8,28 @@ export default function MainPage() {
   const [isDataLoaded, setIsDataLoaded] = useState(false); // État pour suivre si les données sont chargées ou non
   const [fileData, setFileData] = useState([]);
   useEffect(() => {
-    // Vérifiez si les données sont déjà stockées dans le localStorage
-    const storedData = sessionStorage.getItem("fileData");
+    const storedData = localStorage.getItem("fileData");
+    // localStorage.setItem("fileData", JSON.stringify(""));
+
+    alert(storedData);
     if (storedData) {
-      // Si les données sont présentes, initialisez fileData avec ces données
       setFileData(JSON.parse(storedData));
     } else {
-      // Sinon, récupérez les données de l'API Electron
-      window.electronAPI.filePaths().then((result) => {
-        setFileData(result);
-        setIsDataLoaded(true);
-        sessionStorage.setItem("fileData", JSON.stringify(result));
-      });
+      localStorage.setItem("fileData", JSON.stringify(""));
+
+      //   // Sinon, récupérez les données de l'API Electron
+      //   window.electronAPI.filePaths().then((result) => {
+      //     setFileData(result);
+      //     setIsDataLoaded(true);
+      //     localStorage.setItem("fileData", JSON.stringify(result));
+      //   });
     }
   }, []); // Passer un tableau vide en deuxième argument pour que cet effet ne se déclenche qu'une fois
 
   const updateFileData = (newFileData) => {
     const updatedData = [...fileData, newFileData];
     setFileData(updatedData);
-    sessionStorage.setItem("fileData", JSON.stringify(updatedData)); // Use updatedData here
+    localStorage.setItem("fileData", JSON.stringify(updatedData)); // Use updatedData here
   };
 
   const removeFileData = (filePathToRemove) => {
@@ -51,8 +54,7 @@ export default function MainPage() {
     // Mettre à jour fileData
     setFileData(updatedData);
 
-    // Mettre à jour sessionStorage
-    sessionStorage.setItem("fileData", JSON.stringify(updatedData));
+    localStorage.setItem("fileData", JSON.stringify(updatedData));
   };
   return (
     <div

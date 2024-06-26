@@ -45,7 +45,7 @@ export default function FileStats() {
   };
 
   useEffect(() => {
-    const dataString = sessionStorage.getItem("fileData");
+    const dataString = localStorage.getItem("fileData");
     const data = JSON.parse(dataString);
     const handleResize = () => {
       setGap(window.innerWidth <= 1200 ? "1vw" : "4vw");

@@ -1,6 +1,11 @@
-const { app, BrowserWindow, ipcMain, dialog } = require("electron"); // Import des modules Electron nécessaires
+// Import des modules Electron nécessaires
+const electron = require("electron");
+const app = electron.app;
+const BrowserWindow = electron.BrowserWindow;
+const ipcMain = electron.ipcMain;
+const dialog = electron.dialog;
 const path = require("path"); // Import du module path pour gérer les chemins de fichiers
-const isDev = require("electron-is-dev"); // Import du module electron-is-dev pour détecter le mode de développement
+const isDev = app.isPackaged ? false : require("electron-is-dev");
 const fs = require("fs");
 const { exec } = require("child_process");
 const axios = require("axios");
@@ -97,14 +102,15 @@ function createWindow() {
   // Chargement de l'URL de l'application React
   win.loadURL(
     isDev
-      ? "http://127.0.0.1:3000"
+      ? "http://localhost:3000"
       : `file://${path.join(__dirname, "../build/index.html")}`
   );
+  win.on("closed", () => (win = null));
 }
 
-ipcMain.handle("file-paths", (event) => {
-  return paths;
-});
+// ipcMain.handle("file-paths", (event) => {
+//   return paths;
+// });
 // Écouteur d'événement pour l'événement 'logged-successfully'
 ipcMain.on("logged-successfully", (event) => {
   // Redimensionnement de la fenêtre et centrage
@@ -246,6 +252,10 @@ ipcMain.handle(
     }
   }
 );
+// Surveiller les événements de lancement de fichiers
+app.on("open-file", (event, filePath) => {
+  console.log(filePath);
+});
 
 ipcMain.handle("view-data", async (event, filePath, accessToken) => {
   try {
@@ -269,19 +279,19 @@ ipcMain.handle("view-data", async (event, filePath, accessToken) => {
 
 app.whenReady().then(() => {
   // Création d'une promesse pour exécuter runInBackground
-  const runInBackgroundPromise = new Promise((resolve, reject) => {
-    // Exécution de runInBackground avec une fonction de rappel pour obtenir les données
-    runInBackground((fileData) => {
-      paths = fileData;
-      console.log(fileData);
-      resolve(); // Résoudre la promesse une fois runInBackground terminé
-    });
-  });
+  // const runInBackgroundPromise = new Promise((resolve, reject) => {
+  //   // Exécution de runInBackground avec une fonction de rappel pour obtenir les données
+  //   runInBackground((fileData) => {
+  //     paths = fileData;
+  //     console.log(fileData);
+  //     resolve(); // Résoudre la promesse une fois runInBackground terminé
+  //   });
+  // });
 
   // Attente de la résolution de la promesse avant de créer la fenêtre principale
-  runInBackgroundPromise.then(() => {
-    createWindow();
-  });
+  // runInBackgroundPromise.then(() => {
+  createWindow();
+  // });
 
   // Gestion de l'événement 'activate' pour recréer la fenêtre si toutes les fenêtres sont fermées
   app.on("activate", () => {

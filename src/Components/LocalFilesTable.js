@@ -69,78 +69,85 @@ export default function LocalFilesTable({ fileData, removeFileData }) {
       className="w-full h-full overflow-y-auto"
       style={{ maxHeight: "100%" }}
     >
-      <div
-        ref={tableRef}
-        style={{ maxHeight: `${containerHeight}px`, overflowY: "auto" }}
-      >
-        <table className="w-full">
-          <thead className="text-white h-14">
-            <tr className="sticky top-0" style={{ backgroundColor: "#25525D" }}>
-              <th className="px-4">File</th>
-              <th className="px-4">Size</th>
-              <th className="px-4">Access Date</th>
-              <th className="px-4">Path</th>
-              <th className="px-4">Algorithm</th>
-            </tr>
-          </thead>
-          <tbody>
-            {fileData.map((row, index) => (
-              <React.Fragment key={index}>
-                <tr
-                  className="bg-white h-14 row-b-bottom cursor-pointer"
-                  onClick={() => handleRowClick(index)}
-                >
-                  <td align="center">{getFileName(row.path)}</td>
-                  <td className="px-4" align="center">
-                    {convertSize(row.size)}
-                  </td>
-                  <td className="px-4" align="center">
-                    {row.accessDate}
-                  </td>
-                  <td className="px-4" align="center">
-                    {row.path}
-                  </td>
-                  <td className="px-4" align="center">
-                    AES_256
-                  </td>
-                </tr>
-                {actions[index] && (
-                  <tr className="h-14 row-b-bottom slide-down actions-row">
-                    <td colSpan="5">
-                      <div style={{ display: "flex" }}>
-                        <div
-                          style={{ flex: 1 }}
-                          align="center"
-                          className="cursor-pointer hover:text-blue-500"
-                        >
-                          <UploadButton file_path={row.path} />
-                        </div>
-                        <div
-                          style={{ flex: 1 }}
-                          align="center"
-                          className="cursor-pointer hover:text-blue-500"
-                        >
-                          <LocalShowFileIcon file_path={row.path} />
-                        </div>
-                        <div
-                          style={{ flex: 1 }}
-                          align="center"
-                          className="cursor-pointer hover:text-blue-500"
-                        >
-                          <DecryptButton
-                            file_path={row.path}
-                            removeFileData={removeFileData}
-                          ></DecryptButton>
-                        </div>
-                      </div>
+      {fileData ? (
+        <div
+          ref={tableRef}
+          style={{ maxHeight: `${containerHeight}px`, overflowY: "auto" }}
+        >
+          <table className="w-full">
+            <thead className="text-white h-14">
+              <tr
+                className="sticky top-0"
+                style={{ backgroundColor: "#25525D" }}
+              >
+                <th className="px-4">File</th>
+                <th className="px-4">Size</th>
+                <th className="px-4">Access Date</th>
+                <th className="px-4">Path</th>
+                <th className="px-4">Algorithm</th>
+              </tr>
+            </thead>
+            <tbody>
+              {fileData.map((row, index) => (
+                <React.Fragment key={index}>
+                  <tr
+                    className="bg-white h-14 row-b-bottom cursor-pointer"
+                    onClick={() => handleRowClick(index)}
+                  >
+                    <td align="center">{getFileName(row.path)}</td>
+                    <td className="px-4" align="center">
+                      {convertSize(row.size)}
+                    </td>
+                    <td className="px-4" align="center">
+                      {row.accessDate}
+                    </td>
+                    <td className="px-4" align="center">
+                      {row.path}
+                    </td>
+                    <td className="px-4" align="center">
+                      AES_256
                     </td>
                   </tr>
-                )}
-              </React.Fragment>
-            ))}
-          </tbody>
-        </table>
-      </div>
+                  {actions[index] && (
+                    <tr className="h-14 row-b-bottom slide-down actions-row">
+                      <td colSpan="5">
+                        <div style={{ display: "flex" }}>
+                          <div
+                            style={{ flex: 1 }}
+                            align="center"
+                            className="cursor-pointer hover:text-blue-500"
+                          >
+                            <UploadButton file_path={row.path} />
+                          </div>
+                          <div
+                            style={{ flex: 1 }}
+                            align="center"
+                            className="cursor-pointer hover:text-blue-500"
+                          >
+                            <LocalShowFileIcon file_path={row.path} />
+                          </div>
+                          <div
+                            style={{ flex: 1 }}
+                            align="center"
+                            className="cursor-pointer hover:text-blue-500"
+                          >
+                            <DecryptButton
+                              file_path={row.path}
+                              removeFileData={removeFileData}
+                            ></DecryptButton>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                  )}
+                </React.Fragment>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      ) : (
+        <h1>No crypted files</h1>
+      )}
     </div>
   );
 }
