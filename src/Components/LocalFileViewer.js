@@ -8,7 +8,7 @@ const LocalFileViewer = ({ file_path }) => {
   const [unsupported, setUnsupported] = useState(false);
 
   useEffect(() => {
-    let accessToken = localStorage.getItem("token");
+    const accessToken = localStorage.getItem("token");
     const fileNameWithoutExtension = file_path.replace(/\.[^/.]+$/, "");
 
     const fetchFileData = async () => {
@@ -17,8 +17,6 @@ const LocalFileViewer = ({ file_path }) => {
           file_path,
           accessToken
         );
-        const blob = new Blob([result]);
-        const fileUrl = URL.createObjectURL(blob);
 
         const supportedTypes = ["pdf", "jpg", "jpeg", "png", "gif", "txt"];
         const getValidExtension = (filePath) => {
@@ -26,6 +24,7 @@ const LocalFileViewer = ({ file_path }) => {
           for (let i = parts.length - 1; i >= 0; i--) {
             const ext = parts[i].toLowerCase();
             if (supportedTypes.includes(ext)) {
+              setType(ext);
               return ext;
             }
           }
@@ -33,10 +32,13 @@ const LocalFileViewer = ({ file_path }) => {
         };
 
         const ext = getValidExtension(file_path);
+        console.log(ext);
         setType(ext);
         setName(fileNameWithoutExtension);
 
         if (supportedTypes.includes(ext)) {
+          const blob = new Blob([result.data], { type: result.mimeType });
+          const fileUrl = URL.createObjectURL(blob);
           setFileUrl(fileUrl);
         } else {
           setUnsupported(true);
@@ -93,7 +95,6 @@ const LocalFileViewer = ({ file_path }) => {
       ) : (
         <iframe
           src={fileUrl}
-          type={mimeType}
           style={{ width: "100%", height: "100%", border: "none" }}
           title={name}
         />

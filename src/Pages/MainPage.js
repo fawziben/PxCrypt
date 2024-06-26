@@ -11,7 +11,6 @@ export default function MainPage() {
     const storedData = localStorage.getItem("fileData");
     // localStorage.setItem("fileData", JSON.stringify(""));
 
-    alert(storedData);
     if (storedData) {
       setFileData(JSON.parse(storedData));
     } else {
