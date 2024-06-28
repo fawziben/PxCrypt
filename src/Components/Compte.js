@@ -1,20 +1,36 @@
-import { useState } from "react";
-// @mui
+import { useEffect, useState } from "react";
 import { alpha } from "@mui/material/styles";
 import { Box, Avatar, IconButton, Popover } from "@mui/material";
-import myImg from "../Components/IMG_7271.jpg";
 import UserProfile from "./UserProfile"; // Import the UserProfile component
-
-// ----------------------------------------------------------------------
+import { axiosInstance } from "../AxiosInstance";
 
 export default function Compte() {
-  // Définir un compte statique pour les tests
   const account = {
     username: "Fawzi Ben",
     email: "admin@gmail.com",
-    image: myImg,
     type: "chercheur",
   };
+
+  const [parentimg, setParentImg] = useState("");
+
+  async function getCurrentUser() {
+    try {
+      let accessToken = localStorage.getItem("token");
+
+      const response = await axiosInstance.get(`users/current/`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      if (response.status === 200) {
+        console.log(response.data);
+        setParentImg(response.data.img_src);
+        console.log(parentimg);
+      }
+    } catch (e) {
+      alert(e);
+    }
+  }
 
   const [open, setOpen] = useState(null);
 
@@ -25,6 +41,10 @@ export default function Compte() {
   const handleClose = () => {
     setOpen(null);
   };
+
+  useEffect(() => {
+    getCurrentUser();
+  }, []);
 
   return (
     <>
@@ -46,7 +66,7 @@ export default function Compte() {
         }}
       >
         <Avatar sx={{ backgroundColor: "#C27821" }}>
-          <img src={myImg} alt="Profile" />
+          <img src={parentimg} alt="Profile" />
         </Avatar>
       </IconButton>
 

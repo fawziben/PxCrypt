@@ -11,6 +11,8 @@ import {
 
 import { Done, Edit } from "@mui/icons-material";
 import { axiosInstance } from "../AxiosInstance";
+import { blue } from "@mui/material/colors";
+import PasswordDialog from "./PasswordDialog";
 
 async function UpdateFName(firstName, setEditName) {
   try {
@@ -97,6 +99,7 @@ const UserProfile = ({ account, onClose }) => {
         setFirstName(response.data.first_name);
         setLastName(response.data.last_name);
         setEmail(response.data.email);
+        setImage(response.data.img_src);
       }
     } catch (e) {
       alert(e);
@@ -105,10 +108,12 @@ const UserProfile = ({ account, onClose }) => {
   useEffect(() => {
     getCurrentUser();
   }, []);
+  const [open, setOpen] = useState(false);
+
   const [editMode, setEditMode] = useState(false);
-  const [image, setImage] = useState(account.image);
-  const [firstName, setFirstName] = useState();
-  const [lastName, setLastName] = useState();
+  const [image, setImage] = useState(null);
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState(account.email);
   const [editName, setEditName] = useState(true);
   const [editLName, setEditLName] = useState(true);
@@ -117,7 +122,9 @@ const UserProfile = ({ account, onClose }) => {
   const handleEditClick = () => {
     setEditMode(true);
   };
-
+  const handleAddClick = () => {
+    setOpen(true);
+  };
   const handleSaveClick = () => {
     // Add save logic here
     setEditMode(false);
@@ -142,7 +149,21 @@ const UserProfile = ({ account, onClose }) => {
     <Box sx={{ p: 2, width: 300 }}>
       <Stack spacing={2} alignItems="center">
         <Box sx={{ position: "relative" }}>
-          <Avatar sx={{ width: 100, height: 100 }} src={image} alt="Profile" />
+          {image ? (
+            <Avatar
+              sx={{ width: 100, height: 100 }}
+              src={image}
+              alt="Profile"
+            />
+          ) : (
+            <Avatar
+              sx={{ width: 100, height: 100, backgroundColor: blue[200] }}
+            >
+              <Typography sx={{ fontSize: "40px" }}>
+                {firstName[0] + " " + lastName[0]}
+              </Typography>
+            </Avatar>
+          )}
           {editMode && (
             <IconButton
               component="label"
@@ -265,7 +286,7 @@ const UserProfile = ({ account, onClose }) => {
               </IconButton>{" "}
             </div>
 
-            <Button variant="contained" onClick={handleSaveClick}>
+            <Button variant="contained" onClick={handleAddClick}>
               Reset Password
             </Button>
             <Button variant="outlined" onClick={handleCancelClick}>
@@ -278,6 +299,7 @@ const UserProfile = ({ account, onClose }) => {
           </Button>
         )}
       </Stack>
+      <PasswordDialog open={open} setOpen={setOpen} />
     </Box>
   );
 };
