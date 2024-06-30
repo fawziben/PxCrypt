@@ -1,14 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { Chart as ChartJS, defaults } from "chart.js/auto";
-import { Bar, Doughnut, Line } from "react-chartjs-2";
+import { Doughnut } from "react-chartjs-2";
 import { Chart, ArcElement } from "chart.js";
 import LinearProgress from "@mui/material/LinearProgress";
-
 import "./FileStats.css";
-
-import sourceData from "../data/sourceData.json";
 import { Stack } from "@mui/material";
 import ProgressComponent from "../ProgressComponent/ProgressComponent";
+import { axiosInstance } from "../../AxiosInstance";
 
 Chart.register(ArcElement);
 
@@ -22,11 +20,30 @@ defaults.plugins.title.color = "black";
 
 export default function FileStats() {
   const [results, setResults] = useState([]);
-
+  const [ufiles, setUfiles] = useState([]);
+  const [data, setData] = useState([]);
   const [gap, setGap] = useState(window.innerWidth <= 1200 ? "1vw" : "4vw");
   const [width, setWidth] = useState(window.innerWidth <= 1200 ? "81%" : "85%");
 
-  const countFileTypes = (data) => {
+  async function getUploadedFiles() {
+    try {
+      let accessToken = localStorage.getItem("token");
+
+      const response = await axiosInstance.get(`files/stats/uploaded`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      if (response.status === 200) {
+        console.log(response.data);
+        setUfiles(response.data);
+      }
+    } catch (e) {
+      alert(e);
+    }
+  }
+
+  const countFileTypes = (data, setRes) => {
     const fileCounts = data.reduce((acc, file) => {
       let ext = file.path.split(".").slice(-2, -1)[0];
       if (acc[ext]) {
@@ -41,23 +58,48 @@ export default function FileStats() {
       ext: ext,
       count: fileCounts[ext],
     }));
-    setResults(resultsArray);
+    setRes(resultsArray);
+  };
+
+  const countUFileTypes = (data, setRes) => {
+    const fileCounts = data.reduce((acc, file) => {
+      let ext = file.name.split(".").slice(-2, -1)[0]; // Utilisation de file.name
+      if (acc[ext]) {
+        acc[ext] += 1;
+      } else {
+        acc[ext] = 1;
+      }
+      return acc;
+    }, {});
+
+    const resultsArray = Object.keys(fileCounts).map((ext) => ({
+      ext: ext,
+      count: fileCounts[ext],
+    }));
+    setRes(resultsArray);
   };
 
   useEffect(() => {
     const dataString = localStorage.getItem("fileData");
     const data = JSON.parse(dataString);
+    getUploadedFiles();
     const handleResize = () => {
       setGap(window.innerWidth <= 1200 ? "1vw" : "4vw");
       setWidth(window.innerWidth <= 1200 ? "81%" : "85%");
     };
-    countFileTypes(data);
+    countFileTypes(data, setResults);
+    console.log(data);
+
     window.addEventListener("resize", handleResize);
 
     return () => {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
+
+  useEffect(() => {
+    countUFileTypes(ufiles, setData); // Appel de la fonction après la mise à jour de ufiles
+  }, [ufiles]);
 
   return (
     <div className="App" style={{ gap }}>
@@ -90,7 +132,7 @@ export default function FileStats() {
             cutout: "70%",
             plugins: {
               title: {
-                text: "Repartition des fichiers cryptes sur le serveur",
+                text: "Repartition des fichiers cryptes",
               },
             },
           }}
@@ -103,11 +145,11 @@ export default function FileStats() {
       <div className="dataCard categoryCard">
         <Doughnut
           data={{
-            labels: sourceData.map((data) => data.label),
+            labels: data.map((result) => result.ext), // Changement de ufiles à data
             datasets: [
               {
                 label: "Count",
-                data: sourceData.map((data) => data.value),
+                data: data.map((result) => result.count), // Changement de sourceData à data
                 backgroundColor: [
                   "rgba(43, 63, 229, 0.8)",
                   "rgba(250, 192, 19, 0.8)",
@@ -125,11 +167,14 @@ export default function FileStats() {
             cutout: "70%",
             plugins: {
               title: {
-                text: "Repartition des fichiers cryptes",
+                text: "Repartition des fichiers cryptes sur le serveur",
               },
             },
           }}
         />
+        <div className="centered">
+          {data.reduce((total, result) => total + result.count, 0)} Files
+        </div>
       </div>
       <div className="dataCard revenueCard" style={{ width }}>
         <ProgressComponent usedStorage={33.2} totalStorage={100} />
