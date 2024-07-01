@@ -11,6 +11,7 @@ const { exec } = require("child_process");
 const axios = require("axios");
 const FormData = require("form-data");
 
+let mainScreen;
 let win; // Déclaration de la variable pour stocker la fenêtre de l'application
 let paths = null;
 //-------------------------------------------------------------------------------------------------//
@@ -91,9 +92,13 @@ function runInBackground(callback) {
 
 // Fonction pour créer une nouvelle fenêtre de navigateur
 function createWindow() {
+  mainScreen = electron.screen.getPrimaryDisplay().size;
+  console.log(mainScreen.width);
   win = new BrowserWindow({
     width: 800, // Largeur initiale de la fenêtre
     height: 600, // Hauteur initiale de la fenêtre
+    titleBarStyle: "hidden",
+    titleBarOverlay: true,
     webPreferences: {
       preload: path.join(__dirname, "preload.js"), // Chargement du script de pré-chargement
     },
@@ -114,7 +119,14 @@ function createWindow() {
 // Écouteur d'événement pour l'événement 'logged-successfully'
 ipcMain.on("logged-successfully", (event) => {
   // Redimensionnement de la fenêtre et centrage
-  win.setSize(1000, 600);
+  win.maximize();
+  win.center();
+});
+
+ipcMain.on("logout", (event) => {
+  // Redimensionnement de la fenêtre et centrage
+  win.unmaximize();
+  win.setSize(800, 600);
   win.center();
 });
 

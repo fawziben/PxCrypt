@@ -2,6 +2,7 @@ const { contextBridge, ipcRenderer } = require("electron/renderer");
 
 contextBridge.exposeInMainWorld("electronAPI", {
   loginSuccess: () => ipcRenderer.send("logged-successfully"),
+  logout: () => ipcRenderer.send("logout"),
   saveNewData: (encryptedData, fileName, operation) =>
     ipcRenderer.send("replace-data", encryptedData, fileName),
   filePaths: () => ipcRenderer.invoke("file-paths").then((result) => result),

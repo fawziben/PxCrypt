@@ -29,6 +29,7 @@ import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import GroupsIcon from "@mui/icons-material/Groups";
 import Compte from "../Components/Compte";
 import Notifications from "../Components/Notification";
+import { Logout } from "@mui/icons-material";
 
 export default function Layout({ children }) {
   const minWidth = 100;
@@ -104,6 +105,11 @@ export default function Layout({ children }) {
       ),
       path: "/add",
     },
+    // {
+    //   text: "Log Out",
+    //   icon: <Logout sx={{ color: "#000000", ...classes.drawerIcons }} />,
+    //   path: "/add",
+    // },
   ];
 
   const toggleDrawerWidth = () => {
@@ -115,6 +121,12 @@ export default function Layout({ children }) {
       ? setSearch(false)
       : setSearch(true);
     navigate(item.path);
+  };
+
+  const logOut = () => {
+    localStorage.setItem("token", "");
+    window.electronAPI.logout(); // Appel d'une fonction depuis l'API Electron
+    navigate("/");
   };
 
   return (
@@ -251,6 +263,28 @@ export default function Layout({ children }) {
               </Typography>
             </ListItem>
           ))}
+          <ListItem
+            onClick={logOut}
+            button
+            sx={{
+              height: "80px",
+              display: "flex",
+              justifyContent: "center",
+              borderRadius: 0,
+              backgroundColor:
+                location.pathname == "/logout" ? "#8AA2A8" : null,
+            }}
+            key="Log_Out"
+          >
+            <Box sx={{ marginBottom: "0px" }}>
+              <ListItemIcon sx={classes.drawerIcons}>
+                <Logout sx={{ color: "#000000", ...classes.drawerIcons }} />
+              </ListItemIcon>
+            </Box>
+            <Typography noWrap sx={classes.text}>
+              {showNewIcon ? "Log Out" : null}
+            </Typography>
+          </ListItem>
         </List>
       </Drawer>
       <Outlet />

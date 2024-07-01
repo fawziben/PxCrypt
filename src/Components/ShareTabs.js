@@ -104,7 +104,14 @@ export default function ShareTabs({ file_id, recipients, setRecipients }) {
             setRecipients={setRecipients}
           ></UsersList>
         </CustomTabPanel>
-        <CustomTabPanel value={value} index={1}></CustomTabPanel>
+        <CustomTabPanel value={value} index={1}>
+          {" "}
+          <UsersList
+            file_id={file_id}
+            recipients={recipients}
+            setRecipients={setRecipients}
+          ></UsersList>
+        </CustomTabPanel>
       </Box>
     </div>
   );
