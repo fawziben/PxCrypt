@@ -1,7 +1,15 @@
-import { Password, Visibility, VisibilityOff } from "@mui/icons-material"; // Import des icônes MUI
+import {
+  Password,
+  Visibility,
+  VisibilityOff,
+  Close as CloseIcon,
+} from "@mui/icons-material"; // Import des icônes MUI
 import {
   Box,
   Button,
+  Dialog,
+  DialogContent,
+  DialogTitle,
   IconButton,
   InputAdornment,
   TextField,
@@ -11,6 +19,7 @@ import React, { useState } from "react"; // Import de React et useState
 import { useNavigate } from "react-router-dom"; // Import du hook useNavigate pour la navigation
 import { axiosInstance } from "../AxiosInstance";
 import { validateEmail } from "../Validators/inputValidators";
+import OTPFile from "./OTPFile";
 
 const classes = {
   input: {
@@ -26,6 +35,15 @@ const classes = {
     width: "150px",
     marginTop: "100px",
   },
+  closeButton: {
+    position: "absolute",
+    right: 8,
+    top: 8,
+    color: "grey",
+    "&:hover": {
+      color: "red",
+    },
+  },
 };
 
 export default function LoginForm() {
@@ -35,6 +53,7 @@ export default function LoginForm() {
   const [email, setEmail] = useState(""); // État pour stocker l'email
   const [password, setPassword] = useState(""); // État pour stocker le mot de passe
   const [emailError, setEmailError] = useState(false); // État pour gérer l'erreur d'email
+  const [otp, setOtp] = useState(false);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -45,7 +64,33 @@ export default function LoginForm() {
     }
 
     try {
-      const response = await axiosInstance.post("/login", {
+      const response = await axiosInstance.post("/email", {
+        email,
+        password,
+      });
+
+      console.log(response);
+
+      if (response.status == 200) {
+        setOtp(true);
+      } else {
+        console.log("Invalid credentials");
+      }
+    } catch (error) {
+      console.log("Error:", error);
+    }
+  };
+
+  const verifyCode = async (e) => {
+    e.preventDefault();
+
+    if (!validateEmail(email)) {
+      setEmailError(true);
+      return;
+    }
+
+    try {
+      const response = await axiosInstance.post("/verify-code", {
         email,
         password,
       });
@@ -66,6 +111,10 @@ export default function LoginForm() {
 
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword); // Inversion de l'état de l'affichage du mot de passe
+  };
+
+  const handleClose = () => {
+    setOtp(false); // Fermeture de la boîte de dialogue
   };
 
   return (
@@ -123,6 +172,20 @@ export default function LoginForm() {
           </Button>
         </Box>
       </form>
+      <Dialog open={otp} onClose={handleClose}>
+        <DialogTitle>
+          <IconButton
+            aria-label="close"
+            onClick={handleClose}
+            sx={classes.closeButton}
+          >
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
+        <DialogContent>
+          <OTPFile email={email} />
+        </DialogContent>
+      </Dialog>
     </Box>
   );
 }
