@@ -101,30 +101,36 @@ export default function FileStats() {
     countUFileTypes(ufiles, setData); // Appel de la fonction après la mise à jour de ufiles
   }, [ufiles]);
 
+  const getBackgroundColor = (index) => {
+    const colors = [
+      "rgba(43, 63, 229, 0.8)",
+      "rgba(250, 192, 19, 0.8)",
+      "rgba(253, 135, 135, 0.8)",
+      "rgba(35, 135, 135, 0.8)",
+      "rgba(100, 100, 100, 0.8)",
+    ];
+    return index < 4 ? colors[index] : colors[4];
+  };
+
   return (
     <div className="App" style={{ gap }}>
       <div className="dataCard categoryCard">
         <Doughnut
           data={{
-            labels: results.map((result) => result.ext),
+            labels: [
+              ...results.slice(0, 4).map((result) => result.ext),
+              "Others",
+            ],
             datasets: [
               {
                 label: "Count",
                 data: results.map((result) => result.count),
-                backgroundColor: [
-                  "rgba(43, 63, 229, 0.8)",
-                  "rgba(250, 192, 19, 0.8)",
-                  "rgba(253, 135, 135, 0.8)",
-                  "rgba(35, 135, 135, 0.8)",
-                  "rgba(100, 100, 100, 0.8)",
-                ],
-                borderColor: [
-                  "rgba(43, 63, 229, 0.8)",
-                  "rgba(250, 192, 19, 0.8)",
-                  "rgba(253, 135, 135, 0.8)",
-                  "rgba(35, 135, 135, 0.8)",
-                  "rgba(100, 100, 100, 0.8)",
-                ],
+                backgroundColor: results.map((result, index) =>
+                  getBackgroundColor(index)
+                ),
+                borderColor: results.map((result, index) =>
+                  getBackgroundColor(index)
+                ),
               },
             ],
           }}
@@ -133,6 +139,19 @@ export default function FileStats() {
             plugins: {
               title: {
                 text: "Repartition des fichiers cryptes",
+              },
+              tooltip: {
+                callbacks: {
+                  label: function (tooltipItem) {
+                    let label = results[tooltipItem.dataIndex].ext || "";
+                    if (label) {
+                      label += ": ";
+                    }
+                    label += Math.round(tooltipItem.raw);
+                    label += " files";
+                    return label;
+                  },
+                },
               },
             },
           }}
@@ -145,21 +164,19 @@ export default function FileStats() {
       <div className="dataCard categoryCard">
         <Doughnut
           data={{
-            labels: data.map((result) => result.ext), // Changement de ufiles à data
+            labels: data.map((result, index) =>
+              index < 4 ? result.ext : "Others"
+            ),
             datasets: [
               {
                 label: "Count",
-                data: data.map((result) => result.count), // Changement de sourceData à data
-                backgroundColor: [
-                  "rgba(43, 63, 229, 0.8)",
-                  "rgba(250, 192, 19, 0.8)",
-                  "rgba(253, 135, 135, 0.8)",
-                ],
-                borderColor: [
-                  "rgba(43, 63, 229, 0.8)",
-                  "rgba(250, 192, 19, 0.8)",
-                  "rgba(253, 135, 135, 0.8)",
-                ],
+                data: data.map((result) => result.count),
+                backgroundColor: data.map((result, index) =>
+                  getBackgroundColor(index)
+                ),
+                borderColor: data.map((result, index) =>
+                  getBackgroundColor(index)
+                ),
               },
             ],
           }}
@@ -168,6 +185,19 @@ export default function FileStats() {
             plugins: {
               title: {
                 text: "Repartition des fichiers cryptes sur le serveur",
+              },
+              tooltip: {
+                callbacks: {
+                  label: function (tooltipItem) {
+                    let label = data[tooltipItem.dataIndex].ext || "";
+                    if (label) {
+                      label += ": ";
+                    }
+                    label += Math.round(tooltipItem.raw);
+                    label += " files";
+                    return label;
+                  },
+                },
               },
             },
           }}
