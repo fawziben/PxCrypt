@@ -30,6 +30,7 @@ import GroupsIcon from "@mui/icons-material/Groups";
 import Compte from "../Components/Compte";
 import Notifications from "../Components/Notification";
 import { Logout } from "@mui/icons-material";
+import Settings from "../Components/Settings";
 
 export default function Layout({ children }) {
   const minWidth = 100;
@@ -178,6 +179,7 @@ export default function Layout({ children }) {
           {/* <Typography variant='h6' sx={classes.date}>
                     {format(new Date(),'do MMMM Y')}
                 </Typography> */}
+          <Settings></Settings>
           <IconButton
             size="large"
             aria-label="show 17 new notifications"

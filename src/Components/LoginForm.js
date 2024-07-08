@@ -71,34 +71,10 @@ export default function LoginForm() {
 
       console.log(response);
 
-      if (response.status == 200) {
+      if (response.status === 200) {
         setOtp(true);
-      } else {
-        console.log("Invalid credentials");
-      }
-    } catch (error) {
-      console.log("Error:", error);
-    }
-  };
-
-  const verifyCode = async (e) => {
-    e.preventDefault();
-
-    if (!validateEmail(email)) {
-      setEmailError(true);
-      return;
-    }
-
-    try {
-      const response = await axiosInstance.post("/verify-code", {
-        email,
-        password,
-      });
-
-      console.log(response);
-
-      if (response.data.access_token) {
-        localStorage.setItem("token", response.data.access_token);
+      } else if (response.status === 202) {
+        localStorage.setItem("token", response.data.access_token); // Assurez-vous que le token est stocké
         window.electronAPI.loginSuccess(); // Appel d'une fonction depuis l'API Electron
         navigate("dashboard");
       } else {
