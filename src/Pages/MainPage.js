@@ -26,9 +26,11 @@ export default function MainPage() {
   }, []); // Passer un tableau vide en deuxième argument pour que cet effet ne se déclenche qu'une fois
 
   const updateFileData = (newFileData) => {
-    const updatedData = [...fileData, newFileData];
-    setFileData(updatedData);
-    localStorage.setItem("fileData", JSON.stringify(updatedData)); // Use updatedData here
+    setFileData((prevFileData) => {
+      const updatedData = [...prevFileData, newFileData];
+      localStorage.setItem("fileData", JSON.stringify(updatedData));
+      return updatedData;
+    });
   };
 
   const removeFileData = (filePathToRemove) => {

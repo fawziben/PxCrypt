@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Box,
   List,
@@ -15,6 +15,8 @@ import {
   ListItemSecondaryAction,
 } from "@mui/material";
 import { FaCog } from "react-icons/fa";
+import { axiosInstance } from "../AxiosInstance";
+import TFADialog from "./TFADialog";
 
 const STATIC_SETTINGS = [
   {
@@ -25,9 +27,32 @@ const STATIC_SETTINGS = [
 ];
 
 export default function Settings() {
-  const [settings, setSettings] = useState(STATIC_SETTINGS);
+  useEffect(() => {
+    getCurrentUser();
+  }, []);
+
+  const [TFA, setTFA] = useState();
 
   const [open, setOpen] = useState(null);
+  const [openDialog, setOpenDialog] = useState(false);
+
+  async function getCurrentUser() {
+    try {
+      let accessToken = localStorage.getItem("token");
+
+      const response = await axiosInstance.get(`users/current/`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      if (response.status === 200) {
+        console.log(response.data);
+        setTFA(response.data.TFA);
+      }
+    } catch (e) {
+      alert(e);
+    }
+  }
 
   const handleOpen = (event) => {
     setOpen(event.currentTarget);
@@ -37,12 +62,9 @@ export default function Settings() {
     setOpen(null);
   };
 
-  const handleToggle = (id) => {
-    setSettings(
-      settings.map((setting) =>
-        setting._id === id ? { ...setting, checked: !setting.checked } : setting
-      )
-    );
+  const handleToggle = () => {
+    setTFA(!TFA);
+    setOpenDialog(true);
   };
 
   return (
@@ -88,39 +110,20 @@ export default function Settings() {
             </ListSubheader>
           }
         >
-          {settings.map((setting) => (
-            <SettingItem
-              key={setting._id}
-              setting={setting}
-              onToggle={handleToggle}
-            />
-          ))}
+          <ListItem>
+            <ListItemText primary="Double authentification" />
+            <ListItemSecondaryAction>
+              <Switch edge="end" onChange={handleToggle} checked={TFA} />
+            </ListItemSecondaryAction>
+          </ListItem>
         </List>
       </Popover>
+      <TFADialog
+        open={openDialog}
+        setOpen={setOpenDialog}
+        TFA={TFA}
+        setTFA={setTFA}
+      ></TFADialog>
     </>
-  );
-}
-
-SettingItem.propTypes = {
-  setting: PropTypes.shape({
-    _id: PropTypes.string,
-    label: PropTypes.string,
-    checked: PropTypes.bool,
-  }),
-  onToggle: PropTypes.func,
-};
-
-function SettingItem({ setting, onToggle }) {
-  return (
-    <ListItem>
-      <ListItemText primary={setting.label} />
-      <ListItemSecondaryAction>
-        <Switch
-          edge="end"
-          onChange={() => onToggle(setting._id)}
-          checked={setting.checked}
-        />
-      </ListItemSecondaryAction>
-    </ListItem>
   );
 }
