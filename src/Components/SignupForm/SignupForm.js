@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import {
   Box,
   Button,
@@ -7,13 +8,11 @@ import {
   Typography,
 } from "@mui/material";
 import InfoIcon from "@mui/icons-material/Info";
-import "./input.css";
-import { useState } from "react";
+import { axiosInstance } from "../../AxiosInstance";
 import {
   validateEmail,
   validatePhoneNumber,
 } from "../../Validators/inputValidators";
-import { axiosInstance } from "../../AxiosInstance";
 
 const classes = {
   input: {
@@ -24,23 +23,31 @@ const classes = {
   root: {
     marginTop: "-10px",
   },
-  Button: {
+  button: {
     borderRadius: "20px",
     width: "150px",
     marginTop: "40px",
   },
 };
 
-export default function SignUpForm() {
-  const [fname, setFname] = useState(""); // État pour stocker le mot de passe
-  const [lname, setLname] = useState(""); // État pour stocker le mot de passe
+const SignUpForm = () => {
+  const [fname, setFname] = useState("");
+  const [lname, setLname] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
-  const [phoneNumberError, setPhoneNumberError] = useState("");
-  const [email, setEmail] = useState(""); // État pour stocker l'email
-  const [emailError, setEmailError] = useState(false); // État pour gérer l'erreur d'email
-  const [password, setPassword] = useState(""); // État pour stocker le mot de passe
-  const [confirmPassword, setConfirmPassword] = useState(""); // État pour stocker le mot de passe
-  const [confirmPasswordError, setConfirmPasswordError] = useState(""); // État pour stocker le mot de passe
+  const [phoneNumberError, setPhoneNumberError] = useState(false);
+  const [email, setEmail] = useState("");
+  const [emailError, setEmailError] = useState(false);
+  const [password, setPassword] = useState("");
+  const [passwordError, setPasswordError] = useState(false);
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [confirmPasswordError, setConfirmPasswordError] = useState(false);
+
+  const validatePasswordPolicy = (password) => {
+    // Au moins 12 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial
+    const regex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{12,}$/;
+    return regex.test(password);
+  };
 
   const handleCreate = async (e) => {
     e.preventDefault();
@@ -53,10 +60,15 @@ export default function SignUpForm() {
       setPhoneNumberError(true);
       return;
     }
+    if (!validatePasswordPolicy(password)) {
+      setPasswordError(true);
+      return;
+    }
     if (password !== confirmPassword) {
       setConfirmPasswordError(true);
       return;
     }
+
     try {
       const response = await axiosInstance.post("/users/", {
         first_name: fname,
@@ -100,14 +112,14 @@ export default function SignUpForm() {
           label="Enter your email"
           required
           fullWidth
-          value={email} // Valeur du champ email provenant de l'état local
+          value={email}
           onChange={(e) => {
             setEmail(e.target.value);
-            setEmailError(false); // Réinitialisation de l'erreur d'email lors de la modification de l'email
+            setEmailError(false);
           }}
           sx={classes.input}
-          error={emailError} // Utilisation de l'erreur d'email pour afficher une mise en forme spécifique
-          helperText={emailError && "Invalid email format"} // Message d'erreur affiché en cas d'erreur d'email
+          error={emailError}
+          helperText={emailError && "Invalid email format"}
         />
         <TextField
           variant="standard"
@@ -120,10 +132,10 @@ export default function SignUpForm() {
             if (e.target.value.length <= 9) {
               setPhoneNumber(e.target.value);
             }
-            setPhoneNumberError(false); // Réinitialisation de l'erreur d'email lors de la modification de l'email
+            setPhoneNumberError(false);
           }}
           error={phoneNumberError}
-          helperText={phoneNumberError && "Invalid phone number format"} // Message d'erreur affiché en cas d'erreur d'email
+          helperText={phoneNumberError && "Invalid phone number format"}
           sx={classes.input}
           InputProps={{
             startAdornment: (
@@ -138,7 +150,7 @@ export default function SignUpForm() {
           label="Password"
           required
           fullWidth
-          onChange={(e) => setPassword(e.target.value)} // Fonction de mise à jour de l'état password
+          onChange={(e) => setPassword(e.target.value)}
           sx={classes.input}
           InputProps={{
             endAdornment: (
@@ -149,6 +161,11 @@ export default function SignUpForm() {
               </InputAdornment>
             ),
           }}
+          error={passwordError}
+          helperText={
+            passwordError &&
+            "Password must be at least 12 characters, with uppercase, lowercase, digit, and special character"
+          }
         />
         <TextField
           variant="standard"
@@ -160,17 +177,17 @@ export default function SignUpForm() {
           InputLabelProps={{}}
           color="primary"
           error={confirmPasswordError}
-          helperText={confirmPasswordError && "Passwords does not match"} // Message d'erreur affiché en cas d'erreur d'email
+          helperText={confirmPasswordError && "Passwords do not match"}
           onChange={(e) => {
             setConfirmPassword(e.target.value);
-            setConfirmPasswordError(false); // Réinitialisation de l'erreur d'email lors de la modification de l'email
+            setConfirmPasswordError(false);
           }}
         />
         <Box sx={{ display: "flex", justifyContent: "center" }}>
           <Button
             variant="contained"
             color="primary"
-            sx={classes.Button}
+            sx={classes.button}
             type="submit"
           >
             <Typography variant="p" fontWeight="bold">
@@ -181,4 +198,6 @@ export default function SignUpForm() {
       </form>
     </Box>
   );
-}
+};
+
+export default SignUpForm;
