@@ -5,58 +5,51 @@ import UploadeFilesTable from "../Components/UploadedFilesTable";
 import KeyFab from "../Components/KeyFab";
 
 export default function MainPage() {
-  const [isDataLoaded, setIsDataLoaded] = useState(false); // État pour suivre si les données sont chargées ou non
+  const [isDataLoaded, setIsDataLoaded] = useState(false);
   const [fileData, setFileData] = useState([]);
+  const [userId, setUserId] = useState("");
   useEffect(() => {
-    const storedData = localStorage.getItem("fileData");
-    // localStorage.setItem("fileData", JSON.stringify(""));
-
+    setUserId(sessionStorage.getItem("id")); // Replace with actual user ID from your authentication system
+    const storedData = localStorage.getItem(`fileData_${userId}`);
+    alert(userId);
     if (storedData) {
       setFileData(JSON.parse(storedData));
     } else {
-      localStorage.setItem("fileData", JSON.stringify(""));
+      localStorage.setItem(`fileData_${userId}`, JSON.stringify([]));
 
-      //   // Sinon, récupérez les données de l'API Electron
-      //   window.electronAPI.filePaths().then((result) => {
-      //     setFileData(result);
-      //     setIsDataLoaded(true);
-      //     localStorage.setItem("fileData", JSON.stringify(result));
-      //   });
+      // Uncomment and adjust if retrieving from API
+      // window.electronAPI.filePaths().then((result) => {
+      //   setFileData(result);
+      //   setIsDataLoaded(true);
+      //   localStorage.setItem(`fileData_${userId}`, JSON.stringify(result));
+      // });
     }
-  }, []); // Passer un tableau vide en deuxième argument pour que cet effet ne se déclenche qu'une fois
+  }, [userId]);
 
   const updateFileData = (newFileData) => {
     setFileData((prevFileData) => {
       const updatedData = [...prevFileData, newFileData];
-      localStorage.setItem("fileData", JSON.stringify(updatedData));
+      localStorage.setItem(`fileData_${userId}`, JSON.stringify(updatedData));
       return updatedData;
     });
   };
 
   const removeFileData = (filePathToRemove) => {
-    // Assurez-vous que filePathToRemove est une chaîne
     filePathToRemove = String(filePathToRemove);
-
-    // Recherche de l'index de l'élément à supprimer en fonction du chemin du fichier
     const indexToRemove = fileData.findIndex(
       (item) => String(item.path) === filePathToRemove
     );
-    alert(indexToRemove);
 
-    // Vérifier si l'index a été trouvé
     if (indexToRemove === -1) {
       console.error("Le chemin du fichier n'a pas été trouvé dans fileData");
       return;
     }
 
-    // Créer une copie de fileData sans l'élément à supprimer
     const updatedData = fileData.filter((_, index) => index !== indexToRemove);
-
-    // Mettre à jour fileData
     setFileData(updatedData);
-
-    localStorage.setItem("fileData", JSON.stringify(updatedData));
+    localStorage.setItem(`fileData_${userId}`, JSON.stringify(updatedData));
   };
+
   return (
     <div
       style={{ marginTop: "100px", padding: 0, width: "100%" }}
@@ -70,7 +63,7 @@ export default function MainPage() {
         />
         <UploadeFilesTable />
       </MainPageTabs>
-      <KeyFab updateFileData={updateFileData}></KeyFab>
+      <KeyFab updateFileData={updateFileData} />
     </div>
   );
 }

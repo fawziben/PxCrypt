@@ -80,7 +80,8 @@ export default function FileStats() {
   };
 
   useEffect(() => {
-    const dataString = localStorage.getItem("fileData");
+    const userId = sessionStorage.getItem("id");
+    const dataString = localStorage.getItem(`fileData_${userId}`);
     const data = JSON.parse(dataString);
     getUploadedFiles();
     const handleResize = () => {

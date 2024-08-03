@@ -20,6 +20,8 @@ function OTPFile({ email }) {
 
       if (response.data.access_token) {
         localStorage.setItem("token", response.data.access_token);
+        console.log(response.data.user_id);
+        sessionStorage.setItem("id", response.data.user_id);
         window.electronAPI.loginSuccess(); // Appel d'une fonction depuis l'API Electron
         navigate("dashboard");
       } else {

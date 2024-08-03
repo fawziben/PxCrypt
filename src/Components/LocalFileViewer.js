@@ -18,7 +18,16 @@ const LocalFileViewer = ({ file_path }) => {
           accessToken
         );
 
-        const supportedTypes = ["pdf", "jpg", "jpeg", "png", "gif", "txt"];
+        const supportedTypes = [
+          "pdf",
+          "jpg",
+          "jpeg",
+          "png",
+          "gif",
+          "txt",
+          "docx",
+          "xlsx",
+        ];
         const getValidExtension = (filePath) => {
           const parts = filePath.split(".");
           for (let i = parts.length - 1; i >= 0; i--) {
@@ -74,6 +83,8 @@ const LocalFileViewer = ({ file_path }) => {
       png: "image/png",
       gif: "image/gif",
       txt: "text/plain",
+      docx: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      xlsx: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
     }[type] || "application/octet-stream";
 
   return (
@@ -92,12 +103,22 @@ const LocalFileViewer = ({ file_path }) => {
           alt={name}
           style={{ maxWidth: "100%", maxHeight: "100%", objectFit: "contain" }}
         />
-      ) : (
+      ) : mimeType === "application/pdf" || mimeType === "text/plain" ? (
         <iframe
           src={fileUrl}
           style={{ width: "100%", height: "100%", border: "none" }}
           title={name}
         />
+      ) : (
+        <div>
+          <p>
+            Affichage non pris en charge pour ce type de fichier. Vous pouvez le
+            télécharger ci-dessous :
+          </p>
+          <a href={fileUrl} download={file_path}>
+            Télécharger {name}
+          </a>
+        </div>
       )}
     </div>
   );

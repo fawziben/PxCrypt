@@ -75,6 +75,7 @@ export default function LoginForm() {
         setOtp(true);
       } else if (response.status === 202) {
         localStorage.setItem("token", response.data.access_token); // Assurez-vous que le token est stocké
+        sessionStorage.setItem("id", response.data.user_id);
         window.electronAPI.loginSuccess(); // Appel d'une fonction depuis l'API Electron
         navigate("dashboard");
       } else {

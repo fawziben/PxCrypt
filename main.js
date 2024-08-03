@@ -150,6 +150,17 @@ ipcMain.on("replace-data", (event, data, filePath) => {
   });
 });
 
+app.on("open-file", (event, filePath) => {
+  console.log("Fichier ouvert:", filePath);
+  openFilePath = filePath;
+
+  // Si la fenêtre de l'application est déjà ouverte, affichez le chemin du fichier dans la console
+  if (win) {
+    console.log("Fichier ouvert après démarrage:", filePath);
+    // Vous pouvez également envoyer ce chemin au renderer process si nécessaire
+  }
+});
+
 ipcMain.handle("decrypt-data", async (event, filePath, accessToken) => {
   try {
     const formData = new FormData();
