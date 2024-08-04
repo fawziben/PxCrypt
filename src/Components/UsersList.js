@@ -7,16 +7,14 @@ import {
   ListItemText,
   Avatar,
   Switch,
-  Box,
-  Typography,
-  AvatarGroup,
   DialogContent,
 } from "@mui/material";
 import { Search, Download, Message } from "@mui/icons-material";
 import { axiosInstance } from "../AxiosInstance";
+import AvatarGroup from "@mui/material/AvatarGroup";
 import { blue } from "@mui/material/colors";
 
-const UsersList = ({ recipients, setRecipients, file_id }) => {
+const UsersList = ({ recipients, setRecipients }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedRecipients, setSelectedRecipients] = useState([]);
 
@@ -106,11 +104,12 @@ const UsersList = ({ recipients, setRecipients, file_id }) => {
             id: user.id,
             name: `${user.first_name} ${user.last_name}`,
             state: false,
-            avatar: `${user.last_name[0].toUpperCase()}${user.first_name[0].toUpperCase()}`,
+            avatar: user.img_src,
             moreState: false,
             download: false,
             color: "",
             message: "",
+            initials: `${user.first_name[0].toUpperCase()}${user.last_name[0].toUpperCase()}`,
           };
         });
 
@@ -151,8 +150,10 @@ const UsersList = ({ recipients, setRecipients, file_id }) => {
                     backgroundColor: "#29508a",
                     marginRight: "20px",
                   }}
+                  src={recipient.avatar}
+                  alt={recipient.initials}
                 >
-                  {recipient.avatar}
+                  {!recipient.avatar && recipient.initials}
                 </Avatar>
                 <ListItemText primary={recipient.name} />
                 {recipient.state && (
@@ -213,8 +214,9 @@ const UsersList = ({ recipients, setRecipients, file_id }) => {
                 <Avatar
                   key={recipient.id}
                   sx={{ color: "#ffffff", backgroundColor: "#29508a" }}
+                  src={recipient.avatar}
                 >
-                  {recipient.avatar}
+                  {!recipient.avatar && recipient.initials}
                 </Avatar>
               ))}
             </AvatarGroup>

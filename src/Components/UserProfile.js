@@ -8,13 +8,38 @@ import {
   Stack,
   IconButton,
 } from "@mui/material";
-
 import { Done, Edit } from "@mui/icons-material";
 import { axiosInstance } from "../AxiosInstance";
 import { blue } from "@mui/material/colors";
 import PasswordDialog from "./PasswordDialog";
 
-async function UpdateFName(firstName, setEditName) {
+async function updateImage(file, setEditImage, setParentImage) {
+  try {
+    let accessToken = localStorage.getItem("token");
+
+    const formData = new FormData();
+    formData.append("image", file);
+
+    const response = await axiosInstance.put(`users/current/image/`, formData, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    if (response.status === 200) {
+      console.log("Image updated successfully");
+      setEditImage(true);
+      setParentImage(file);
+    } else {
+      console.log("Internal server error");
+    }
+  } catch (e) {
+    alert(e);
+  }
+}
+
+async function updateFirstName(firstName, setEditName) {
   try {
     let accessToken = localStorage.getItem("token");
 
@@ -27,18 +52,18 @@ async function UpdateFName(firstName, setEditName) {
         },
       }
     );
-    if (response.status == 200) {
-      console.log("name updated successfully");
+    if (response.status === 200) {
+      console.log("Name updated successfully");
       setEditName(true);
     } else {
-      console.log("internal server error");
+      console.log("Internal server error");
     }
   } catch (e) {
     alert(e);
   }
 }
 
-async function UpdateLName(lastName, setEditLName) {
+async function updateLastName(lastName, setEditLName) {
   try {
     let accessToken = localStorage.getItem("token");
 
@@ -51,41 +76,53 @@ async function UpdateLName(lastName, setEditLName) {
         },
       }
     );
-    if (response.status == 200) {
-      console.log("name updated successfully");
+    if (response.status === 200) {
+      console.log("Name updated successfully");
       setEditLName(true);
     } else {
-      console.log("internal server error");
+      console.log("Internal server error");
     }
   } catch (e) {
     alert(e);
   }
 }
-async function UpdateEmail(mail, setEditEmail) {
+
+async function updateEmail(email, setEditEmail) {
   try {
     let accessToken = localStorage.getItem("token");
 
     const response = await axiosInstance.put(
       `users/current/email/`,
-      { email: mail },
+      { email: email },
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
       }
     );
-    if (response.status == 200) {
-      console.log("name updated successfully");
+    if (response.status === 200) {
+      console.log("Email updated successfully");
       setEditEmail(true);
     } else {
-      console.log("internal server error");
+      console.log("Internal server error");
     }
   } catch (e) {
     alert(e);
   }
 }
 
-const UserProfile = ({ account, onClose }) => {
+const UserProfile = ({ account, onClose, setParentImg, parentimg }) => {
+  const [open, setOpen] = useState(false);
+  const [editMode, setEditMode] = useState(false);
+  const [image, setImage] = useState(parentimg);
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState(account.email);
+  const [editName, setEditName] = useState(true);
+  const [editLName, setEditLName] = useState(true);
+  const [editEmail, setEditEmail] = useState(true);
+  const [editImage, setEditImage] = useState(true);
+
   async function getCurrentUser() {
     try {
       let accessToken = localStorage.getItem("token");
@@ -95,39 +132,31 @@ const UserProfile = ({ account, onClose }) => {
           Authorization: `Bearer ${accessToken}`,
         },
       });
-      if (response.status == 200) {
+      if (response.status === 200) {
         setFirstName(response.data.first_name);
         setLastName(response.data.last_name);
         setEmail(response.data.email);
-        setImage(response.data.img_src);
+        setImage(response.data.img_src); // Update the local state with the latest image
       }
     } catch (e) {
       alert(e);
     }
   }
-  useEffect(() => {
-    getCurrentUser();
-  }, []);
-  const [open, setOpen] = useState(false);
 
-  const [editMode, setEditMode] = useState(false);
-  const [image, setImage] = useState(null);
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [email, setEmail] = useState(account.email);
-  const [editName, setEditName] = useState(true);
-  const [editLName, setEditLName] = useState(true);
-  const [editEmail, setEditEmail] = useState(true);
+  useEffect(() => {
+    getCurrentUser(); // Fetch user data when the component mounts
+  }, []);
+
+  useEffect(() => {
+    setImage(parentimg); // Update local image state when parentimg changes
+  }, [parentimg]);
 
   const handleEditClick = () => {
     setEditMode(true);
   };
+
   const handleAddClick = () => {
     setOpen(true);
-  };
-  const handleSaveClick = () => {
-    // Add save logic here
-    setEditMode(false);
   };
 
   const handleCancelClick = () => {
@@ -140,8 +169,40 @@ const UserProfile = ({ account, onClose }) => {
       const reader = new FileReader();
       reader.onload = () => {
         setImage(reader.result);
+        setEditImage(false); // Activer le bouton Done
       };
       reader.readAsDataURL(file);
+    }
+  };
+
+  const handleImageUpdate = async () => {
+    try {
+      let accessToken = localStorage.getItem("token");
+
+      const formData = new FormData();
+      formData.append("image", image);
+
+      const response = await axiosInstance.put(
+        `users/current/image/`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        console.log("Image updated successfully");
+        setEditImage(true);
+        setImage(image);
+        setParentImg(image); // Update parent image
+      } else {
+        console.log("Internal server error");
+      }
+    } catch (e) {
+      alert(e);
     }
   };
 
@@ -152,7 +213,7 @@ const UserProfile = ({ account, onClose }) => {
           {image ? (
             <Avatar
               sx={{ width: 100, height: 100 }}
-              src={image}
+              src={parentimg}
               alt="Profile"
             />
           ) : (
@@ -177,7 +238,13 @@ const UserProfile = ({ account, onClose }) => {
                 },
               }}
             >
-              <Edit />
+              {editImage ? (
+                <Edit />
+              ) : (
+                <Done
+                  onClick={handleImageUpdate} // Use the new function here
+                />
+              )}
               <input
                 type="file"
                 accept="image/*"
@@ -195,7 +262,7 @@ const UserProfile = ({ account, onClose }) => {
               <TextField
                 sx={{
                   "& .MuiInputBase-root": {
-                    height: "50px", // Set your desired height here
+                    height: "50px",
                   },
                 }}
                 label="First Name"
@@ -218,18 +285,16 @@ const UserProfile = ({ account, onClose }) => {
                   <Edit onClick={() => setEditName(false)} />
                 ) : (
                   <Done
-                    onClick={() => {
-                      UpdateFName(firstName, setEditName);
-                    }}
+                    onClick={() => updateFirstName(firstName, setEditName)}
                   />
                 )}
-              </IconButton>{" "}
+              </IconButton>
             </div>
             <div className="flex" style={{ alignItems: "center" }}>
               <TextField
                 sx={{
                   "& .MuiInputBase-root": {
-                    height: "50px", // Set your desired height here
+                    height: "50px",
                   },
                 }}
                 label="Last Name"
@@ -251,15 +316,17 @@ const UserProfile = ({ account, onClose }) => {
                 {editLName ? (
                   <Edit onClick={() => setEditLName(false)} />
                 ) : (
-                  <Done onClick={() => UpdateLName(lastName, setEditLName)} />
+                  <Done
+                    onClick={() => updateLastName(lastName, setEditLName)}
+                  />
                 )}
-              </IconButton>{" "}
+              </IconButton>
             </div>
             <div className="flex" style={{ alignItems: "center" }}>
               <TextField
                 sx={{
                   "& .MuiInputBase-root": {
-                    height: "50px", // Set your desired height here
+                    height: "50px",
                   },
                 }}
                 label="Email"
@@ -281,9 +348,9 @@ const UserProfile = ({ account, onClose }) => {
                 {editEmail ? (
                   <Edit onClick={() => setEditEmail(false)} />
                 ) : (
-                  <Done onClick={() => UpdateEmail(email, setEditEmail)} />
+                  <Done onClick={() => updateEmail(email, setEditEmail)} />
                 )}
-              </IconButton>{" "}
+              </IconButton>
             </div>
 
             <Button variant="contained" onClick={handleAddClick}>

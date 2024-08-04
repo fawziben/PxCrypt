@@ -23,9 +23,7 @@ export default function Compte() {
         },
       });
       if (response.status === 200) {
-        console.log(response.data);
         setParentImg(response.data.img_src);
-        console.log(parentimg);
       }
     } catch (e) {
       alert(e);
@@ -66,7 +64,11 @@ export default function Compte() {
         }}
       >
         <Avatar sx={{ backgroundColor: "#C27821" }}>
-          <img src={parentimg} alt="Profile" />
+          <img
+            src={parentimg}
+            alt="Profile"
+            style={{ width: "100%", height: "100%", borderRadius: "50%" }}
+          />
         </Avatar>
       </IconButton>
 
@@ -89,7 +91,12 @@ export default function Compte() {
           },
         }}
       >
-        <UserProfile account={account} onClose={handleClose} />
+        <UserProfile
+          account={account}
+          onClose={handleClose}
+          setParentImg={setParentImg}
+          parentimg={parentimg}
+        />
       </Popover>
     </>
   );
