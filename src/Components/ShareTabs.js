@@ -5,6 +5,7 @@ import Tab from "@mui/material/Tab"; // Import de l'onglet MUI
 import Typography from "@mui/material/Typography"; // Import de la typographie MUI
 import Box from "@mui/material/Box"; // Import de la boîte MUI
 import UsersList from "./UsersList";
+import GroupsShareList from "./GroupsShareList";
 
 // Styles pour les onglets
 const classes = {
@@ -106,11 +107,11 @@ export default function ShareTabs({ file_id, recipients, setRecipients }) {
         </CustomTabPanel>
         <CustomTabPanel value={value} index={1}>
           {" "}
-          <UsersList
+          <GroupsShareList
             file_id={file_id}
             recipients={recipients}
             setRecipients={setRecipients}
-          ></UsersList>
+          ></GroupsShareList>
         </CustomTabPanel>
       </Box>
     </div>
