@@ -168,7 +168,7 @@ const UserProfile = ({ account, onClose, setParentImg, parentimg }) => {
     if (file) {
       const reader = new FileReader();
       reader.onload = () => {
-        setImage(reader.result);
+        setParentImg(reader.result);
         setEditImage(false); // Activer le bouton Done
       };
       reader.readAsDataURL(file);
@@ -196,7 +196,7 @@ const UserProfile = ({ account, onClose, setParentImg, parentimg }) => {
       if (response.status === 200) {
         console.log("Image updated successfully");
         setEditImage(true);
-        setImage(image);
+        // setImage(image);
         setParentImg(image); // Update parent image
       } else {
         console.log("Internal server error");
@@ -210,7 +210,7 @@ const UserProfile = ({ account, onClose, setParentImg, parentimg }) => {
     <Box sx={{ p: 2, width: 300 }}>
       <Stack spacing={2} alignItems="center">
         <Box sx={{ position: "relative" }}>
-          {image ? (
+          {parentimg ? (
             <Avatar
               sx={{ width: 100, height: 100 }}
               src={parentimg}

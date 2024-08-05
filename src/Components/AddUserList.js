@@ -12,7 +12,7 @@ import {
   AvatarGroup,
   DialogContent,
 } from "@mui/material";
-import { Search, Download, Message } from "@mui/icons-material";
+import { Search } from "@mui/icons-material";
 import { axiosInstance } from "../AxiosInstance";
 
 const AddUserList = ({ recipients, setRecipients, users }) => {
@@ -74,6 +74,7 @@ const AddUserList = ({ recipients, setRecipients, users }) => {
             email: user.email,
             state: false,
             avatar: `${user.last_name[0].toUpperCase()}${user.first_name[0].toUpperCase()}`,
+            img_src: user.img_src,
           }));
 
         setRecipients(newRecipients);
@@ -113,8 +114,10 @@ const AddUserList = ({ recipients, setRecipients, users }) => {
                     backgroundColor: "#29508a",
                     marginRight: "20px",
                   }}
+                  src={recipient.img_src} // Display image if available
                 >
-                  {recipient.avatar}
+                  {!recipient.img_src && // Display initials if no image
+                    recipient.avatar}
                 </Avatar>
                 <ListItemText primary={recipient.fullname} />
                 <Switch
@@ -148,8 +151,10 @@ const AddUserList = ({ recipients, setRecipients, users }) => {
                 <Avatar
                   key={recipient.id}
                   sx={{ color: "#ffffff", backgroundColor: "#29508a" }}
+                  src={recipient.img_src} // Display image if available
                 >
-                  {recipient.avatar}
+                  {!recipient.img_src && // Display initials if no image
+                    recipient.avatar}
                 </Avatar>
               ))}
             </AvatarGroup>

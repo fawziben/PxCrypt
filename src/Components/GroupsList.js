@@ -120,8 +120,12 @@ const GroupsList = ({
                             color: "#ffffff",
                             backgroundColor: "#29508a",
                           }}
+                          src={user.img_src || ""} // Show image if available
                         >
-                          {user.first_name[0] + user.last_name[0]}
+                          {!user.img_src && // Display initials if no image
+                            (
+                              user.first_name[0] + user.last_name[0]
+                            ).toUpperCase()}
                         </Avatar>
                       ))}
                     </AvatarGroup>

@@ -1,5 +1,5 @@
 import { DeleteOutline } from "@mui/icons-material";
-import { Avatar, ListItem, ListItemText } from "@mui/material";
+import { Avatar, ListItem, ListItemText, Typography, Box } from "@mui/material";
 import React from "react";
 import { axiosInstance } from "../AxiosInstance";
 
@@ -58,24 +58,45 @@ const GroupUsers = ({
           key={index}
           className="mt-5 mx-auto p-5 pt-2.5 bg-blue-50 rounded-lg w-[80%] shadow-[5px_5px_15px_rgba(0,0,0,0.3)]"
         >
-          <ListItem>
-            <Avatar
-              sx={{
-                color: "#ffffff",
-                backgroundColor: "#29508a",
-                marginRight: "20px",
-              }}
-            >
-              {user.first_name[0] + user.last_name[0]}
-            </Avatar>
-            <ListItemText>
-              {user.first_name +
-                " " +
-                user.last_name +
-                " (" +
-                user.email +
-                " )"}
-            </ListItemText>
+          <ListItem
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between", // Ensures space between items
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <Avatar
+                sx={{
+                  color: "#ffffff",
+                  backgroundColor: "#29508a",
+                  marginRight: "20px",
+                }}
+                src={user.img_src} // Display image if available
+              >
+                {!user.img_src && // Display initials if no image
+                  (user.first_name[0] + user.last_name[0]).toUpperCase()}
+              </Avatar>
+              <div>
+                <ListItemText
+                  primary={
+                    <>
+                      {user.first_name} {user.last_name}
+                      <Typography
+                        variant="body2"
+                        sx={{
+                          fontWeight: 300,
+                          fontSize: "0.875rem",
+                          color: "text.secondary",
+                        }}
+                      >
+                        {user.email}
+                      </Typography>
+                    </>
+                  }
+                />
+              </div>
+            </div>
             <DeleteOutline
               sx={{
                 cursor: "pointer",
@@ -86,7 +107,7 @@ const GroupUsers = ({
                 },
               }}
               onClick={() => handleDelete(user)}
-            ></DeleteOutline>
+            />
           </ListItem>
         </div>
       ))}
