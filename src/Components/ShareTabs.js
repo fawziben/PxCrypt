@@ -65,7 +65,12 @@ function a11yProps(index) {
 }
 
 // Composant de panneaux d'onglets principaux
-export default function ShareTabs({ file_id, recipients, setRecipients }) {
+export default function ShareTabs({
+  file_id,
+  recipients,
+  setRecipients,
+  setGroup,
+}) {
   const [value, setValue] = React.useState(0); // État local pour la valeur de l'onglet sélectionné
   let i = -1; // Initialiser un compteur pour les index de panneaux d'onglets
 
@@ -103,6 +108,7 @@ export default function ShareTabs({ file_id, recipients, setRecipients }) {
             file_id={file_id}
             recipients={recipients}
             setRecipients={setRecipients}
+            setGroup={setGroup}
           ></UsersList>
         </CustomTabPanel>
         <CustomTabPanel value={value} index={1}>
@@ -111,6 +117,7 @@ export default function ShareTabs({ file_id, recipients, setRecipients }) {
             file_id={file_id}
             recipients={recipients}
             setRecipients={setRecipients}
+            setGroup={setGroup}
           ></GroupsShareList>
         </CustomTabPanel>
       </Box>

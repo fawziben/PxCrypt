@@ -13,7 +13,7 @@ import { Search, Download, Message } from "@mui/icons-material";
 import { axiosInstance } from "../AxiosInstance";
 import AvatarGroup from "@mui/material/AvatarGroup";
 
-const GroupsShareList = () => {
+const GroupsShareList = ({ file_id, recipients, setRecipients, setGroup }) => {
   const [groups, setGroups] = useState([]);
   const [users, setUsers] = useState([]);
   const [title, setTitle] = useState("");
@@ -24,10 +24,11 @@ const GroupsShareList = () => {
   const [searchText, setSearchText] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedRecipients, setSelectedRecipients] = useState([]);
-  const [recipients, setRecipients] = useState([]);
 
   useEffect(() => {
     getGroups();
+    setGroupIndex(true);
+    setGroup(true);
   }, []);
 
   const refresh = (users) => {

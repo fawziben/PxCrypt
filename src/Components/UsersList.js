@@ -14,7 +14,7 @@ import { axiosInstance } from "../AxiosInstance";
 import AvatarGroup from "@mui/material/AvatarGroup";
 import { blue } from "@mui/material/colors";
 
-const UsersList = ({ recipients, setRecipients }) => {
+const UsersList = ({ recipients, setRecipients, setGroup }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedRecipients, setSelectedRecipients] = useState([]);
 
@@ -63,6 +63,7 @@ const UsersList = ({ recipients, setRecipients }) => {
 
   useEffect(() => {
     getUsers();
+    setGroup(false);
   }, []);
 
   const handleMessage = (id) => {

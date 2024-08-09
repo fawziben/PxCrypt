@@ -1,24 +1,24 @@
 import React, { useState } from "react";
-import { ShareOutlined, ShareRounded } from "@mui/icons-material";
+import { ShareOutlined } from "@mui/icons-material";
 import {
-  Avatar,
-  AvatarGroup,
   Button,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
 } from "@mui/material";
-import UsersList from "./UsersList";
-import { axiosInstance } from "../AxiosInstance";
 import ShareTabs from "./ShareTabs";
+import { axiosInstance } from "../AxiosInstance";
 
 const ShareDialog = ({ file_id }) => {
   const [recipients, setRecipients] = useState([]);
   const [openDialog, setOpenDialog] = useState(false);
+  const [group, setGroup] = useState();
 
   async function ShareFile(recipientsData, file_id) {
     try {
+      console.log(recipientsData);
+      console.log(file_id);
       let accessToken = localStorage.getItem("token");
       const response = await axiosInstance.post(
         `files/share/${file_id.toString()}`,
@@ -30,10 +30,33 @@ const ShareDialog = ({ file_id }) => {
         }
       );
 
-      if (response.status === 200) alert("file shared successfully");
+      if (response.status === 200) alert("File shared successfully");
       setOpenDialog(false);
     } catch (e) {
-      alert(e);
+      alert(`Error sharing file: ${e.response?.data?.detail || e.message}`);
+    }
+  }
+
+  async function multipleFileShare(recipientsData, file_id) {
+    try {
+      let accessToken = localStorage.getItem("token");
+      console.log("Recipients Data:", recipientsData); // Debug log
+      console.log("File ID:", file_id); // Debug log
+
+      const response = await axiosInstance.post(
+        `files/group_share/${file_id.toString()}`,
+        recipientsData,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+
+      if (response.status === 200) alert("File shared successfully");
+      setOpenDialog(false);
+    } catch (e) {
+      alert(`Error sharing file: ${e.response?.data?.detail || e.message}`);
     }
   }
 
@@ -54,22 +77,23 @@ const ShareDialog = ({ file_id }) => {
         message: recipient.message,
       }));
 
-    ShareFile(selectedRecipients, file_id);
+    console.log("Selected Recipients:", selectedRecipients); // Debug log
+
+    !group
+      ? ShareFile(selectedRecipients, file_id)
+      : multipleFileShare(selectedRecipients, file_id);
   };
 
   return (
     <div>
       <ShareOutlined onClick={handleShareClick} style={{ cursor: "pointer" }} />
       <Dialog open={openDialog} onClose={handleCloseDialog} maxWidth="md">
-        <div>
-          {/* Partager le fichier */}
-          {/* <ShareRounded style={{ marginLeft: "15px" }}></ShareRounded> */}
-        </div>
         <ShareTabs
           file_id={file_id}
           recipients={recipients}
           setRecipients={setRecipients}
-        ></ShareTabs>
+          setGroup={setGroup}
+        />
         <DialogActions>
           <Button variant="contained" onClick={Share}>
             Partager
