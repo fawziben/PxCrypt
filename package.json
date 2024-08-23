@@ -19,6 +19,7 @@
     "builder": "^5.0.0",
     "chart.js": "^4.4.2",
     "cross-env": "^7.0.3",
+    "docx-preview": "^0.3.2",
     "electron-is-dev": "^2.0.0",
     "electron-store": "^8.2.0",
     "path-browserify": "^1.0.1",
@@ -35,7 +36,8 @@
     "react-transition-group": "^4.4.5",
     "recharts": "^2.12.1",
     "victory": "^36.9.1",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "xlsx": "^0.18.5"
   },
   "build": {
     "appId": "com.example.myapp",
