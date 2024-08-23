@@ -139,7 +139,7 @@ export default function FileStats() {
             cutout: "70%",
             plugins: {
               title: {
-                text: "Repartition des fichiers cryptes",
+                text: "Distribution of Encrypted Files",
               },
               tooltip: {
                 callbacks: {
@@ -185,7 +185,7 @@ export default function FileStats() {
             cutout: "70%",
             plugins: {
               title: {
-                text: "Repartition des fichiers cryptes sur le serveur",
+                text: "Distribution of Encrypted Files on the Server",
               },
               tooltip: {
                 callbacks: {
@@ -208,7 +208,7 @@ export default function FileStats() {
         </div>
       </div>
       <div className="dataCard revenueCard" style={{ width }}>
-        <ProgressComponent usedStorage={33.2} totalStorage={100} />
+        <ProgressComponent usedStorage={2.24} totalStorage={100} />
       </div>
     </div>
   );

@@ -108,7 +108,7 @@ export default function CryptOptions({ updateFileData }) {
               component="span"
               startIcon={<InsertDriveFileIcon />}
             >
-              Sélectionner des fichiers
+              Single File Encryption
             </Button>
           </label>
           <br></br>
@@ -119,7 +119,7 @@ export default function CryptOptions({ updateFileData }) {
               component="span"
               startIcon={<FolderOpenIcon />}
             >
-              Sélectionner un dossier
+              Multiple File Encryption
             </Button>
           </label>
         </Box>
@@ -155,7 +155,7 @@ export default function CryptOptions({ updateFileData }) {
           onClick={crypt}
           disabled={selectedFiles.length === 0}
         >
-          Chiffrer
+          Encrypt
         </Button>
       </DialogActions>
     </div>

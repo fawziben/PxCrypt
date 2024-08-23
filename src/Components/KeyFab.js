@@ -35,7 +35,7 @@ export default function KeyFab({ updateFileData }) {
         <KeyOutlinedIcon />
       </Fab>
       <Dialog open={openDialog} onClose={handleCloseDialog}>
-        <DialogTitle>Dialog Title</DialogTitle>
+        <DialogTitle>Options</DialogTitle>
         <DialogContent>
           <CryptOptions updateFileData={updateFileData}></CryptOptions>
         </DialogContent>

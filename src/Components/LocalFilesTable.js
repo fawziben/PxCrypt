@@ -82,7 +82,7 @@ export default function LocalFilesTable({ fileData, removeFileData }) {
               >
                 <th className="px-4">File</th>
                 <th className="px-4">Size</th>
-                <th className="px-4">Access Date</th>
+                {/* <th className="px-4">Access Date</th> */}
                 <th className="px-4">Path</th>
                 <th className="px-4">Algorithm</th>
               </tr>
@@ -98,9 +98,9 @@ export default function LocalFilesTable({ fileData, removeFileData }) {
                     <td className="px-4" align="center">
                       {convertSize(row.size)}
                     </td>
-                    <td className="px-4" align="center">
+                    {/* <td className="px-4" align="center">
                       {row.accessDate}
-                    </td>
+                    </td> */}
                     <td className="px-4" align="center">
                       {row.path}
                     </td>

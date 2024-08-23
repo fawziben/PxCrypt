@@ -11,7 +11,7 @@ const ProgressComponent = ({ usedStorage, totalStorage }) => {
         <div className="progress-bar">
           <div className="progress" style={{ width: `${percentage}%` }}></div>
         </div>
-        <span className="progress-value">{`${usedStorage} / ${totalStorage} GB`}</span>
+        <span className="progress-value">{`${usedStorage} / ${totalStorage} MB`}</span>
       </div>
     </div>
   );

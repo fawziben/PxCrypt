@@ -163,10 +163,10 @@ const UsersList = ({ recipients, setRecipients, setGroup }) => {
                       sx={{ marginRight: "10px", cursor: "pointer" }}
                       onClick={() => handleMessage(recipient.id)}
                     />
-                    <Download
+                    {/* <Download
                       sx={{ cursor: "pointer", color: recipient.color }}
                       onClick={() => handleRecipientDownload(recipient.id)}
-                    />
+                    /> */}
                   </div>
                 )}
                 <Switch
