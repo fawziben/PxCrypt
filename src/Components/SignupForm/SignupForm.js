@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import {
   Box,
   Button,
+  Dialog,
+  DialogContent,
+  DialogTitle,
   IconButton,
   InputAdornment,
   TextField,
@@ -13,6 +16,8 @@ import {
   validateEmail,
   validatePhoneNumber,
 } from "../../Validators/inputValidators";
+import { Close } from "@mui/icons-material";
+import CreateOTP from "../CreateOTP";
 
 const classes = {
   input: {
@@ -41,6 +46,11 @@ const SignUpForm = () => {
   const [passwordError, setPasswordError] = useState(false);
   const [confirmPassword, setConfirmPassword] = useState("");
   const [confirmPasswordError, setConfirmPasswordError] = useState(false);
+  const [otp, setOtp] = useState(false);
+
+  const handleClose = () => {
+    setOtp(false); // Fermeture de la boîte de dialogue
+  };
 
   const validatePasswordPolicy = (password) => {
     // Au moins 12 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial
@@ -70,18 +80,17 @@ const SignUpForm = () => {
     }
 
     try {
-      const response = await axiosInstance.post("/users/", {
-        first_name: fname,
-        last_name: lname,
+      const response = await axiosInstance.post("/users/verify_email", {
         email: email,
         phone_number: `0${phoneNumber.toString()}`,
-        password: password,
       });
 
-      if (response.status === 201) {
-        alert("Success");
+      if (response.status === 200) {
+        setOtp(true);
       } else if (response.status === 400) {
         alert("Invalid credentials");
+      } else if (response.status === 404) {
+        alert("Server Error");
       }
     } catch (error) {
       console.log("Error:", error);
@@ -196,6 +205,21 @@ const SignUpForm = () => {
           </Button>
         </Box>
       </form>
+
+      <Dialog open={otp} onClose={handleClose}>
+        <DialogTitle>
+          <IconButton
+            aria-label="close"
+            onClick={handleClose}
+            sx={classes.closeButton}
+          >
+            <Close />
+          </IconButton>
+        </DialogTitle>
+        <DialogContent>
+          <CreateOTP user={{ fname, lname, phoneNumber, password, email }} />
+        </DialogContent>
+      </Dialog>
     </Box>
   );
 };
