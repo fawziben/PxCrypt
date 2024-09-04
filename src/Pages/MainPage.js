@@ -4,27 +4,30 @@ import LocalFilesTable from "../Components/LocalFilesTable";
 import UploadeFilesTable from "../Components/UploadedFilesTable";
 import KeyFab from "../Components/KeyFab";
 
-export default function MainPage() {
+export default function MainPage({ searchVal }) {
+  const [search, setSearch] = useState("");
   const [isDataLoaded, setIsDataLoaded] = useState(false);
   const [fileData, setFileData] = useState([]);
   const [userId, setUserId] = useState("");
-  useEffect(() => {
-    setUserId(sessionStorage.getItem("id")); // Replace with actual user ID from your authentication system
-    const storedData = localStorage.getItem(`fileData_${userId}`);
-    alert(userId);
-    if (storedData) {
-      setFileData(JSON.parse(storedData));
-    } else {
-      localStorage.setItem(`fileData_${userId}`, JSON.stringify([]));
 
-      // Uncomment and adjust if retrieving from API
-      // window.electronAPI.filePaths().then((result) => {
-      //   setFileData(result);
-      //   setIsDataLoaded(true);
-      //   localStorage.setItem(`fileData_${userId}`, JSON.stringify(result));
-      // });
+  useEffect(() => {
+    // Set the user ID from session storage
+    const id = sessionStorage.getItem("id"); // Replace with actual user ID from your authentication system
+    setUserId(id);
+  }, []); // Run only once when the component mounts
+
+  useEffect(() => {
+    if (userId) {
+      // Load file data if user ID is available
+      const storedData = localStorage.getItem(`fileData_${userId}`);
+      if (storedData) {
+        setFileData(JSON.parse(storedData));
+      } else {
+        localStorage.setItem(`fileData_${userId}`, JSON.stringify([]));
+      }
+      setIsDataLoaded(true);
     }
-  }, [userId]);
+  }, [userId]); // Run whenever userId changes
 
   const updateFileData = (newFileData) => {
     setFileData((prevFileData) => {
@@ -56,12 +59,17 @@ export default function MainPage() {
       className="overflow-y-hidden"
     >
       <MainPageTabs title1="Local" title2="Uploaded">
-        <LocalFilesTable
-          fileData={fileData}
-          removeFileData={removeFileData}
-          isDataLoaded={isDataLoaded}
-        />
-        <UploadeFilesTable />
+        {isDataLoaded ? (
+          <LocalFilesTable
+            searchVal={searchVal}
+            fileData={fileData}
+            removeFileData={removeFileData}
+            isDataLoaded={isDataLoaded}
+          />
+        ) : (
+          <h1>Loading...</h1>
+        )}
+        <UploadeFilesTable searchVal={searchVal} />
       </MainPageTabs>
       <KeyFab updateFileData={updateFileData} />
     </div>

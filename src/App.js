@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { CssBaseline } from "@mui/material";
 import {
@@ -26,15 +26,22 @@ const customTheme = createTheme({
   },
 });
 
+// Pour pouvoir filtre avec la barre de recherche
+
 function App() {
+  const [searchVal, setSearchVal] = useState("");
+
   return (
     <ThemeProvider theme={customTheme}>
       <CssBaseline />
       <HashRouter>
         <Routes>
           <Route exact path="/" element={<Login />} />
-          <Route path="dashboard" element={<Layout />}>
-            <Route index element={<MainPage />} />
+          <Route
+            path="dashboard"
+            element={<Layout setSearchVal={setSearchVal} />}
+          >
+            <Route index element={<MainPage searchVal={searchVal} />} />
             <Route path="sharedfiles" element={<SharedFiles />} />
             <Route path="analytics" element={<FileStats />} />
             <Route path="groups" element={<UserGroups />} />

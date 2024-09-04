@@ -6,35 +6,31 @@ import LocalShowFileIcon from "./LocalShowFileIcon";
 import { convertSize } from "../utilities/utilisties";
 
 const getFileName = (filePath) => {
-  // Séparer le chemin en parties en utilisant le séparateur '\'
   let parts = filePath.split("\\");
-
-  // Extraire le dernier élément qui représente le nom du fichier
   let fileNameWithExtension = parts[parts.length - 1];
-
-  // Enlever l'extension '.pxc' du nom du fichier en utilisant une expression régulière
   let fileNameWithoutExtension = fileNameWithExtension.replace(/\.pxc$/, "");
-
   return fileNameWithoutExtension;
 };
 
-export default function LocalFilesTable({ fileData, removeFileData }) {
+export default function LocalFilesTable({
+  searchVal,
+  fileData,
+  removeFileData,
+}) {
   const tableRef = React.useRef(null);
   const [containerHeight, setContainerHeight] = React.useState(0);
   const [actions, setActions] = React.useState({});
   const [selectedRow, setSelectedRow] = React.useState(null);
 
-  // Fonction pour recalculer la hauteur du conteneur
   const updateContainerHeight = () => {
     if (tableRef.current) {
       const windowHeight = window.innerHeight;
       const containerTop = tableRef.current.getBoundingClientRect().top;
-      const containerHeight = windowHeight - containerTop; // 20 est une marge fixe pour la barre de défilement
+      const containerHeight = windowHeight - containerTop;
       setContainerHeight(containerHeight);
     }
   };
 
-  // Mettre à jour la hauteur du conteneur lorsque le composant est monté ou lorsque la fenêtre est redimensionnée
   React.useEffect(() => {
     updateContainerHeight();
     window.addEventListener("resize", updateContainerHeight);
@@ -51,25 +47,32 @@ export default function LocalFilesTable({ fileData, removeFileData }) {
   };
 
   const handleRowClick = (index) => {
-    // Ferme la ligne précédemment ouverte
     if (selectedRow !== null && selectedRow !== index) {
       setActions((prevState) => ({
         ...prevState,
         [selectedRow]: false,
       }));
     }
-    // Ouvre la ligne sélectionnée
     toggleActions(index);
     setSelectedRow(index);
   };
-  // Fonction pour envoyer le chemin du fichier au processus principal et récupérer la réponse de l'API
+
+  // Filtrer les données selon le terme de recherche
+  const filteredData = fileData.filter((row) => {
+    const fileName = getFileName(row.path).toLowerCase();
+    const searchTerm = searchVal.toLowerCase();
+    return (
+      fileName.includes(searchTerm) ||
+      row.path.toLowerCase().includes(searchTerm)
+    );
+  });
 
   return (
     <div
       className="w-full h-full overflow-y-auto"
       style={{ maxHeight: "100%" }}
     >
-      {fileData ? (
+      {filteredData.length > 0 ? (
         <div
           ref={tableRef}
           style={{ maxHeight: `${containerHeight}px`, overflowY: "auto" }}
@@ -82,13 +85,12 @@ export default function LocalFilesTable({ fileData, removeFileData }) {
               >
                 <th className="px-4">File</th>
                 <th className="px-4">Size</th>
-                {/* <th className="px-4">Access Date</th> */}
                 <th className="px-4">Path</th>
                 <th className="px-4">Algorithm</th>
               </tr>
             </thead>
             <tbody>
-              {fileData.map((row, index) => (
+              {filteredData.map((row, index) => (
                 <React.Fragment key={index}>
                   <tr
                     className="bg-white h-14 row-b-bottom cursor-pointer"
@@ -98,9 +100,6 @@ export default function LocalFilesTable({ fileData, removeFileData }) {
                     <td className="px-4" align="center">
                       {convertSize(row.size)}
                     </td>
-                    {/* <td className="px-4" align="center">
-                      {row.accessDate}
-                    </td> */}
                     <td className="px-4" align="center">
                       {row.path}
                     </td>

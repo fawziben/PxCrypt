@@ -9,7 +9,7 @@ import DownloadButton from "./DownloadButton";
 import ShowFileIcon from "./ShowFileIcon";
 import { convertSize } from "../utilities/utilisties";
 
-export default function UploadeFilesTable() {
+export default function UploadeFilesTable(searchVal) {
   const tableRef = React.useRef(null);
   const [containerHeight, setContainerHeight] = React.useState(0);
   const [actions, setActions] = React.useState({});

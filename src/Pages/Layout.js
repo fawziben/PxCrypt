@@ -32,7 +32,7 @@ import Notifications from "../Components/Notification";
 import { Logout } from "@mui/icons-material";
 import Settings from "../Components/Settings";
 
-export default function Layout({ children }) {
+export default function Layout({ setSearchVal }) {
   const minWidth = 100;
   const maxWidth = 240;
 
@@ -41,6 +41,7 @@ export default function Layout({ children }) {
   const navigate = useNavigate();
   const location = useLocation();
   const [search, setSearch] = useState(true);
+  // const [searchVal,setSearchVal] = useState("")
 
   const classes = {
     arrowButton: {
@@ -97,15 +98,15 @@ export default function Layout({ children }) {
       icon: <GroupsIcon sx={{ color: "#000000", ...classes.drawerIcons }} />,
       path: "/dashboard/groups",
     },
-    {
-      text: "Notifications",
-      icon: (
-        <NotificationsNoneOutlinedIcon
-          sx={{ color: "#000000", ...classes.drawerIcons }}
-        />
-      ),
-      path: "/add",
-    },
+    // {
+    //   text: "Notifications",
+    //   icon: (
+    //     <NotificationsNoneOutlinedIcon
+    //       sx={{ color: "#000000", ...classes.drawerIcons }}
+    //     />
+    //   ),
+    //   path: "/add",
+    // },
     // {
     //   text: "Log Out",
     //   icon: <Logout sx={{ color: "#000000", ...classes.drawerIcons }} />,
@@ -164,6 +165,7 @@ export default function Layout({ children }) {
                   <SearchIcon />
                 </Box>
                 <InputBase
+                  onChange={(e) => setSearchVal(e.target.value)}
                   sx={{
                     height: "40px",
                     transition: "transform 0.5s ease-in-out",
@@ -212,7 +214,7 @@ export default function Layout({ children }) {
             display: "flex",
             alignItems: "center",
             justifyContent: "right",
-            marginBottom: "50px",
+            marginBottom: "80px",
           }}
         >
           {showNewIcon ? (
