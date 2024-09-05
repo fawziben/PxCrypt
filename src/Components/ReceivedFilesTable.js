@@ -4,7 +4,7 @@ import ShareDialog from "./ShareDialog";
 import UploadButton from "./UploadButton";
 import DecryptIcon from "./DecryptButton";
 import DecryptButton from "./DecryptButton";
-import { formatDate } from "../utilities/utilisties";
+import { convertSize, formatDate } from "../utilities/utilisties";
 import Message from "./Message";
 import ShowFileIcon from "./ShowFileIcon";
 import { axiosInstance } from "../AxiosInstance";
@@ -16,7 +16,7 @@ import {
 } from "@mui/icons-material";
 import DownloadButton from "./DownloadButton";
 
-export default function SharedFilesTable() {
+export default function SharedFilesTable({ searchVal }) {
   const tableRef = React.useRef(null);
   const [containerHeight, setContainerHeight] = React.useState(0);
   const [actions, setActions] = React.useState({});
@@ -38,7 +38,6 @@ export default function SharedFilesTable() {
         },
       });
 
-      // Vérifiez si la réponse est valide et contient des données
       if (response.status === 200) {
         setSharedFiles(response.data);
       }
@@ -55,12 +54,11 @@ export default function SharedFilesTable() {
     if (tableRef.current) {
       const windowHeight = window.innerHeight;
       const containerTop = tableRef.current.getBoundingClientRect().top;
-      const containerHeight = windowHeight - containerTop; // 20 est une marge fixe pour la barre de défilement
+      const containerHeight = windowHeight - containerTop;
       setContainerHeight(containerHeight);
     }
   };
 
-  // Mettre à jour la hauteur du conteneur lorsque le composant est monté ou lorsque la fenêtre est redimensionnée
   React.useEffect(() => {
     getSharedFiles();
     updateContainerHeight();
@@ -78,25 +76,29 @@ export default function SharedFilesTable() {
   };
 
   const handleDelete = (id) => {
-    // Filtrer les éléments pour exclure celui avec l'ID spécifié
     const updatedData = sharedFiles.filter((item) => item.id !== id);
-
-    // Mettre à jour uploadedData avec la nouvelle liste filtrée
     setSharedFiles(updatedData);
   };
+
   const handleRowClick = (index) => {
-    // Ferme la ligne précédemment ouverte
     if (selectedRow !== null && selectedRow !== index) {
       setActions((prevState) => ({
         ...prevState,
         [selectedRow]: false,
       }));
     }
-    // Ouvre la ligne sélectionnée
     toggleActions(index);
     setSelectedRow(index);
   };
-  // Fonction pour envoyer le chemin du fichier au processus principal et récupérer la réponse de l'API
+
+  // Filtrer les fichiers partagés en fonction de la valeur de recherche
+  const filteredFiles = sharedFiles.filter((file) => {
+    // Assurez-vous que chaque propriété de file existe avant d'appeler toLowerCase
+    const fileName = file.name ? file.name.toLowerCase() : "";
+    const searchTerm = searchVal ? searchVal.toLowerCase() : "";
+
+    return fileName.includes(searchTerm);
+  });
 
   return (
     <div
@@ -118,7 +120,7 @@ export default function SharedFilesTable() {
             </tr>
           </thead>
           <tbody>
-            {sharedFiles.map((row, index) => (
+            {filteredFiles.map((row, index) => (
               <React.Fragment key={index}>
                 <tr
                   className="bg-white h-14 row-b-bottom"
@@ -126,7 +128,7 @@ export default function SharedFilesTable() {
                 >
                   <td align="center">{row.name}</td>
                   <td className="px-4" align="center">
-                    {row.size}
+                    {convertSize(row.size)}
                   </td>
                   <td className="px-4" align="center">
                     {formatDate(row.date)}
@@ -147,7 +149,6 @@ export default function SharedFilesTable() {
                           align="center"
                           className="cursor-pointer hover:text-blue-500"
                         >
-                          {" "}
                           <DeleteButton
                             file_id={row.id}
                             handleDelete={handleDelete}

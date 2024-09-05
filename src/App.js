@@ -42,7 +42,10 @@ function App() {
             element={<Layout setSearchVal={setSearchVal} />}
           >
             <Route index element={<MainPage searchVal={searchVal} />} />
-            <Route path="sharedfiles" element={<SharedFiles />} />
+            <Route
+              path="sharedfiles"
+              element={<SharedFiles searchVal={searchVal} />}
+            />
             <Route path="analytics" element={<FileStats />} />
             <Route path="groups" element={<UserGroups />} />
           </Route>

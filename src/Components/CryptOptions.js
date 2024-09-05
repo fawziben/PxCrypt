@@ -1,12 +1,6 @@
 import React, { useState } from "react";
 import {
   Box,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  DialogContent,
-  DialogActions,
   Button,
   Typography,
   Card,
@@ -14,6 +8,8 @@ import {
   CardActions,
   IconButton,
   Grid,
+  DialogContent,
+  DialogActions,
 } from "@mui/material";
 import { axiosInstance } from "../AxiosInstance";
 import FolderOpenIcon from "@mui/icons-material/FolderOpen";
@@ -47,13 +43,34 @@ export default function CryptOptions({ updateFileData }) {
     try {
       let accessToken = localStorage.getItem("token");
       for (const file of selectedFiles) {
+        const fileExtension = file.name.split(".").pop(); // Extract the file extension
+
+        // Check if the extension is allowed
+        const verifyResponse = await axiosInstance.put(
+          "/settings/verify_extensions",
+          {},
+          {
+            params: { ext: fileExtension },
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
+
+        if (verifyResponse.status == 403) {
+          alert(
+            `The extension .${fileExtension} is not allowed to be encrypted.`
+          );
+          continue; // Skip the current file if the extension is not allowed
+        }
+
         const formData = new FormData();
-        formData.append("file", file); // Ajoutez votre fichier à FormData
+        formData.append("file", file); // Add your file to FormData
 
         const response = await axiosInstance.post("/encrypt", formData, {
           headers: {
             Authorization: `Bearer ${accessToken}`,
-            "Content-Type": "multipart/form-data", // Spécifiez le type de contenu comme multipart/form-data pour les envois de fichier
+            "Content-Type": "multipart/form-data", // Specify content type as multipart/form-data for file uploads
           },
           responseType: "arraybuffer",
           responseEncoding: "binary",
@@ -111,7 +128,7 @@ export default function CryptOptions({ updateFileData }) {
               Single File Encryption
             </Button>
           </label>
-          <br></br>
+          <br />
           <label htmlFor="directory-input">
             <Button
               variant="contained"

@@ -9,7 +9,7 @@ import DownloadButton from "./DownloadButton";
 import ShowFileIcon from "./ShowFileIcon";
 import { convertSize } from "../utilities/utilisties";
 
-export default function UploadeFilesTable(searchVal) {
+export default function UploadeFilesTable({ searchVal }) {
   const tableRef = React.useRef(null);
   const [containerHeight, setContainerHeight] = React.useState(0);
   const [actions, setActions] = React.useState({});
@@ -43,25 +43,21 @@ export default function UploadeFilesTable(searchVal) {
       }
     }
   }
+
   const updateContainerHeight = () => {
     if (tableRef.current) {
       const windowHeight = window.innerHeight;
       const containerTop = tableRef.current.getBoundingClientRect().top;
-      const containerHeight = windowHeight - containerTop; // 20 est une marge fixe pour la barre de défilement
+      const containerHeight = windowHeight - containerTop;
       setContainerHeight(containerHeight);
     }
   };
 
   const handleDelete = (id) => {
-    // Filtrer les éléments pour exclure celui avec l'ID spécifié
     const updatedData = uploadedData.filter((item) => item.id !== id);
-
-    // Mettre à jour uploadedData avec la nouvelle liste filtrée
     setUploadedData(updatedData);
-    alert(uploadedData);
   };
 
-  // Mettre à jour la hauteur du conteneur lorsque le composant est monté ou lorsque la fenêtre est redimensionnée
   React.useEffect(() => {
     getUFiles();
     updateContainerHeight();
@@ -79,17 +75,20 @@ export default function UploadeFilesTable(searchVal) {
   };
 
   const handleRowClick = (index) => {
-    // Ferme la ligne précédemment ouverte
     if (selectedRow !== null && selectedRow !== index) {
       setActions((prevState) => ({
         ...prevState,
         [selectedRow]: false,
       }));
     }
-    // Ouvre la ligne sélectionnée
     toggleActions(index);
     setSelectedRow(index);
   };
+
+  // Fonction pour filtrer les fichiers téléchargés
+  const filteredData = uploadedData.filter((file) =>
+    file.name.toLowerCase().includes(searchVal.toLowerCase())
+  );
 
   return (
     <div
@@ -110,7 +109,7 @@ export default function UploadeFilesTable(searchVal) {
             </tr>
           </thead>
           <tbody>
-            {uploadedData.map((row, index) => (
+            {filteredData.map((row, index) => (
               <React.Fragment key={index}>
                 <tr
                   className="bg-white h-14 row-b-bottom cursor_pointer"
@@ -136,7 +135,6 @@ export default function UploadeFilesTable(searchVal) {
                           align="center"
                           className="cursor-pointer hover:text-blue-500"
                         >
-                          {" "}
                           <DeleteButton
                             file_id={row.id}
                             handleDelete={handleDelete}
@@ -148,7 +146,6 @@ export default function UploadeFilesTable(searchVal) {
                           align="center"
                           className="cursor-pointer hover:text-blue-500"
                         >
-                          {" "}
                           <DownloadButton
                             file_id={row.id}
                             file_name={row.name}
