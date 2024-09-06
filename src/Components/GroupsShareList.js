@@ -58,6 +58,7 @@ const GroupsShareList = ({ file_id, recipients, setRecipients, setGroup }) => {
             users: group.users,
             initials: `${group.title[0].toUpperCase()}`,
             name: group.title || "", // Assurez-vous que `name` est défini
+            is_admin: group.is_admin,
           };
         });
 
@@ -173,10 +174,10 @@ const GroupsShareList = ({ file_id, recipients, setRecipients, setGroup }) => {
                       sx={{ marginRight: "10px", cursor: "pointer" }}
                       onClick={() => handleMessage(recipient.id)}
                     />
-                    <Download
+                    {/* <Download
                       sx={{ cursor: "pointer", color: recipient.color }}
                       onClick={() => handleRecipientDownload(recipient.id)}
-                    />
+                    /> */}
                   </div>
                 )}
                 <Switch

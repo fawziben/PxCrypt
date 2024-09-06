@@ -75,6 +75,7 @@ const ShareDialog = ({ file_id }) => {
         id: recipient.id,
         download: recipient.download,
         message: recipient.message,
+        is_admin: !group ? null : recipient.is_admin,
       }));
 
     console.log("Selected Recipients:", selectedRecipients); // Debug log

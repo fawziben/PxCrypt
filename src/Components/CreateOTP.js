@@ -26,6 +26,11 @@ function CreateOTP({ user }) {
 
       if (response.status == 201) {
         console.log("User created Successfully");
+        if (!response.data.state) {
+          console.log(
+            "This email is not allowed, please contact admin to activate your account"
+          );
+        }
       } else {
         console.log("Invalid OTP");
       }
