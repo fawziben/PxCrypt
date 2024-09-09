@@ -13,10 +13,10 @@ contextBridge.exposeInMainWorld("electronAPI", {
         .then((result) => resolve(result))
         .catch((error) => reject(error));
     }),
-  uploadData: (file, algorithm, accessToken) =>
+  uploadData: (file, algorithm, accessToken, storage) =>
     new Promise((resolve, reject) => {
       ipcRenderer
-        .invoke("upload-data", file, algorithm, accessToken)
+        .invoke("upload-data", file, algorithm, accessToken, storage)
         .then((result) => resolve(result))
         .catch((error) => reject(error));
     }),

@@ -199,10 +199,17 @@ ipcMain.handle("decrypt-data", async (event, filePath, accessToken) => {
 
 ipcMain.handle(
   "upload-data",
-  async (event, filePath, algorithm, accessToken) => {
+  async (event, filePath, algorithm, accessToken, storage) => {
     try {
       const formData = new FormData();
-      console.log(filePath);
+      const fileStats = fs.statSync(filePath);
+      const fileSizeInBytes = fileStats.size;
+      console.log(fileSizeInBytes);
+      console.log(storage);
+
+      if (fileSizeInBytes > storage) {
+        return "no-size"; // Indiquer que l'espace est insuffisant
+      }
 
       formData.append("file", fs.createReadStream(filePath));
 
@@ -214,14 +221,15 @@ ipcMain.handle(
         responseType: "arraybuffer",
         responseEncoding: "binary",
       });
+
       return response.data;
     } catch (error) {
-      // Gérer les erreurs
       console.error("Erreur lors de l'envoi du fichier à l'API :", error);
-      throw error;
+      throw error; // Relancer l'erreur pour la gestion dans React
     }
   }
 );
+
 ipcMain.handle(
   "download-data",
   async (event, fileId, fileName, accessToken) => {

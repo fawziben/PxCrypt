@@ -97,17 +97,19 @@ const GroupUsers = ({
                 />
               </div>
             </div>
-            <DeleteOutline
-              sx={{
-                cursor: "pointer",
-                color: "inherit",
-                transition: "color 0.3s",
-                "&:hover": {
-                  color: "red",
-                },
-              }}
-              onClick={() => handleDelete(user)}
-            />
+            {!groups[groupIndex].is_admin && (
+              <DeleteOutline
+                sx={{
+                  cursor: "pointer",
+                  color: "inherit",
+                  transition: "color 0.3s",
+                  "&:hover": {
+                    color: "red",
+                  },
+                }}
+                onClick={() => handleDelete(user)}
+              />
+            )}
           </ListItem>
         </div>
       ))}

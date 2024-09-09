@@ -62,7 +62,7 @@ const GroupsList = ({
   };
 
   return (
-    <div className="rounded-lg w-2/5 overflow-auto border border-black relative">
+    <div className="relative rounded-lg w-2/5 overflow-auto border border-black flex flex-col">
       <div
         style={{
           position: "sticky",
@@ -86,7 +86,7 @@ const GroupsList = ({
           }}
         />
       </div>
-      <div>
+      <div className="flex-grow overflow-auto">
         {filteredGroups.length > 0 &&
           filteredGroups.map((group) => (
             <div
@@ -122,7 +122,7 @@ const GroupsList = ({
                           }}
                           src={user.img_src || ""} // Show image if available
                         >
-                          {!user.img_src && // Display initials if no image
+                          {!user.img_src &&
                             (
                               user.first_name[0] + user.last_name[0]
                             ).toUpperCase()}
@@ -132,23 +132,27 @@ const GroupsList = ({
                   </div>
                 </div>
                 <div>
-                  <DeleteOutline
-                    onClick={(e) => handleGroupDelete(e, group.id)}
-                    sx={{
-                      cursor: "pointer",
-                      color: "inherit",
-                      transition: "color 0.3s",
-                      "&:hover": {
-                        color: "red",
-                      },
-                    }}
-                  ></DeleteOutline>
+                  {!group.is_admin && (
+                    <DeleteOutline
+                      onClick={(e) => handleGroupDelete(e, group.id)}
+                    />
+                  )}
                 </div>
               </div>
             </div>
           ))}
       </div>
-      <Box sx={{ position: "sticky", bottom: "10px", right: "10px" }}>
+      {/* Bouton AddGroup fixé en bas à droite */}
+      <Box
+        sx={{
+          position: "sticky",
+          bottom: "10px",
+          right: "10px",
+          display: "flex",
+          justifyContent: "flex-end",
+          marginTop: "auto", // Permet au FAB de rester en bas
+        }}
+      >
         <AddGroup setGroups={setGroups} groups={groups} />
       </Box>
     </div>

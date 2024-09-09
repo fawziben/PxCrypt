@@ -128,10 +128,12 @@ export default function GroupInfo({
             onClick={handleTitleSubmit}
           />
         ) : (
-          <EditIcon
-            sx={{ cursor: "pointer" }}
-            onClick={() => handleEditClick("title")}
-          />
+          !groups[groupIndex].is_admin && (
+            <EditIcon
+              sx={{ cursor: "pointer" }}
+              onClick={() => handleEditClick("title")}
+            />
+          )
         )}
       </div>
       <div className="h-[100px] rounded-md mr-2.5 bg-blue-50 shadow-[5px_5px_15px_rgba(0,0,0,0.3)] p-5 pt-2.5 w-[60%] overflow-auto flex">
@@ -162,10 +164,12 @@ export default function GroupInfo({
             onClick={handleDescriptionSubmit}
           />
         ) : (
-          <EditIcon
-            sx={{ cursor: "pointer" }}
-            onClick={() => handleEditClick("description")}
-          />
+          !groups[groupIndex].is_admin && (
+            <EditIcon
+              sx={{ cursor: "pointer" }}
+              onClick={() => handleEditClick("description")}
+            />
+          )
         )}
       </div>
     </div>

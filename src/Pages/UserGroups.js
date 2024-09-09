@@ -120,7 +120,7 @@ const UserGroups = () => {
               groupIndex={groupIndex}
               searchText={searchText}
             />
-            {groupIndex != null && (
+            {groupIndex != null && !groups[groupIndex].is_admin && (
               <AddUserDialog
                 users={users}
                 groupId={groups[groupIndex].id}
