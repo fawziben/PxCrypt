@@ -1,16 +1,32 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./OTPFile.css";
 import MarkEmailReadIcon from "@mui/icons-material/MarkEmailRead";
 import { Button } from "@mui/material";
 import { axiosInstance } from "../AxiosInstance";
 import { useNavigate } from "react-router-dom";
 
-function CreateOTP({ user }) {
+function CreateOTP({ user, onSuccess }) {
   const [otp, setOtp] = useState(new Array(6).fill(""));
+  const [countdown, setCountdown] = useState(180); // Compte à rebours de 3 minutes
+  const [message, setMessage] = useState({ text: "", severity: "" });
+  const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
 
+  useEffect(() => {
+    if (countdown > 0) {
+      const timer = setInterval(() => setCountdown(countdown - 1), 1000);
+      return () => clearInterval(timer);
+    } else {
+      handleClose();
+    }
+  }, [countdown]);
+
+  const handleClose = () => {
+    setOpen(false);
+    navigate("/"); // Rediriger vers la page d'accueil ou une autre page
+  };
   const verifyCode = async (code) => {
     try {
-      alert(user.phoneNumber);
       const response = await axiosInstance.post("/users/", {
         user: {
           first_name: user.fname,
@@ -31,6 +47,7 @@ function CreateOTP({ user }) {
             "This email is not allowed, please contact admin to activate your account"
           );
         }
+        onSuccess();
       } else {
         console.log("Invalid OTP");
       }
@@ -53,14 +70,13 @@ function CreateOTP({ user }) {
 
   const handleSubmit = () => {
     verifyCode(otp.join(""));
-    alert("Entered OTP is: " + otp.join(""));
   };
 
   return (
     <div className="otp-container">
       <div>
         <MarkEmailReadIcon
-          sx={{ width: "120px", height: "120px", color: "#27535E" }}
+          sx={{ width: "120px", height: "110px", color: "#27535E" }}
         ></MarkEmailReadIcon>
       </div>
       <h2 style={{ color: "#27535E" }}>OTP Verification</h2>
@@ -90,6 +106,12 @@ function CreateOTP({ user }) {
         >
           Verify
         </Button>
+        <div style={{ marginTop: "10px", color: "#27535E" }}>
+          <p>
+            Time remaining: {Math.floor(countdown / 60)}:
+            {String(countdown % 60).padStart(2, "0")}
+          </p>
+        </div>
       </div>
     </div>
   );

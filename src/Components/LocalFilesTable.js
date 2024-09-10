@@ -72,23 +72,20 @@ export default function LocalFilesTable({
       className="w-full h-full overflow-y-auto"
       style={{ maxHeight: "100%" }}
     >
-      {filteredData.length > 0 ? (
-        <div
-          ref={tableRef}
-          style={{ maxHeight: `${containerHeight}px`, overflowY: "auto" }}
-        >
-          <table className="w-full">
-            <thead className="text-white h-14">
-              <tr
-                className="sticky top-0"
-                style={{ backgroundColor: "#25525D" }}
-              >
-                <th className="px-4">File</th>
-                <th className="px-4">Size</th>
-                <th className="px-4">Path</th>
-                <th className="px-4">Algorithm</th>
-              </tr>
-            </thead>
+      <div
+        ref={tableRef}
+        style={{ maxHeight: `${containerHeight}px`, overflowY: "auto" }}
+      >
+        <table className="w-full">
+          <thead className="text-white h-14">
+            <tr className="sticky top-0" style={{ backgroundColor: "#25525D" }}>
+              <th className="px-4">File</th>
+              <th className="px-4">Size</th>
+              <th className="px-4">Path</th>
+              <th className="px-4">Algorithm</th>
+            </tr>
+          </thead>
+          {filteredData.length > 0 ? (
             <tbody>
               {filteredData.map((row, index) => (
                 <React.Fragment key={index}>
@@ -142,11 +139,11 @@ export default function LocalFilesTable({
                 </React.Fragment>
               ))}
             </tbody>
-          </table>
-        </div>
-      ) : (
-        <h1>No crypted files</h1>
-      )}
+          ) : (
+            <h1></h1>
+          )}
+        </table>
+      </div>
     </div>
   );
 }

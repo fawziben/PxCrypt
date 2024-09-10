@@ -18,6 +18,7 @@ import {
 } from "../../Validators/inputValidators";
 import { Close } from "@mui/icons-material";
 import CreateOTP from "../CreateOTP";
+import CustomSnackbar from "../CustomSnackbar"; // Import du composant CustomSnackbar
 
 const classes = {
   input: {
@@ -48,12 +49,39 @@ const SignUpForm = () => {
   const [confirmPasswordError, setConfirmPasswordError] = useState(false);
   const [otp, setOtp] = useState(false);
 
+  // States for Snackbar notifications
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState("success"); // 'success', 'error', 'warning', 'info'
+
+  const handleSuccess = () => {
+    setFname("");
+    setLname("");
+    setPhoneNumber("");
+    setPhoneNumberError(false);
+    setEmail("");
+    setEmailError(false);
+    setPassword("");
+    setPasswordError(false);
+    setConfirmPassword("");
+    setConfirmPasswordError(false);
+    setOtp(false); // Close OTP dialog
+
+    // Show success snackbar
+    setSnackbarMessage("User created successfully!");
+    setSnackbarSeverity("success");
+    setSnackbarOpen(true);
+  };
+
   const handleClose = () => {
     setOtp(false); // Fermeture de la boîte de dialogue
   };
 
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
+
   const validatePasswordPolicy = (password) => {
-    // Au moins 12 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial
     const regex =
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{12,}$/;
     return regex.test(password);
@@ -62,6 +90,7 @@ const SignUpForm = () => {
   const handleCreate = async (e) => {
     e.preventDefault();
 
+    // Local validations without using Snackbar
     if (!validateEmail(email)) {
       setEmailError(true);
       return;
@@ -79,6 +108,7 @@ const SignUpForm = () => {
       return;
     }
 
+    // API call to verify email and handle responses with Snackbar
     try {
       const response = await axiosInstance.post("/users/verify_email", {
         email: email,
@@ -87,13 +117,24 @@ const SignUpForm = () => {
 
       if (response.status === 200) {
         setOtp(true);
+        setSnackbarMessage("OTP sent successfully");
+        setSnackbarSeverity("success");
       } else if (response.status === 400) {
-        alert("Invalid credentials");
+        setSnackbarMessage(
+          "User with this email or phone number already exists"
+        );
+        setSnackbarSeverity("error");
       } else if (response.status === 404) {
-        alert("Server Error");
+        setSnackbarMessage("Error while generating the OTP");
+        setSnackbarSeverity("error");
       }
+
+      setSnackbarOpen(true);
     } catch (error) {
       console.log("Error:", error);
+      setSnackbarMessage("User with this email or phone number already exists");
+      setSnackbarSeverity("error");
+      setSnackbarOpen(true);
     }
   };
 
@@ -105,6 +146,7 @@ const SignUpForm = () => {
           label="First Name"
           required
           fullWidth
+          value={fname}
           onChange={(e) => setFname(e.target.value)}
           sx={classes.input}
         />
@@ -113,6 +155,7 @@ const SignUpForm = () => {
           label="Last Name"
           required
           fullWidth
+          value={lname}
           onChange={(e) => setLname(e.target.value)}
           sx={classes.input}
         />
@@ -150,7 +193,6 @@ const SignUpForm = () => {
             startAdornment: (
               <InputAdornment position="start">+213</InputAdornment>
             ),
-            maxLength: 10,
           }}
         />
         <TextField
@@ -159,6 +201,7 @@ const SignUpForm = () => {
           label="Password"
           required
           fullWidth
+          value={password}
           onChange={(e) => setPassword(e.target.value)}
           sx={classes.input}
           InputProps={{
@@ -180,11 +223,10 @@ const SignUpForm = () => {
           variant="standard"
           type="password"
           label="Confirm your password"
+          value={confirmPassword}
           required
           fullWidth
           sx={classes.input}
-          InputLabelProps={{}}
-          color="primary"
           error={confirmPasswordError}
           helperText={confirmPasswordError && "Passwords do not match"}
           onChange={(e) => {
@@ -217,9 +259,20 @@ const SignUpForm = () => {
           </IconButton>
         </DialogTitle>
         <DialogContent>
-          <CreateOTP user={{ fname, lname, phoneNumber, password, email }} />
+          <CreateOTP
+            user={{ fname, lname, phoneNumber, password, email }}
+            onSuccess={handleSuccess}
+          />
         </DialogContent>
       </Dialog>
+
+      {/* Using CustomSnackbar for notifications related to API responses only */}
+      <CustomSnackbar
+        open={snackbarOpen}
+        message={snackbarMessage}
+        severity={snackbarSeverity}
+        onClose={handleSnackbarClose}
+      />
     </Box>
   );
 };
