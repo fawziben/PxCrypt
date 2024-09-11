@@ -10,7 +10,12 @@ import {
 import KeyOutlinedIcon from "@mui/icons-material/KeyOutlined";
 import CryptOptions from "./CryptOptions";
 
-export default function KeyFab({ updateFileData }) {
+export default function KeyFab({
+  updateFileData,
+  setSnackbarOpen,
+  setSnackbarMessage,
+  setSnackbarSeverity,
+}) {
   const [openDialog, setOpenDialog] = useState(false);
 
   const handleFabClick = () => {
@@ -37,7 +42,13 @@ export default function KeyFab({ updateFileData }) {
       <Dialog open={openDialog} onClose={handleCloseDialog}>
         <DialogTitle>Options</DialogTitle>
         <DialogContent>
-          <CryptOptions updateFileData={updateFileData}></CryptOptions>
+          <CryptOptions
+            updateFileData={updateFileData}
+            setOpenDialog={setOpenDialog}
+            setSnackbarMessage={setSnackbarMessage}
+            setSnackbarSeverity={setSnackbarSeverity}
+            setSnackbarOpen={setSnackbarOpen}
+          ></CryptOptions>
         </DialogContent>
       </Dialog>
     </div>

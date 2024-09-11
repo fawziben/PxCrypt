@@ -2,11 +2,13 @@ import { KeyOffOutlined } from "@mui/icons-material";
 import React, { useState } from "react";
 import CustomSnackbar from "./CustomSnackbar"; // Importez votre composant CustomSnackbar
 
-const DecryptButton = ({ file_path, removeFileData }) => {
-  const [snackbarOpen, setSnackbarOpen] = useState(false); // État pour gérer l'ouverture du Snackbar
-  const [snackbarMessage, setSnackbarMessage] = useState(""); // État pour gérer le message du Snackbar
-  const [snackbarSeverity, setSnackbarSeverity] = useState("success"); // État pour gérer la sévérité du Snackbar
-
+const DecryptButton = ({
+  file_path,
+  removeFileData,
+  setSnackbarOpen,
+  setSnackbarMessage,
+  setSnackbarSeverity,
+}) => {
   async function decrypt(filepath) {
     try {
       let accessToken = localStorage.getItem("token");
@@ -37,13 +39,6 @@ const DecryptButton = ({ file_path, removeFileData }) => {
         <KeyOffOutlined />
       </div>
       {/* Utilisation du composant CustomSnackbar */}
-      <CustomSnackbar
-        open={snackbarOpen}
-        message={snackbarMessage}
-        severity={snackbarSeverity}
-        onClose={handleCloseSnackbar}
-        anchorOrigin={{ vertical: "top", horizontal: "right" }} // Positionnez le Snackbar à gauche
-      />
     </div>
   );
 };

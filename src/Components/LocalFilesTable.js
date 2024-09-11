@@ -4,6 +4,7 @@ import UploadButton from "./UploadButton";
 import DecryptButton from "./DecryptButton";
 import LocalShowFileIcon from "./LocalShowFileIcon";
 import { convertSize } from "../utilities/utilisties";
+import CustomSnackbar from "./CustomSnackbar";
 
 const getFileName = (filePath) => {
   let parts = filePath.split("\\");
@@ -21,6 +22,13 @@ export default function LocalFilesTable({
   const [containerHeight, setContainerHeight] = React.useState(0);
   const [actions, setActions] = React.useState({});
   const [selectedRow, setSelectedRow] = React.useState(null);
+  const [snackbarOpen, setSnackbarOpen] = React.useState(false);
+  const [snackbarMessage, setSnackbarMessage] = React.useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = React.useState("success");
+
+  const handleCloseSnackbar = () => {
+    setSnackbarOpen(false);
+  };
 
   const updateContainerHeight = () => {
     if (tableRef.current) {
@@ -130,6 +138,9 @@ export default function LocalFilesTable({
                             <DecryptButton
                               file_path={row.path}
                               removeFileData={removeFileData}
+                              setSnackbarMessage={setSnackbarMessage}
+                              setSnackbarSeverity={setSnackbarSeverity}
+                              setSnackbarOpen={setSnackbarOpen}
                             ></DecryptButton>
                           </div>
                         </div>
@@ -144,6 +155,13 @@ export default function LocalFilesTable({
           )}
         </table>
       </div>
+      <CustomSnackbar
+        open={snackbarOpen}
+        message={snackbarMessage}
+        severity={snackbarSeverity}
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }} // Positionnez le Snackbar à gauche
+      />
     </div>
   );
 }

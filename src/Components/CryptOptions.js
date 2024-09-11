@@ -15,8 +15,15 @@ import { axiosInstance } from "../AxiosInstance";
 import FolderOpenIcon from "@mui/icons-material/FolderOpen";
 import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
 import DeleteIcon from "@mui/icons-material/Delete";
+import CustomSnackbar from "./CustomSnackbar";
 
-export default function CryptOptions({ updateFileData }) {
+export default function CryptOptions({
+  updateFileData,
+  setOpenDialog,
+  setSnackbarOpen,
+  setSnackbarMessage,
+  setSnackbarSeverity,
+}) {
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [algorithm, setAlgorithm] = useState("");
 
@@ -39,6 +46,10 @@ export default function CryptOptions({ updateFileData }) {
     setSelectedFiles(updatedFiles);
   };
 
+  const handleCloseSnackbar = () => {
+    setSnackbarOpen(false);
+  };
+
   async function crypt() {
     try {
       let accessToken = localStorage.getItem("token");
@@ -58,9 +69,13 @@ export default function CryptOptions({ updateFileData }) {
         );
 
         if (verifyResponse.status == 403) {
-          alert(
+          setSnackbarMessage(
             `The extension .${fileExtension} is not allowed to be encrypted.`
           );
+          setSnackbarSeverity("error");
+          setOpenDialog(false);
+          setSnackbarOpen(true); // Open the Snackbar
+
           continue; // Skip the current file if the extension is not allowed
         }
 
@@ -87,6 +102,10 @@ export default function CryptOptions({ updateFileData }) {
         if (response.status === 200) {
           window.electronAPI.saveNewData(response.data, absolutePath); // Pass the absolute path to Electron API
           updateFileData(encryptedFile);
+          setSnackbarMessage("file encrypted successfully");
+          setSnackbarSeverity("success");
+          setSnackbarOpen(true); // Open the Snackbar
+          setOpenDialog(false);
         }
       }
     } catch (e) {

@@ -3,13 +3,20 @@ import MainPageTabs from "../Components/MainPageTabs";
 import LocalFilesTable from "../Components/LocalFilesTable";
 import UploadeFilesTable from "../Components/UploadedFilesTable";
 import KeyFab from "../Components/KeyFab";
+import CustomSnackbar from "../Components/CustomSnackbar";
 
 export default function MainPage({ searchVal }) {
   const [search, setSearch] = useState("");
   const [isDataLoaded, setIsDataLoaded] = useState(false);
   const [fileData, setFileData] = useState([]);
   const [userId, setUserId] = useState("");
+  const [snackbarOpen, setSnackbarOpen] = React.useState(false);
+  const [snackbarMessage, setSnackbarMessage] = React.useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = React.useState("success");
 
+  const handleCloseSnackbar = () => {
+    setSnackbarOpen(false);
+  };
   useEffect(() => {
     // Set the user ID from session storage
     const id = sessionStorage.getItem("id"); // Replace with actual user ID from your authentication system
@@ -71,7 +78,19 @@ export default function MainPage({ searchVal }) {
         )}
         <UploadeFilesTable searchVal={searchVal} />
       </MainPageTabs>
-      <KeyFab updateFileData={updateFileData} />
+      <KeyFab
+        updateFileData={updateFileData}
+        setSnackbarMessage={setSnackbarMessage}
+        setSnackbarSeverity={setSnackbarSeverity}
+        setSnackbarOpen={setSnackbarOpen}
+      />
+      <CustomSnackbar
+        open={snackbarOpen}
+        message={snackbarMessage}
+        severity={snackbarSeverity}
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }} // Positionnez le Snackbar à gauche
+      />
     </div>
   );
 }

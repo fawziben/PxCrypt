@@ -81,6 +81,7 @@ const UploadButton = ({ file_path }) => {
         message={snackbarMessage}
         severity={snackbarSeverity}
         onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }} // Positionnez le Snackbar à gauche
       />
     </div>
   );
