@@ -1,9 +1,4 @@
-import {
-  Password,
-  Visibility,
-  VisibilityOff,
-  Close as CloseIcon,
-} from "@mui/icons-material"; // Import des icônes MUI
+import React, { useState } from "react";
 import {
   Box,
   Button,
@@ -14,12 +9,17 @@ import {
   InputAdornment,
   TextField,
   Typography,
-} from "@mui/material"; // Import des composants MUI
-import React, { useState } from "react"; // Import de React et useState
-import { useNavigate } from "react-router-dom"; // Import du hook useNavigate pour la navigation
+} from "@mui/material";
+import {
+  Visibility,
+  VisibilityOff,
+  Close as CloseIcon,
+} from "@mui/icons-material";
+import { useNavigate } from "react-router-dom";
 import { axiosInstance } from "../AxiosInstance";
 import { validateEmail } from "../Validators/inputValidators";
 import OTPFile from "./OTPFile";
+import CustomSnackbar from "./CustomSnackbar"; // Import du composant CustomSnackbar
 
 const classes = {
   input: {
@@ -47,13 +47,17 @@ const classes = {
 };
 
 export default function LoginForm() {
-  const navigate = useNavigate(); // Initialisation du hook de navigation
-  // Gestion de l'état de l'affichage du mot de passe
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
-  const [email, setEmail] = useState(""); // État pour stocker l'email
-  const [password, setPassword] = useState(""); // État pour stocker le mot de passe
-  const [emailError, setEmailError] = useState(false); // État pour gérer l'erreur d'email
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [emailError, setEmailError] = useState(false);
   const [otp, setOtp] = useState(false);
+
+  // States for Snackbar notifications
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState("success"); // 'success', 'error', 'warning', 'info'
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -73,58 +77,70 @@ export default function LoginForm() {
 
       if (response.status === 200) {
         setOtp(true);
+        setSnackbarMessage("OTP sent successfully");
+        setSnackbarSeverity("success");
+        setSnackbarOpen(true);
       } else if (response.status === 202) {
-        localStorage.setItem("token", response.data.access_token); // Assurez-vous que le token est stocké
+        localStorage.setItem("token", response.data.access_token);
         sessionStorage.setItem("id", response.data.user_id);
-        window.electronAPI.loginSuccess(); // Appel d'une fonction depuis l'API Electron
+        window.electronAPI.loginSuccess();
         navigate("dashboard");
-      } else {
-        console.log("Invalid credentials");
       }
     } catch (error) {
-      console.log("Error:", error);
+      if (error.response?.status == 403) {
+        setSnackbarMessage("Your account has been blocked");
+        setSnackbarSeverity("error");
+        setSnackbarOpen(true);
+      } else if (error.response?.status == 401) {
+        setSnackbarMessage("Wrong password");
+        setSnackbarSeverity("error");
+        setSnackbarOpen(true);
+      } else if (error.response?.status == 404) {
+        setSnackbarMessage("Wrong informations");
+        setSnackbarSeverity("error");
+        setSnackbarOpen(true);
+      }
     }
   };
 
   const handleClickShowPassword = () => {
-    setShowPassword(!showPassword); // Inversion de l'état de l'affichage du mot de passe
+    setShowPassword(!showPassword);
   };
 
   const handleClose = () => {
-    setOtp(false); // Fermeture de la boîte de dialogue
+    setOtp(false);
+  };
+
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
   };
 
   return (
     <Box sx={classes.root}>
       <form onSubmit={handleLogin}>
-        {/* Champ de saisie pour l'email */}
         <TextField
           variant="standard"
           label="Enter your email"
           required
           fullWidth
-          value={email} // Valeur du champ email provenant de l'état local
+          value={email}
           onChange={(e) => {
             setEmail(e.target.value);
-            setEmailError(false); // Réinitialisation de l'erreur d'email lors de la modification de l'email
+            setEmailError(false);
           }}
           sx={classes.input}
-          error={emailError} // Utilisation de l'erreur d'email pour afficher une mise en forme spécifique
-          helperText={emailError && "Invalid email format"} // Message d'erreur affiché en cas d'erreur d'email
+          error={emailError}
+          helperText={emailError && "Invalid email format"}
         />
-        {/* Champ de saisie pour le mot de passe */}
         <TextField
           variant="standard"
           label="Enter your password"
           required
           fullWidth
           sx={classes.input}
-          value={password} // Valeur du champ password provenant de l'état local
-          onChange={(e) => setPassword(e.target.value)} // Fonction de mise à jour de l'état password
-          type={showPassword ? "text" : "password"} // Affichage du texte ou du mot de passe en fonction de l'état
-          InputLabelProps={{}}
-          color="primary"
-          // Affichage du bouton pour afficher/masquer le mot de passe
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          type={showPassword ? "text" : "password"}
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
@@ -135,7 +151,6 @@ export default function LoginForm() {
             ),
           }}
         />
-        {/* Bouton de connexion */}
         <Box sx={{ display: "flex", justifyContent: "center" }}>
           <Button
             type="submit"
@@ -149,6 +164,7 @@ export default function LoginForm() {
           </Button>
         </Box>
       </form>
+
       <Dialog open={otp} onClose={handleClose}>
         <DialogTitle>
           <IconButton
@@ -163,6 +179,14 @@ export default function LoginForm() {
           <OTPFile email={email} />
         </DialogContent>
       </Dialog>
+
+      {/* Using CustomSnackbar for notifications related to API responses */}
+      <CustomSnackbar
+        open={snackbarOpen}
+        message={snackbarMessage}
+        severity={snackbarSeverity}
+        onClose={handleSnackbarClose}
+      />
     </Box>
   );
 }

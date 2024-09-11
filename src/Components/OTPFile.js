@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./OTPFile.css";
 import MarkEmailReadIcon from "@mui/icons-material/MarkEmailRead";
 import { Button } from "@mui/material";
@@ -8,7 +8,22 @@ import { useNavigate } from "react-router-dom";
 function OTPFile({ email }) {
   const [otp, setOtp] = useState(new Array(6).fill(""));
   const navigate = useNavigate(); // Initialisation du hook de navigation
+  const [countdown, setCountdown] = useState(180); // Compte à rebours de 3 minutes
+  const [open, setOpen] = useState(false);
 
+  useEffect(() => {
+    if (countdown > 0) {
+      const timer = setInterval(() => setCountdown(countdown - 1), 1000);
+      return () => clearInterval(timer);
+    } else {
+      handleClose();
+    }
+  }, [countdown]);
+
+  const handleClose = () => {
+    setOpen(false);
+    navigate("/"); // Rediriger vers la page d'accueil ou une autre page
+  };
   const verifyCode = async (email, code) => {
     try {
       const response = await axiosInstance.post("/verify-code", {
@@ -46,7 +61,6 @@ function OTPFile({ email }) {
 
   const handleSubmit = () => {
     verifyCode(email, otp.join(""));
-    alert("Entered OTP is: " + otp.join(""));
   };
 
   return (
@@ -83,6 +97,12 @@ function OTPFile({ email }) {
         >
           Verify
         </Button>
+        <div style={{ marginTop: "10px", color: "#27535E" }}>
+          <p>
+            Time remaining: {Math.floor(countdown / 60)}:
+            {String(countdown % 60).padStart(2, "0")}
+          </p>
+        </div>
       </div>
     </div>
   );

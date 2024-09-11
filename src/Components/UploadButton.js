@@ -1,9 +1,13 @@
-import { UploadFileOutlined } from "@mui/icons-material";
 import React, { useState } from "react";
+import { UploadFileOutlined } from "@mui/icons-material";
 import { axiosInstance } from "../AxiosInstance";
+import CustomSnackbar from "./CustomSnackbar"; // Importez le composant CustomSnackbar
 
 const UploadButton = ({ file_path }) => {
   const [storage, setStorage] = useState(0);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState("success");
 
   async function getRemainingStorage() {
     try {
@@ -21,7 +25,9 @@ const UploadButton = ({ file_path }) => {
         return remainingStorage;
       }
     } catch (e) {
-      alert(e);
+      setSnackbarMessage("Error retrieving storage information");
+      setSnackbarSeverity("error");
+      setSnackbarOpen(true);
       return 0; // Return 0 or any default value in case of error
     }
   }
@@ -29,10 +35,11 @@ const UploadButton = ({ file_path }) => {
   async function uploadFile(filepath) {
     try {
       const remainingStorage = await getRemainingStorage(); // Ensure storage is updated
-      alert(`Remaining storage: ${remainingStorage}`); // Verify the storage value
+      setSnackbarMessage(`Remaining storage: ${remainingStorage}`);
+      setSnackbarSeverity("info");
+      setSnackbarOpen(true);
 
       let accessToken = localStorage.getItem("token");
-      alert("Uploading file...");
 
       const res = await window.electronAPI.uploadData(
         filepath,
@@ -40,22 +47,41 @@ const UploadButton = ({ file_path }) => {
         accessToken,
         remainingStorage
       );
-
-      alert(res);
+      console.log(res.data);
       if (!res) {
-        alert("Stockage insuffisant");
-      } else {
-        alert("Upload réussi");
+        setSnackbarMessage("Insufficient storage");
+        setSnackbarSeverity("error");
+      } else if (res == 400) {
+        setSnackbarMessage("File Already uploaded");
+        setSnackbarSeverity("error");
+      } else if (res == 200) {
+        setSnackbarMessage("Upload successful");
+        setSnackbarSeverity("success");
       }
+      setSnackbarOpen(true);
     } catch (error) {
-      console.error("Erreur lors du upload du fichier :", error);
-      // Gérez ici les erreurs de déchiffrement
+      setSnackbarMessage("Error during file upload");
+      setSnackbarSeverity("error");
+      console.error("Error during file upload:", error);
+      setSnackbarOpen(true);
     }
   }
 
+  const handleCloseSnackbar = () => {
+    setSnackbarOpen(false);
+  };
+
   return (
-    <div onClick={() => uploadFile(file_path)}>
-      <UploadFileOutlined />
+    <div>
+      <div onClick={() => uploadFile(file_path)}>
+        <UploadFileOutlined />
+      </div>
+      <CustomSnackbar
+        open={snackbarOpen}
+        message={snackbarMessage}
+        severity={snackbarSeverity}
+        onClose={handleCloseSnackbar}
+      />
     </div>
   );
 };

@@ -204,11 +204,9 @@ ipcMain.handle(
       const formData = new FormData();
       const fileStats = fs.statSync(filePath);
       const fileSizeInBytes = fileStats.size;
-      console.log(fileSizeInBytes);
-      console.log(storage);
 
       if (fileSizeInBytes > storage) {
-        return "no-size"; // Indiquer que l'espace est insuffisant
+        return false; // Indiquer que l'espace est insuffisant
       }
 
       formData.append("file", fs.createReadStream(filePath));
@@ -221,11 +219,9 @@ ipcMain.handle(
         responseType: "arraybuffer",
         responseEncoding: "binary",
       });
-
-      return response.data;
+      return response.status;
     } catch (error) {
-      console.error("Erreur lors de l'envoi du fichier à l'API :", error);
-      throw error; // Relancer l'erreur pour la gestion dans React
+      return error.response.status;
     }
   }
 );
