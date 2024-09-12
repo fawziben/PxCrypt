@@ -15,6 +15,7 @@ import {
   DownloadingOutlined,
 } from "@mui/icons-material";
 import DownloadButton from "./DownloadButton";
+import CustomSnackbar from "./CustomSnackbar";
 
 export default function SharedFilesTable({ searchVal }) {
   const tableRef = React.useRef(null);
@@ -23,6 +24,8 @@ export default function SharedFilesTable({ searchVal }) {
   const [selectedRow, setSelectedRow] = React.useState(null);
   const [sharedFiles, setSharedFiles] = React.useState([]);
   const [snackbarOpen, setSnackbarOpen] = React.useState(false);
+  const [snackbarMessage, setSnackbarMessage] = React.useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = React.useState("success");
 
   const handleSnackbarClose = () => {
     setSnackbarOpen(false);
@@ -153,6 +156,9 @@ export default function SharedFilesTable({ searchVal }) {
                             file_id={row.id}
                             handleDelete={handleDelete}
                             code={2}
+                            setSnackbarMessage={setSnackbarMessage}
+                            setSnackbarSeverity={setSnackbarSeverity}
+                            setSnackbarOpen={setSnackbarOpen}
                           />
                         </div>
                         <div
@@ -173,6 +179,9 @@ export default function SharedFilesTable({ searchVal }) {
                           <DownloadButton
                             file_id={row.file_id}
                             file_name={row.name}
+                            setSnackbarMessage={setSnackbarMessage}
+                            setSnackbarSeverity={setSnackbarSeverity}
+                            setSnackbarOpen={setSnackbarOpen}
                           />
                         </div>
                       </div>
@@ -184,10 +193,12 @@ export default function SharedFilesTable({ searchVal }) {
           </tbody>
         </table>
       </div>
-      <Message
+      <CustomSnackbar
         open={snackbarOpen}
-        message="No Shared files with you"
-        handleClose={handleSnackbarClose}
+        message={snackbarMessage}
+        severity={snackbarSeverity}
+        onClose={handleSnackbarClose}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }} // Positionnez le Snackbar à gauche
       />
     </div>
   );

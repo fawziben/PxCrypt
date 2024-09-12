@@ -2,11 +2,17 @@ import { DeleteOutline } from "@mui/icons-material";
 import React from "react";
 import { axiosInstance } from "../AxiosInstance";
 
-export default function DeleteButton({ file_id, handleDelete, code }) {
+export default function DeleteButton({
+  file_id,
+  handleDelete,
+  code,
+  setSnackbarOpen,
+  setSnackbarMessage,
+  setSnackbarSeverity,
+}) {
   async function deleteFile(file_id) {
     try {
       let accessToken = localStorage.getItem("token");
-      alert(file_id);
 
       let endpoint;
       if (code === 1) {
@@ -14,7 +20,6 @@ export default function DeleteButton({ file_id, handleDelete, code }) {
       } else if (code === 2) {
         endpoint = `files/shared/delete/${file_id}`;
       } else {
-        // Gérer d'autres valeurs de code si nécessaire
         throw new Error("Invalid code value");
       }
 
@@ -24,16 +29,26 @@ export default function DeleteButton({ file_id, handleDelete, code }) {
         },
       });
 
-      // Vérifiez si la réponse est valide et contient des données
-      if (response.status === 200) alert("deleted successfully");
-      handleDelete(file_id);
+      if (response.status === 204) {
+        // Mettre à jour l'UI pour supprimer le fichier
+        handleDelete(file_id);
+
+        // Afficher un message de succès dans le Snackbar
+        setSnackbarMessage("File deleted successfully");
+        setSnackbarSeverity("success");
+        setSnackbarOpen(true);
+      }
     } catch (e) {
-      alert(e);
+      // Afficher un message d'erreur dans le Snackbar
+      setSnackbarMessage("Error deleting file");
+      setSnackbarSeverity("error");
+      setSnackbarOpen(true);
     }
   }
+
   return (
     <div onClick={() => deleteFile(file_id)}>
-      <DeleteOutline></DeleteOutline>
+      <DeleteOutline />
     </div>
   );
 }

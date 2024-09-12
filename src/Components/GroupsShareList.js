@@ -170,10 +170,10 @@ const GroupsShareList = ({ file_id, recipients, setRecipients, setGroup }) => {
                 <ListItemText primary={recipient.name} />
                 {recipient.state && (
                   <div>
-                    <Message
+                    {/* <Message
                       sx={{ marginRight: "10px", cursor: "pointer" }}
                       onClick={() => handleMessage(recipient.id)}
-                    />
+                    /> */}
                     {/* <Download
                       sx={{ cursor: "pointer", color: recipient.color }}
                       onClick={() => handleRecipientDownload(recipient.id)}

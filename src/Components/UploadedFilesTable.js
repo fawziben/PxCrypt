@@ -8,6 +8,7 @@ import Message from "./Message";
 import DownloadButton from "./DownloadButton";
 import ShowFileIcon from "./ShowFileIcon";
 import { convertSize } from "../utilities/utilisties";
+import CustomSnackbar from "./CustomSnackbar";
 
 export default function UploadeFilesTable({ searchVal }) {
   const tableRef = React.useRef(null);
@@ -15,9 +16,12 @@ export default function UploadeFilesTable({ searchVal }) {
   const [actions, setActions] = React.useState({});
   const [selectedRow, setSelectedRow] = React.useState(null);
   const [uploadedData, setUploadedData] = React.useState([]);
-  const [snackbarOpen, setSnackbarOpen] = React.useState(false);
 
-  const handleSnackbarClose = () => {
+  const [snackbarOpen, setSnackbarOpen] = React.useState(false);
+  const [snackbarMessage, setSnackbarMessage] = React.useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = React.useState("success");
+
+  const handleCloseSnackbar = () => {
     setSnackbarOpen(false);
   };
 
@@ -39,7 +43,6 @@ export default function UploadeFilesTable({ searchVal }) {
     } catch (e) {
       // Dans votre gestionnaire d'erreur 404
       if (e.response.status === 404) {
-        setSnackbarOpen(true);
       }
     }
   }
@@ -139,6 +142,9 @@ export default function UploadeFilesTable({ searchVal }) {
                             file_id={row.id}
                             handleDelete={handleDelete}
                             code={1}
+                            setSnackbarMessage={setSnackbarMessage}
+                            setSnackbarSeverity={setSnackbarSeverity}
+                            setSnackbarOpen={setSnackbarOpen}
                           />
                         </div>
                         <div
@@ -149,6 +155,9 @@ export default function UploadeFilesTable({ searchVal }) {
                           <DownloadButton
                             file_id={row.id}
                             file_name={row.name}
+                            setSnackbarMessage={setSnackbarMessage}
+                            setSnackbarSeverity={setSnackbarSeverity}
+                            setSnackbarOpen={setSnackbarOpen}
                           />
                         </div>
                         <div
@@ -163,7 +172,12 @@ export default function UploadeFilesTable({ searchVal }) {
                           align="center"
                           className="cursor-pointer hover:text-blue-500"
                         >
-                          <ShareDialog file_id={row.id} />
+                          <ShareDialog
+                            file_id={row.id}
+                            setSnackbarMessage={setSnackbarMessage}
+                            setSnackbarSeverity={setSnackbarSeverity}
+                            setSnackbarOpen={setSnackbarOpen}
+                          />
                         </div>
                       </div>
                     </td>
@@ -174,10 +188,12 @@ export default function UploadeFilesTable({ searchVal }) {
           </tbody>
         </table>
       </div>
-      <Message
+      <CustomSnackbar
         open={snackbarOpen}
-        message="No uploaded files"
-        handleClose={handleSnackbarClose}
+        message={snackbarMessage}
+        severity={snackbarSeverity}
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }} // Positionnez le Snackbar à gauche
       />
     </div>
   );

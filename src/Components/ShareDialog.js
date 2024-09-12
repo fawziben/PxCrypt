@@ -10,7 +10,12 @@ import {
 import ShareTabs from "./ShareTabs";
 import { axiosInstance } from "../AxiosInstance";
 
-const ShareDialog = ({ file_id }) => {
+const ShareDialog = ({
+  file_id,
+  setSnackbarOpen,
+  setSnackbarMessage,
+  setSnackbarSeverity,
+}) => {
   const [recipients, setRecipients] = useState([]);
   const [openDialog, setOpenDialog] = useState(false);
   const [group, setGroup] = useState();
@@ -30,7 +35,11 @@ const ShareDialog = ({ file_id }) => {
         }
       );
 
-      if (response.status === 200) alert("File shared successfully");
+      if (response.status === 200) {
+        setSnackbarMessage("File shared successfully");
+        setSnackbarSeverity("success");
+        setSnackbarOpen(true);
+      }
       setOpenDialog(false);
     } catch (e) {
       alert(`Error sharing file: ${e.response?.data?.detail || e.message}`);
@@ -53,7 +62,11 @@ const ShareDialog = ({ file_id }) => {
         }
       );
 
-      if (response.status === 200) alert("File shared successfully");
+      if (response.status === 200) {
+        setSnackbarMessage("File shared successfully");
+        setSnackbarSeverity("success");
+        setSnackbarOpen(true);
+      }
       setOpenDialog(false);
     } catch (e) {
       alert(`Error sharing file: ${e.response?.data?.detail || e.message}`);
