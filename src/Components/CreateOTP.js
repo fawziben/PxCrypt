@@ -32,7 +32,7 @@ function CreateOTP({ user, onSuccess }) {
           first_name: user.fname,
           last_name: user.lname,
           email: user.email,
-          phone_number: user.phoneNumber,
+          phone_number: `0${user.phoneNumber.toString()}`,
           password: user.password,
         },
         code: code,

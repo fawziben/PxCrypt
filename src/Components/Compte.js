@@ -12,6 +12,8 @@ export default function Compte() {
   };
 
   const [parentimg, setParentImg] = useState("");
+  const [fname, setFname] = useState("");
+  const [lname, setLname] = useState("");
 
   async function getCurrentUser() {
     try {
@@ -24,6 +26,8 @@ export default function Compte() {
       });
       if (response.status === 200) {
         setParentImg(response.data.img_src);
+        setFname(response.data.first_name);
+        setLname(response.data.last_name);
       }
     } catch (e) {
       alert(e);
@@ -63,13 +67,19 @@ export default function Compte() {
           }),
         }}
       >
-        <Avatar sx={{ backgroundColor: "#C27821" }}>
-          <img
-            src={parentimg}
-            alt="Profile"
-            style={{ width: "100%", height: "100%", borderRadius: "50%" }}
-          />
-        </Avatar>
+        {parentimg ? (
+          <Avatar sx={{ backgroundColor: "#C27821" }}>
+            <img
+              src={parentimg}
+              alt="Profile"
+              style={{ width: "100%", height: "100%", borderRadius: "50%" }}
+            />
+          </Avatar>
+        ) : (
+          <Avatar sx={{ backgroundColor: "#C27821" }}>
+            {fname[0] + lname[0]}
+          </Avatar>
+        )}
       </IconButton>
 
       <Popover
