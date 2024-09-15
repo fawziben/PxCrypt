@@ -1,21 +1,17 @@
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
-import { FaBell, FaCheck, FaClock, FaTag, FaUser } from "react-icons/fa";
+import { FaBell, FaCheck } from "react-icons/fa";
 import {
   Box,
   List,
   Badge,
   Button,
-  Avatar,
   Tooltip,
   Divider,
   Popover,
   Typography,
   IconButton,
   ListSubheader,
-  ListItemAvatar,
-  ListItemButton,
-  ListItemText,
 } from "@mui/material";
 import { axiosInstance } from "../AxiosInstance";
 import NotificationItem from "./NotificationItem";
@@ -94,7 +90,6 @@ async function markAllNotificationsAsRead() {
 export default function Notifications() {
   const [notifications, setNotifications] = useState([]);
   const totalUnRead = notifications.filter((item) => item.unread).length;
-
   const [open, setOpen] = useState(null);
 
   const handleOpen = (event) => {
@@ -127,7 +122,16 @@ export default function Notifications() {
   };
 
   useEffect(() => {
+    // Récupérer les notifications au montage du composant
     getNotifications(setNotifications);
+
+    // Configurer un intervalle de 10 secondes pour actualiser les notifications
+    const interval = setInterval(() => {
+      getNotifications(setNotifications);
+    }, 10000); // 10 secondes
+
+    // Nettoyer l'intervalle lorsque le composant est démonté
+    return () => clearInterval(interval);
   }, []);
 
   return (

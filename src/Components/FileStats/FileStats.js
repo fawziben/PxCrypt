@@ -39,7 +39,7 @@ export default function FileStats() {
         setUfiles(response.data);
       }
     } catch (e) {
-      alert(e);
+      console.log(e);
     }
   }
 

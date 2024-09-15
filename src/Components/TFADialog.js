@@ -30,7 +30,6 @@ export default function TFADialog({ open, setOpen, TFA, setTFA }) {
       );
       if (response.status == 200) {
         setTFA(TFA);
-        alert("success");
         setOpen(false);
       } else {
         console.log("internal server error");
